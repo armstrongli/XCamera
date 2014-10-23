@@ -1,4 +1,4 @@
-package com.xxboy.services;
+package com.xxboy.xservices;
 
 import android.app.Service;
 import android.content.Intent;
