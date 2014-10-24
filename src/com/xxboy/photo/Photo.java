@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.com.xxboy.photo.R;
+import com.xxboy.photo.R;
 import com.xxboy.common.CommonFunction;
 
 public class Photo extends Activity {
