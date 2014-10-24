@@ -17,9 +17,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
         <pluginManagement>
@@ -40,7 +37,7 @@
                 <configuration>
                     <sdk>
                         <platform>14</platform>
-                        <path>/Users/ali/application/AndroidSDK</path>
+                        <path>${android.sdk.platformpath}</path>
                     </sdk>
                 </configuration>
             </plugin>
@@ -94,4 +91,8 @@
         <sourceDirectory>src/main/java</sourceDirectory>
     </build>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <android.sdk.platformpath>/Users/ali/application/AndroidSDK</android.sdk.platformpath>
+    </properties>
 </project>
