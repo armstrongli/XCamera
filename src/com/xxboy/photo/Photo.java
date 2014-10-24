@@ -1,4 +1,4 @@
-package com.xxboy.xcamera;
+package com.xxboy.photo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,10 +20,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.com.xxboy.photo.R;
 import com.xxboy.common.CommonFunction;
-import com.xxboy.xcamera.R;
 
-public class XCamera extends Activity {
+public class Photo extends Activity {
     private Button button;
 
     @Override
