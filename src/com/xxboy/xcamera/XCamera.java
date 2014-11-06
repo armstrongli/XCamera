@@ -4,7 +4,6 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -14,9 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.xxboy.common.CommonFunction;
+import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 
 public class XCamera extends Activity {
@@ -25,7 +24,8 @@ public class XCamera extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_photo);
+		setContentView(R.layout.xcamera);
+
 		button = (Button) findViewById(R.id.btn_camera);
 		button.setOnClickListener(new OnClickListener() {
 
@@ -33,8 +33,6 @@ public class XCamera extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-				// intent.putExtra(MediaStore.EXTRA_OUTPUT,
-				// Uri.fromFile(new File(getFullFileName())));
 
 				// return to XCamera after take photos
 				startActivityForResult(intent, 1);
@@ -42,61 +40,54 @@ public class XCamera extends Activity {
 		});
 	}
 
-	private String generateFullFileName() {
-		/** get picture folder and create system locale date folder */
-		File pictureFolder = new File(getString(R.string.picture_folder_path));
-		if (!pictureFolder.exists()) {
-			pictureFolder.mkdirs();
+	/**
+	 * check whether there're images in the default image path
+	 * 
+	 * @return
+	 */
+	private File[] checkExistingImages() {
+		File defaultFolder = new File(getString(R.string.default_picture_folder_path));
+		if (!defaultFolder.exists()) {
+			return null;
 		}
+		return defaultFolder.listFiles();
+	}
 
-		String fileNameDatePart = CommonFunction.getCurrentDateString();
-		String folderName = fileNameDatePart.substring(0, 8);
-		String targetFolderFullPath = pictureFolder.getPath() + File.separator
-				+ folderName;
-		File targetFolder = new File(targetFolderFullPath);
-		if (!targetFolder.exists()) {
-			targetFolder.mkdirs();
+	private void movingFile() {
+		File[] pictures = checkExistingImages();
+		if (pictures != null && pictures.length > 0) {
+			Logger.log(">>>>>>Begin moving files: " + pictures.length);
+			CommonFunction.XDate date = new CommonFunction.XDate();
+			String currentTargetFolderName = getString(//
+					R.string.picture_folder_path) //
+					+ File.separator + date.getYear() + "." + date.getMonth() //
+					+ File.separator//
+					+ date.getYear() + "." + date.getMonth() + "." + date.getDay();
+
+			/** get picture folder and create system locale date folder */
+			File pictureFolder = new File(currentTargetFolderName);
+			if (!pictureFolder.exists()) {
+				pictureFolder.mkdirs();
+			}
+
+			/** moving pictures */
+			for (File pictureItem : pictures) {
+				pictureItem.renameTo(new File(currentTargetFolderName + File.separator + pictureItem.getName()));
+			}
+		} else {
+			Logger.log("There're no files in the default camera folder");
 		}
-
-		/** prepare file name */
-		String photoFullName = getString(R.string.picture_prefix)
-				+ fileNameDatePart + getString(R.string.picture_cofix);
-		return targetFolder.getPath() + File.separator + photoFullName;
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK) {
-			String sdStatus = Environment.getExternalStorageState();
-			if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-				Log.i("TestFile",
-						"SD card is not avaiable/writeable right now.");
-				return;
-			}
-
-			// String photoFullName = getFullFileName();
-
-			Bundle bundle = data.getExtras();
-			Bitmap bitmap = (Bitmap) bundle.get("data");// 获取相机返回的数据，并转换为Bitmap图片格式
-
-			// FileOutputStream b = null;
-			//
-			// try {
-			// b = new FileOutputStream(photoFullName);
-			// bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
-			// } catch (FileNotFoundException e) {
-			// e.printStackTrace();
-			// } finally {
-			// try {
-			// b.flush();
-			// b.close();
-			// } catch (IOException e) {
-			// e.printStackTrace();
-			// }
-			// }
-			((ImageView) findViewById(R.id.img_photo)).setImageBitmap(bitmap);// 将图片显示在ImageView里
+		String sdStatus = Environment.getExternalStorageState();
+		if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+			Log.i("TestFile", "SD card is not avaiable/writeable right now.");
+			return;
 		}
+		movingFile();
 	}
 
 	@Override

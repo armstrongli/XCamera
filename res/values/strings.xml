@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- default image path on sdcard -->
+    <string name="default_picture_folder_path">/sdcard/DCIM/Camera</string>
+    <string name="picture_folder_path">/sdcard/DCIM/XCamera</string>
+
+    <!-- title bar settings -->
+    <string name="id_title_bar">title_bar</string>
+
+    <!-- main body settings -->
     <string name="app_name">XCamera</string>
     <string name="action_settings">Settings</string>
-    <string name="picture_folder_path">/sdcard/DCIM/XCamera</string>
     <string name="picture_prefix">DCIM_</string>
     <string name="picture_cofix">.jpg</string>
 
