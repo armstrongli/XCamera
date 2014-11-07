@@ -7,7 +7,7 @@ import java.util.Locale;
 public final class CommonFunction {
 	public static final class XDate {
 		public static final String YEAR_FORMAT = "yyyy";
-		public static final String MONTH_FORMAT = "mm";
+		public static final String MONTH_FORMAT = "MM";
 		public static final String DAY_FORMAT = "dd";
 
 		private String year = null;
