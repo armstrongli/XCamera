@@ -12,12 +12,13 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <FrameLayout
             android:id="@+id/camera_preview"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="107dp" >
         </FrameLayout>
     </LinearLayout>
 

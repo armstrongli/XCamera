@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
 
@@ -48,6 +50,8 @@ public class XCamera extends Activity {
 	}
 
 	private Button button;
+	private XPreview xpreview;
+	private Camera mCamera;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +60,12 @@ public class XCamera extends Activity {
 
 		// get components in the main view.
 		this.button = (Button) findViewById(R.id.btn_camera);
+		this.xpreview = new XPreview(this);
+
+		FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
 		GridView gridview = (GridView) findViewById(R.id.photo_grid);
+
+		previewLayout.addView(this.xpreview, 0);
 
 		List<HashMap<String, Object>> resource = get1DayPhotoResource(new File(getString(R.string.picture_folder_path)
 				+ "/2014.11/2014.11.09/"));
@@ -69,6 +78,17 @@ public class XCamera extends Activity {
 
 		// set button click to call system default camera.
 		this.button.setOnClickListener(new CallCameraListener(this));
+
+		mCamera = Camera.open(0);
+		this.xpreview.setCamera(mCamera);
+		mCamera.startPreview();
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		this.mCamera.release();
+		super.onDestroy();
 	}
 
 	/**
@@ -79,6 +99,9 @@ public class XCamera extends Activity {
 	 */
 	private List<HashMap<String, Object>> get1DayPhotoResource(File xcameraDateFolder) {
 		List<HashMap<String, Object>> photoResource = new ArrayList<HashMap<String, Object>>();
+		if (!xcameraDateFolder.exists()) {
+			return photoResource;
+		}
 
 		File[] photos = xcameraDateFolder.listFiles();
 		for (File photoItem : photos) {

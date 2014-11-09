@@ -14,4 +14,8 @@
     <string name="picture_prefix">DCIM_</string>
     <string name="picture_cofix">.jpg</string>
 
+    <!--  -->
+    <string name="camera_alert">alert</string>
+    <string name="switch_cam">switch_cam</string>
+
 </resources>
