@@ -28,7 +28,6 @@ import com.xxboy.photo.R;
 public class XCamera extends Activity {
 	public static interface XCameraConst {
 		String VIEW_NAMW_IMAGE_ITEM = "ItemImage";
-		String VIEW_NAMW_FILE_NAME = "ItemText";
 	}
 
 	public static class CallCameraListener implements OnClickListener {
@@ -60,12 +59,12 @@ public class XCamera extends Activity {
 		GridView gridview = (GridView) findViewById(R.id.photo_grid);
 
 		List<HashMap<String, Object>> resource = get1DayPhotoResource(new File(getString(R.string.picture_folder_path)
-				+ "/201410/20141006/"));
+				+ "/2014.11/2014.11.09/"));
 		SimpleAdapter adp = new SimpleAdapter(this,//
 				resource, //
 				R.layout.xcamera_item,//
-				new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM, XCameraConst.VIEW_NAMW_FILE_NAME },//
-				new int[] { R.id.ItemImage, R.id.ItemText });
+				new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
+				new int[] { R.id.ItemImage });
 		gridview.setAdapter(adp);
 
 		// set button click to call system default camera.
@@ -84,7 +83,6 @@ public class XCamera extends Activity {
 		File[] photos = xcameraDateFolder.listFiles();
 		for (File photoItem : photos) {
 			HashMap<String, Object> item = new HashMap<String, Object>();
-			item.put(XCameraConst.VIEW_NAMW_FILE_NAME, photoItem.getName());
 			item.put(XCameraConst.VIEW_NAMW_IMAGE_ITEM, photoItem.getAbsolutePath());
 			photoResource.add(item);
 		}
