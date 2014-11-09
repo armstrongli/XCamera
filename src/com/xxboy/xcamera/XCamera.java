@@ -1,9 +1,14 @@
 package com.xxboy.xcamera;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -13,12 +18,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.SimpleAdapter;
 
 import com.xxboy.common.CommonFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 
 public class XCamera extends Activity {
+	public static interface XCameraConst {
+		String VIEW_NAMW_IMAGE_ITEM = "ItemImage";
+		String VIEW_NAMW_FILE_NAME = "ItemText";
+	}
+
+	public static class CallCameraListener implements OnClickListener {
+		private Activity activity;
+
+		public CallCameraListener(Activity activity) {
+			this.activity = activity;
+		}
+
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent();
+			intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+
+			// return to XCamera after take photos
+			this.activity.startActivityForResult(intent, 1);
+		}
+	}
+
 	private Button button;
 
 	@Override
@@ -26,18 +55,52 @@ public class XCamera extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
 
-		button = (Button) findViewById(R.id.btn_camera);
-		button.setOnClickListener(new OnClickListener() {
+		// get components in the main view.
+		this.button = (Button) findViewById(R.id.btn_camera);
+		GridView gridview = (GridView) findViewById(R.id.photo_grid);
 
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+		List<HashMap<String, Object>> resource = get1DayPhotoResource(new File(getString(R.string.picture_folder_path)
+				+ "/201410/20141006/"));
+		SimpleAdapter adp = new SimpleAdapter(this,//
+				resource, //
+				R.layout.xcamera_item,//
+				new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM, XCameraConst.VIEW_NAMW_FILE_NAME },//
+				new int[] { R.id.ItemImage, R.id.ItemText });
+		gridview.setAdapter(adp);
 
-				// return to XCamera after take photos
-				startActivityForResult(intent, 1);
-			}
-		});
+		// set button click to call system default camera.
+		this.button.setOnClickListener(new CallCameraListener(this));
+	}
+
+	/**
+	 * generate 1 folder's image view item list.
+	 * 
+	 * @param xcameraDateFolder
+	 * @return
+	 */
+	private List<HashMap<String, Object>> get1DayPhotoResource(File xcameraDateFolder) {
+		List<HashMap<String, Object>> photoResource = new ArrayList<HashMap<String, Object>>();
+
+		File[] photos = xcameraDateFolder.listFiles();
+		for (File photoItem : photos) {
+			HashMap<String, Object> item = new HashMap<String, Object>();
+			item.put(XCameraConst.VIEW_NAMW_FILE_NAME, photoItem.getName());
+			item.put(XCameraConst.VIEW_NAMW_IMAGE_ITEM, photoItem.getAbsolutePath());
+			photoResource.add(item);
+		}
+
+		return photoResource;
+	}
+
+	/**
+	 * get local image bitmap
+	 * 
+	 * @param localImgFullPath
+	 *            full path. e.g. /sdcard/DCIM/camera/1.jpg
+	 * @return
+	 */
+	private Bitmap getLoacalBitmap(String localImgFullPath) {
+		return BitmapFactory.decodeFile(localImgFullPath);
 	}
 
 	/**
@@ -53,6 +116,9 @@ public class XCamera extends Activity {
 		return defaultFolder.listFiles();
 	}
 
+	/**
+	 * generate current date folder and move camera photos to the date folder.
+	 */
 	private void movingFile() {
 		File[] pictures = checkExistingImages();
 		if (pictures != null && pictures.length > 0) {
