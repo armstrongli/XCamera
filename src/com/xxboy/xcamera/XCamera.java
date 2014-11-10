@@ -21,9 +21,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 
-import com.xxboy.common.CommonFunction;
+import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 
@@ -34,13 +35,21 @@ public class XCamera extends Activity {
 
 	public static class CallCameraListener implements OnClickListener {
 		private Activity activity;
+		private XPreview preview;
 
 		public CallCameraListener(Activity activity) {
 			this.activity = activity;
 		}
 
+		public CallCameraListener(Activity activity, XPreview preview) {
+			this.activity = activity;
+			this.preview = preview;
+		}
+
 		@Override
 		public void onClick(View v) {
+			this.preview.surfaceDestroyed(null);
+
 			Intent intent = new Intent();
 			intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
 
@@ -49,14 +58,21 @@ public class XCamera extends Activity {
 		}
 	}
 
+	public XPreview getXPreview() {
+		return this.xpreview;
+	}
+
 	private Button button;
 	private XPreview xpreview;
 	private Camera mCamera;
+	private ScrollView main;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
+
+		this.main = (ScrollView) findViewById(R.id.main);
 
 		// get components in the main view.
 		this.button = (Button) findViewById(R.id.btn_camera);
@@ -76,12 +92,19 @@ public class XCamera extends Activity {
 				new int[] { R.id.ItemImage });
 		gridview.setAdapter(adp);
 
-		// set button click to call system default camera.
-		this.button.setOnClickListener(new CallCameraListener(this));
-
-		mCamera = Camera.open(0);
+		this.mCamera = Camera.open(0);
 		this.xpreview.setCamera(mCamera);
-		mCamera.startPreview();
+
+		// set button click to call system default camera.
+		this.button.setOnClickListener(new CallCameraListener(this, this.xpreview));
+		this.xpreview.setOnClickListener(new CallCameraListener(this, this.xpreview));
+
+		this.mCamera.startPreview();
+
+	}
+
+	public void stopPreview() {
+		this.mCamera.stopPreview();
 	}
 
 	@Override
@@ -144,7 +167,7 @@ public class XCamera extends Activity {
 		File[] pictures = checkExistingImages();
 		if (pictures != null && pictures.length > 0) {
 			Logger.log(">>>>>>Begin moving files: " + pictures.length);
-			CommonFunction.XDate date = new CommonFunction.XDate();
+			XFunction.XDate date = new XFunction.XDate();
 			String currentTargetFolderName = getString(//
 					R.string.picture_folder_path) //
 					+ File.separator + date.getYear() + "." + date.getMonth() //

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public final class CommonFunction {
+public final class XFunction {
 	public static final class XDate {
 		public static final String YEAR_FORMAT = "yyyy";
 		public static final String MONTH_FORMAT = "MM";

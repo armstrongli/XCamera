@@ -3,7 +3,10 @@
 
     <!-- default image path on sdcard -->
     <string name="default_picture_folder_path">/sdcard/DCIM/Camera</string>
-    <string name="picture_folder_path">/sdcard/DCIM/XCamera</string>
+    <!-- the xcamera photo path -->
+    <string name="picture_folder_path">/sdcard/XCamera</string>
+    <!-- the cache img path -->
+    <string name="cash_picture_folder_path">/sdcard/XCamera/.xcache</string>
 
     <!-- title bar settings -->
     <string name="id_title_bar">title_bar</string>
@@ -14,8 +17,11 @@
     <string name="picture_prefix">DCIM_</string>
     <string name="picture_cofix">.jpg</string>
 
-    <!--  -->
+    <!-- test data of camera preview -->
     <string name="camera_alert">alert</string>
     <string name="switch_cam">switch_cam</string>
+
+    <!-- test width and height -->
+    <string name="preview_width_height">30dp</string>
 
 </resources>

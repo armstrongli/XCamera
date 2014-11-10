@@ -1,5 +1,6 @@
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#ffffff"
@@ -20,28 +21,28 @@
             android:layout_width="fill_parent"
             android:layout_height="107dp" >
         </FrameLayout>
-    </LinearLayout>
 
-    <GridView
-        android:id="@+id/photo_grid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:horizontalSpacing="2dp"
-        android:numColumns="3" >
-    </GridView>
+        <com.xxboy.view.XView
+            android:id="@+id/photo_grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="2dp"
+            android:numColumns="3" >
+        </com.xxboy.view.XView>
 
-    <LinearLayout
-        android:id="@+id/set"
-        style="@android:style/Holo.Light.ButtonBar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/btn_camera"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/set"
+            style="@android:style/Holo.Light.ButtonBar"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name" />
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name" />
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>
