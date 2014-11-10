@@ -65,14 +65,11 @@ public class XCamera extends Activity {
 	private Button button;
 	private XPreview xpreview;
 	private Camera mCamera;
-	private ScrollView main;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
-
-		this.main = (ScrollView) findViewById(R.id.main);
 
 		// get components in the main view.
 		this.button = (Button) findViewById(R.id.btn_camera);
