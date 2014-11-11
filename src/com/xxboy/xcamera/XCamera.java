@@ -7,8 +7,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
@@ -54,20 +51,21 @@ public class XCamera extends Activity {
 
 	public static class CallCameraListener implements OnClickListener {
 		private Activity activity;
-		private XPreview preview;
+		private Camera camera;
 
 		public CallCameraListener(Activity activity) {
 			this.activity = activity;
 		}
 
-		public CallCameraListener(Activity activity, XPreview preview) {
+		public CallCameraListener(Activity activity, Camera camera) {
 			this.activity = activity;
-			this.preview = preview;
+			this.camera = camera;
 		}
 
 		@Override
 		public void onClick(View v) {
-			this.preview.surfaceDestroyed(null);
+			this.camera.stopPreview();
+			this.camera.release();
 
 			Intent intent = new Intent();
 			intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
@@ -143,7 +141,6 @@ public class XCamera extends Activity {
 		return this.xpreview;
 	}
 
-	private Button button;
 	private XPreview xpreview;
 	private Camera mCamera;
 
@@ -155,7 +152,6 @@ public class XCamera extends Activity {
 		initScreenParameters();
 
 		// get components in the main view.
-		this.button = (Button) findViewById(R.id.btn_camera);
 		this.xpreview = new XPreview(this);
 
 		FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
@@ -179,8 +175,7 @@ public class XCamera extends Activity {
 		this.mCamera.startPreview();
 
 		// set button click to call system default camera.
-		this.button.setOnClickListener(new CallCameraListener(this, this.xpreview));
-		this.xpreview.setOnClickListener(new CallCameraListener(this, this.xpreview));
+		this.xpreview.setOnClickListener(new CallCameraListener(this, this.mCamera));
 
 	}
 
@@ -202,17 +197,6 @@ public class XCamera extends Activity {
 		// TODO Auto-generated method stub
 		this.mCamera.release();
 		super.onDestroy();
-	}
-
-	/**
-	 * get local image bitmap
-	 * 
-	 * @param localImgFullPath
-	 *            full path. e.g. /sdcard/DCIM/camera/1.jpg
-	 * @return
-	 */
-	private Bitmap getLoacalBitmap(String localImgFullPath) {
-		return BitmapFactory.decodeFile(localImgFullPath);
 	}
 
 	/**
