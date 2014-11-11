@@ -65,7 +65,6 @@ public class XCamera extends Activity {
 		@Override
 		public void onClick(View v) {
 			this.camera.stopPreview();
-			this.camera.release();
 
 			Intent intent = new Intent();
 			intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
