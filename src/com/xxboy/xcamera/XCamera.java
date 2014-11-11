@@ -158,17 +158,6 @@ public class XCamera extends Activity {
 
 		previewLayout.addView(this.xpreview, 0);
 
-		// List<HashMap<String, Object>> resource = null;
-		XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.09/",
-				gridview);
-		new XViewPhotos().execute(param);
-		// SimpleAdapter adp = new SimpleAdapter(this,//
-		// resource, //
-		// R.layout.xcamera_item,//
-		// new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
-		// new int[] { R.id.ItemImage });
-		// gridview.setAdapter(adp);
-
 		this.mCamera = Camera.open(0);
 		this.xpreview.setCamera(mCamera);
 		this.mCamera.startPreview();
@@ -176,6 +165,9 @@ public class XCamera extends Activity {
 		// set button click to call system default camera.
 		this.xpreview.setOnClickListener(new CallCameraListener(this, this.mCamera));
 
+		final XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.09/",
+				gridview);
+		new XViewPhotos().execute(param);
 	}
 
 	private void initScreenParameters() {
@@ -194,6 +186,7 @@ public class XCamera extends Activity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
+		this.mCamera.stopPreview();
 		this.mCamera.release();
 		super.onDestroy();
 	}
