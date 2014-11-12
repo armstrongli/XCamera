@@ -8,6 +8,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -142,6 +144,8 @@ public class XCamera extends Activity {
 
 	private XPreview xpreview;
 	private Camera mCamera;
+	int numberOfCameras;
+	int defaultCameraId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,11 +156,23 @@ public class XCamera extends Activity {
 
 		// get components in the main view.
 		this.xpreview = new XPreview(this);
-
 		FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
-		GridView gridview = (GridView) findViewById(R.id.photo_grid);
-
 		previewLayout.addView(this.xpreview, 0);
+
+		numberOfCameras = Camera.getNumberOfCameras();
+		CameraInfo cameraInfo = new CameraInfo();
+		for (int i = 0; i < numberOfCameras; i++) {
+			Camera.getCameraInfo(i, cameraInfo);
+			if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
+				defaultCameraId = i;
+			}
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		GridView gridview = (GridView) findViewById(R.id.photo_grid);
 
 		this.mCamera = Camera.open(0);
 		this.xpreview.setCamera(mCamera);
@@ -168,6 +184,16 @@ public class XCamera extends Activity {
 		final XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.09/",
 				gridview);
 		new XViewPhotos().execute(param);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (this.mCamera != null) {
+			this.xpreview.setCamera(null);
+			this.mCamera.release();
+			this.mCamera = null;
+		}
 	}
 
 	private void initScreenParameters() {
@@ -186,8 +212,11 @@ public class XCamera extends Activity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		this.mCamera.stopPreview();
-		this.mCamera.release();
+		this.xpreview.surfaceDestroyed(null);
+		if (this.mCamera != null) {
+			this.mCamera.stopPreview();
+			this.mCamera.release();
+		}
 		super.onDestroy();
 	}
 
@@ -246,20 +275,13 @@ public class XCamera extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.photo, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.camera_menu, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
 		return super.onOptionsItemSelected(item);
 	}
 }
