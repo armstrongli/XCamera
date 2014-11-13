@@ -27,6 +27,7 @@ import android.widget.SimpleAdapter;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.services.XService;
 
 public class XCamera extends Activity {
 	public static final class XCameraConst {
@@ -167,6 +168,9 @@ public class XCamera extends Activity {
 				defaultCameraId = i;
 			}
 		}
+
+		// start xcamera service
+		this.startService(new Intent(this, XService.class));
 	}
 
 	@Override
@@ -205,19 +209,16 @@ public class XCamera extends Activity {
 		Logger.log("SCREEN_HEIGHT: " + XCameraConst.SCREEN_HEIGHT);
 	}
 
-	// public void stopPreview() {
-	// this.mCamera.stopPreview();
-	// }
-
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		this.xpreview.surfaceDestroyed(null);
 		if (this.mCamera != null) {
 			this.mCamera.stopPreview();
 			this.mCamera.release();
 		}
 		super.onDestroy();
+		// stop service
+		this.stopService(new Intent(this, XService.class));
 	}
 
 	/**
