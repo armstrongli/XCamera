@@ -11,10 +11,8 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -101,11 +99,20 @@ public class XCamera extends Activity {
 		}
 	}
 
-	public static class XViewPhotos extends AsyncTask<XViewParam, Void, Void> {
+	public static class XViewReloadPhotos extends AsyncTask<XViewParam, Void, Void> {
+		private XViewParam param;
+
+		public XViewReloadPhotos(XViewParam param) {
+			this.param = param;
+		}
 
 		@Override
 		protected Void doInBackground(XViewParam... path) {
-			XViewParam param = path[0];
+			File[] freshFile = checkExistingImages();
+			if (freshFile == null || freshFile.length == 0) {
+				return null;
+			}
+			moviePhotos();
 			List<HashMap<String, Object>> resource = get1DayPhotoResource(new File(param.getPath()));
 			SimpleAdapter adp = new SimpleAdapter(param.getActivity(),//
 					resource, //
@@ -114,6 +121,49 @@ public class XCamera extends Activity {
 					new int[] { R.id.ItemImage });
 			param.getGridView().setAdapter(adp);
 			return null;
+		}
+
+		/**
+		 * check whether there're images in the default image path
+		 * 
+		 * @return
+		 */
+		private File[] checkExistingImages() {
+			File defaultFolder = new File(param.getActivity().getString(R.string.default_picture_folder_path));
+			if (!defaultFolder.exists()) {
+				return null;
+			}
+			return defaultFolder.listFiles();
+		}
+
+		/**
+		 * generate current date folder and move camera photos to the date
+		 * folder.
+		 */
+		private void moviePhotos() {
+			File[] pictures = checkExistingImages();
+			if (pictures != null && pictures.length > 0) {
+				Logger.log(">>>>>>Begin moving files: " + pictures.length);
+				XFunction.XDate date = new XFunction.XDate();
+				String currentTargetFolderName = param.getActivity().getString(//
+						R.string.picture_folder_path) //
+						+ File.separator + date.getYear() + "." + date.getMonth() //
+						+ File.separator//
+						+ date.getYear() + "." + date.getMonth() + "." + date.getDay();
+
+				/** get picture folder and create system locale date folder */
+				File pictureFolder = new File(currentTargetFolderName);
+				if (!pictureFolder.exists()) {
+					pictureFolder.mkdirs();
+				}
+
+				/** moving pictures */
+				for (File pictureItem : pictures) {
+					pictureItem.renameTo(new File(currentTargetFolderName + File.separator + pictureItem.getName()));
+				}
+			} else {
+				Logger.log("There're no files in the default camera folder");
+			}
 		}
 
 		/**
@@ -139,10 +189,10 @@ public class XCamera extends Activity {
 		}
 	}
 
-	public class XServiceHandler extends AsyncTask<String, Void, Void> {
+	public class XServiceAT extends AsyncTask<String, Void, Void> {
 		private Activity activity;
 
-		public XServiceHandler(Activity activity) {
+		public XServiceAT(Activity activity) {
 			super();
 			this.activity = activity;
 		}
@@ -169,7 +219,7 @@ public class XCamera extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
 		// start xcamera service
-		new XServiceHandler(this).execute();
+		new XServiceAT(this).execute();
 
 		initScreenParameters();
 
@@ -201,9 +251,8 @@ public class XCamera extends Activity {
 		// set button click to call system default camera.
 		this.xpreview.setOnClickListener(new CallCameraListener(this, this.mCamera));
 
-		final XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.09/",
-				gridview);
-		new XViewPhotos().execute(param);
+		final XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.09/", gridview);
+		new XViewReloadPhotos(param).execute();
 	}
 
 	@Override
@@ -237,57 +286,12 @@ public class XCamera extends Activity {
 		super.onDestroy();
 	}
 
-	/**
-	 * check whether there're images in the default image path
-	 * 
-	 * @return
-	 */
-	private File[] checkExistingImages() {
-		File defaultFolder = new File(getString(R.string.default_picture_folder_path));
-		if (!defaultFolder.exists()) {
-			return null;
-		}
-		return defaultFolder.listFiles();
-	}
-
-	/**
-	 * generate current date folder and move camera photos to the date folder.
-	 */
-	private void movingFile() {
-		File[] pictures = checkExistingImages();
-		if (pictures != null && pictures.length > 0) {
-			Logger.log(">>>>>>Begin moving files: " + pictures.length);
-			XFunction.XDate date = new XFunction.XDate();
-			String currentTargetFolderName = getString(//
-					R.string.picture_folder_path) //
-					+ File.separator + date.getYear() + "." + date.getMonth() //
-					+ File.separator//
-					+ date.getYear() + "." + date.getMonth() + "." + date.getDay();
-
-			/** get picture folder and create system locale date folder */
-			File pictureFolder = new File(currentTargetFolderName);
-			if (!pictureFolder.exists()) {
-				pictureFolder.mkdirs();
-			}
-
-			/** moving pictures */
-			for (File pictureItem : pictures) {
-				pictureItem.renameTo(new File(currentTargetFolderName + File.separator + pictureItem.getName()));
-			}
-		} else {
-			Logger.log("There're no files in the default camera folder");
-		}
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		String sdStatus = Environment.getExternalStorageState();
-		if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-			Log.i("TestFile", "SD card is not avaiable/writeable right now.");
-			return;
-		}
-		movingFile();
+		GridView gridview = (GridView) findViewById(R.id.photo_grid);
+		final XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.09/", gridview);
+		new XViewReloadPhotos(param).execute();
 	}
 
 	@Override
