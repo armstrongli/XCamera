@@ -139,6 +139,22 @@ public class XCamera extends Activity {
 		}
 	}
 
+	public class XServiceHandler extends AsyncTask<String, Void, Void> {
+		private Activity activity;
+
+		public XServiceHandler(Activity activity) {
+			super();
+			this.activity = activity;
+		}
+
+		@Override
+		protected Void doInBackground(String... params) {
+			this.activity.startService(new Intent(this.activity, XService.class));
+			return null;
+		}
+
+	}
+
 	public XPreview getXPreview() {
 		return this.xpreview;
 	}
@@ -152,6 +168,8 @@ public class XCamera extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
+		// start xcamera service
+		new XServiceHandler(this).execute();
 
 		initScreenParameters();
 
@@ -169,8 +187,6 @@ public class XCamera extends Activity {
 			}
 		}
 
-		// start xcamera service
-		this.startService(new Intent(this, XService.class));
 	}
 
 	@Override
@@ -216,9 +232,9 @@ public class XCamera extends Activity {
 			this.mCamera.stopPreview();
 			this.mCamera.release();
 		}
-		super.onDestroy();
 		// stop service
 		this.stopService(new Intent(this, XService.class));
+		super.onDestroy();
 	}
 
 	/**
