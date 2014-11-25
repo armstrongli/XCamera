@@ -248,7 +248,7 @@ public class XCamera extends Activity {
 	 * @return
 	 */
 	private List<HashMap<String, Object>> getDaysPhotoResource() {
-		String xcameraPath = getString(R.string.picture_folder_path);
+		String xcameraPath = this.xPath;
 		File xFolder = new File(xcameraPath);
 		if (!xFolder.exists()) {
 			xFolder.mkdirs();
@@ -260,10 +260,15 @@ public class XCamera extends Activity {
 		if (xFolders == null || xFolders.length == 0) {
 			return result;
 		}
-		for (File xItem : xFolders) {
-			List<HashMap<String, Object>> itemResult = get1DayPhotoResource(xItem);
-			if (itemResult != null && itemResult.size() > 0) {
-				result.addAll(itemResult);
+		for (File monthFolder : xFolders) {
+			Logger.log("Going to " + monthFolder.getAbsolutePath());
+			File[] daysFolder = monthFolder.listFiles();
+			for (File dayFolder : daysFolder) {
+				Logger.log("Going to " + dayFolder.getAbsolutePath());
+				List<HashMap<String, Object>> itemResult = get1DayPhotoResource(dayFolder);
+				if (itemResult != null && itemResult.size() > 0) {
+					result.addAll(itemResult);
+				}
 			}
 		}
 		return result;
