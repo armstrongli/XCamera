@@ -25,10 +25,10 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
 
-import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.XService;
+import com.xxboy.services.XViewMovePhotos;
 
 public class XCamera extends Activity {
 	public static final class XCameraConst {
@@ -102,69 +102,6 @@ public class XCamera extends Activity {
 		}
 	}
 
-	public static class XViewMovePhotos extends AsyncTask<XViewParam, Void, Integer> {
-		private XViewParam param;
-
-		public XViewMovePhotos(XViewParam param) {
-			this.param = param;
-		}
-
-		@Override
-		protected Integer doInBackground(XViewParam... path) {
-			File[] freshFile = checkExistingImages();
-			if (freshFile == null || freshFile.length == 0) {
-				return null;
-			}
-			int movedPhotosCount = movePhotos();
-			Logger.log("Moved " + movedPhotosCount + " photos");
-			return XCamera.COMPLETED;
-		}
-
-		/**
-		 * check whether there're images in the default image path
-		 * 
-		 * @return
-		 */
-		private File[] checkExistingImages() {
-			File defaultFolder = new File(param.getActivity().getString(R.string.default_picture_folder_path));
-			if (!defaultFolder.exists()) {
-				return null;
-			}
-			return defaultFolder.listFiles();
-		}
-
-		/**
-		 * generate current date folder and move camera photos to the date
-		 * folder.
-		 */
-		private int movePhotos() {
-			File[] pictures = checkExistingImages();
-			if (pictures != null && pictures.length > 0) {
-				Logger.log(">>>>>>Begin moving files: " + pictures.length);
-				XFunction.XDate date = new XFunction.XDate();
-				String currentTargetFolderName = param.getActivity().getString(//
-						R.string.picture_folder_path) //
-						+ File.separator + date.getYear() + "." + date.getMonth() //
-						+ File.separator//
-						+ date.getYear() + "." + date.getMonth() + "." + date.getDay();
-
-				/** get picture folder and create system locale date folder */
-				File pictureFolder = new File(currentTargetFolderName);
-				if (!pictureFolder.exists()) {
-					pictureFolder.mkdirs();
-				}
-
-				/** moving pictures */
-				for (File pictureItem : pictures) {
-					pictureItem.renameTo(new File(currentTargetFolderName + File.separator + pictureItem.getName()));
-				}
-			} else {
-				Logger.log("There're no files in the default camera folder");
-			}
-			return pictures.length;
-		}
-	}
-
 	public class XServiceAT extends AsyncTask<String, Void, Void> {
 		private Activity activity;
 
@@ -190,7 +127,7 @@ public class XCamera extends Activity {
 	int numberOfCameras;
 	int defaultCameraId;
 
-	private static final Integer COMPLETED = 0;
+	public static final Integer COMPLETED = 0;
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {

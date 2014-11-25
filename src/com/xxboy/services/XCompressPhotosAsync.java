@@ -20,28 +20,6 @@ import com.xxboy.log.Logger;
  */
 public class XCompressPhotosAsync extends AsyncTask<Void, Void, Integer> {
 
-	public static class XPhotoParam {
-		private String xPath;
-		private String xCachePath;
-
-		public String getxPath() {
-			return xPath;
-		}
-
-		public void setxPath(String xPath) {
-			this.xPath = xPath;
-		}
-
-		public String getxCachePath() {
-			return xCachePath;
-		}
-
-		public void setxCachePath(String xCachePath) {
-			this.xCachePath = xCachePath;
-		}
-
-	}
-
 	private XPhotoParam param;
 
 	public XCompressPhotosAsync(XPhotoParam param) {
