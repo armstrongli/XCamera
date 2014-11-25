@@ -81,30 +81,6 @@ public class XCamera extends Activity {
 		}
 	}
 
-	public static class XViewParam {
-		private String path;
-		private GridView gridview;
-		private Activity activity;
-
-		public XViewParam(Activity activity, String path, GridView gridview) {
-			this.activity = activity;
-			this.path = path;
-			this.gridview = gridview;
-		}
-
-		public Activity getActivity() {
-			return this.activity;
-		}
-
-		public String getPath() {
-			return this.path;
-		}
-
-		public GridView getGridView() {
-			return this.gridview;
-		}
-	}
-
 	public class XServiceAT extends AsyncTask<String, Void, Void> {
 		private Activity activity;
 
@@ -246,7 +222,6 @@ public class XCamera extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		GridView gridview = (GridView) findViewById(R.id.photo_grid);
-		final XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.23/", gridview);
 
 		XPhotoParam p = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
 		XViewMovePhotos reload = new XViewMovePhotos(p);
@@ -254,11 +229,9 @@ public class XCamera extends Activity {
 		try {
 			result = reload.execute().get();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.log(e);
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.log(e);
 		}
 
 		Logger.log("The return result is " + result);
@@ -266,14 +239,14 @@ public class XCamera extends Activity {
 			Logger.log("return~~~~");
 			return;
 		}
-		List<HashMap<String, Object>> resource = get1DayPhotoResource(new File(param.getPath()));
+		List<HashMap<String, Object>> resource = getDaysPhotoResource();
 		Logger.log("There're " + resource.size() + " photos in the exact path");
-		SimpleAdapter adp = new SimpleAdapter(param.getActivity(),//
+		SimpleAdapter adp = new SimpleAdapter(this,//
 				resource, //
 				R.layout.xcamera_item,//
 				new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
 				new int[] { R.id.ItemImage });
-		param.getGridView().setAdapter(adp);
+		gridview.setAdapter(adp);
 	}
 
 	@Override
