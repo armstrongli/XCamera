@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,7 +27,6 @@ import android.widget.SimpleAdapter;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.XPhotoParam;
-import com.xxboy.services.XService;
 import com.xxboy.services.XViewMovePhotos;
 
 public class XCamera extends Activity {
@@ -81,22 +79,6 @@ public class XCamera extends Activity {
 		}
 	}
 
-	public class XServiceAT extends AsyncTask<String, Void, Void> {
-		private Activity activity;
-
-		public XServiceAT(Activity activity) {
-			super();
-			this.activity = activity;
-		}
-
-		@Override
-		protected Void doInBackground(String... params) {
-			this.activity.startService(new Intent(this.activity, XService.class));
-			return null;
-		}
-
-	}
-
 	public XPreview getXPreview() {
 		return this.xpreview;
 	}
@@ -120,8 +102,6 @@ public class XCamera extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
-		// start xcamera service
-		new XServiceAT(this).execute();
 
 		initScreenParameters();
 
@@ -213,8 +193,6 @@ public class XCamera extends Activity {
 			this.mCamera.stopPreview();
 			this.mCamera.release();
 		}
-		// stop service
-		this.stopService(new Intent(this, XService.class));
 		super.onDestroy();
 	}
 
