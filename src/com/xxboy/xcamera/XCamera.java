@@ -102,10 +102,10 @@ public class XCamera extends Activity {
 		}
 	}
 
-	public static class XViewReloadPhotos extends AsyncTask<XViewParam, Void, Integer> {
+	public static class XViewMovePhotos extends AsyncTask<XViewParam, Void, Integer> {
 		private XViewParam param;
 
-		public XViewReloadPhotos(XViewParam param) {
+		public XViewMovePhotos(XViewParam param) {
 			this.param = param;
 		}
 
@@ -308,7 +308,7 @@ public class XCamera extends Activity {
 		GridView gridview = (GridView) findViewById(R.id.photo_grid);
 		final XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.23/", gridview);
 
-		XViewReloadPhotos reload = new XViewReloadPhotos(param);
+		XViewMovePhotos reload = new XViewMovePhotos(param);
 		Integer result = null;
 		try {
 			result = reload.execute().get();
@@ -345,6 +345,33 @@ public class XCamera extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * get all xCamera photos
+	 * 
+	 * @return
+	 */
+	private List<HashMap<String, Object>> getDaysPhotoResource() {
+		String xcameraPath = getString(R.string.picture_folder_path);
+		File xFolder = new File(xcameraPath);
+		if (!xFolder.exists()) {
+			xFolder.mkdirs();
+			return new ArrayList<HashMap<String, Object>>();
+		}
+
+		List<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
+		File[] xFolders = xFolder.listFiles();
+		if (xFolders == null || xFolders.length == 0) {
+			return result;
+		}
+		for (File xItem : xFolders) {
+			List<HashMap<String, Object>> itemResult = get1DayPhotoResource(xItem);
+			if (itemResult != null && itemResult.size() > 0) {
+				result.addAll(itemResult);
+			}
+		}
+		return result;
 	}
 
 	/**
