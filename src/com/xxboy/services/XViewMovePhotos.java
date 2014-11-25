@@ -6,26 +6,24 @@ import android.os.AsyncTask;
 
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
-import com.xxboy.photo.R;
-import com.xxboy.xcamera.XCamera;
-import com.xxboy.xcamera.XCamera.XViewParam;
 
-public final class XViewMovePhotos extends AsyncTask<XViewParam, Void, Integer> {
-	private XViewParam param;
+public final class XViewMovePhotos extends AsyncTask<Void, Void, Integer> {
+	private XPhotoParam param;
 
-	public XViewMovePhotos(XViewParam param) {
+	public XViewMovePhotos(XPhotoParam param) {
 		this.param = param;
 	}
 
 	@Override
-	protected Integer doInBackground(XViewParam... path) {
+	protected Integer doInBackground(Void... path) {
 		File[] freshFile = checkExistingImages();
 		if (freshFile == null || freshFile.length == 0) {
-			return null;
+			return 0;
 		}
+		Logger.log("Begin moving photos");
 		int movedPhotosCount = movePhotos();
 		Logger.log("Moved " + movedPhotosCount + " photos");
-		return XCamera.COMPLETED;
+		return movedPhotosCount;
 	}
 
 	/**
@@ -34,7 +32,7 @@ public final class XViewMovePhotos extends AsyncTask<XViewParam, Void, Integer> 
 	 * @return
 	 */
 	private File[] checkExistingImages() {
-		File defaultFolder = new File(param.getActivity().getString(R.string.default_picture_folder_path));
+		File defaultFolder = new File(this.param.getCameraPath());
 		if (!defaultFolder.exists()) {
 			return null;
 		}
@@ -49,8 +47,8 @@ public final class XViewMovePhotos extends AsyncTask<XViewParam, Void, Integer> 
 		if (pictures != null && pictures.length > 0) {
 			Logger.log(">>>>>>Begin moving files: " + pictures.length);
 			XFunction.XDate date = new XFunction.XDate();
-			String currentTargetFolderName = param.getActivity().getString(//
-					R.string.picture_folder_path) //
+			String currentTargetFolderName = ""//
+					+ this.param.getxPath()//
 					+ File.separator + date.getYear() + "." + date.getMonth() //
 					+ File.separator//
 					+ date.getYear() + "." + date.getMonth() + "." + date.getDay();

@@ -27,10 +27,13 @@ import android.widget.SimpleAdapter;
 
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.services.XPhotoParam;
 import com.xxboy.services.XService;
 import com.xxboy.services.XViewMovePhotos;
 
 public class XCamera extends Activity {
+	private String xPath, xCachePath, cameraPath;
+
 	public static final class XCameraConst {
 		public static final String VIEW_NAMW_IMAGE_ITEM = "ItemImage";
 
@@ -245,7 +248,8 @@ public class XCamera extends Activity {
 		GridView gridview = (GridView) findViewById(R.id.photo_grid);
 		final XViewParam param = new XViewParam(this, getString(R.string.picture_folder_path) + "/2014.11/2014.11.23/", gridview);
 
-		XViewMovePhotos reload = new XViewMovePhotos(param);
+		XPhotoParam p = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
+		XViewMovePhotos reload = new XViewMovePhotos(p);
 		Integer result = null;
 		try {
 			result = reload.execute().get();
