@@ -119,6 +119,9 @@ public class XCamera extends Activity {
 			}
 		}
 
+		this.xPath = getString(R.string.picture_folder_path);
+		this.xCachePath = getString(R.string.cash_picture_folder_path);
+		this.cameraPath = getString(R.string.default_picture_folder_path);
 	}
 
 	@Override
@@ -213,7 +216,7 @@ public class XCamera extends Activity {
 		}
 
 		Logger.log("The return result is " + result);
-		if (result == null || COMPLETED != result) {
+		if (result == null || result <= 0) {
 			Logger.log("return~~~~");
 			return;
 		}
