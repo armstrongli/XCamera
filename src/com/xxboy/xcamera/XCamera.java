@@ -147,31 +147,7 @@ public class XCamera extends Activity {
 
 		this.self = this;
 
-		// new Thread(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// List<HashMap<String, Object>> resource = getDaysPhotoResource();
-		// Logger.log("There're " + resource.size() +
-		// " photos in the exact path");
-		// SimpleAdapter adp = new SimpleAdapter(self,//
-		// resource, //
-		// R.layout.xcamera_item,//
-		// new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
-		// new int[] { R.id.ItemImage });
-		// gridview.setAdapter(adp);
-		// }
-		// }).start();
-
-		try {
-			this.gridview = new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this).get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this);
 	}
 
 	@Override

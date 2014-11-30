@@ -14,7 +14,7 @@ import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
-public class XReloadPhoto extends AsyncTask<Activity, Void, ListView> {
+public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 
 	private XPhotoParam param;
 
@@ -24,21 +24,24 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, ListView> {
 	}
 
 	@Override
-	protected ListView doInBackground(Activity... params) {
-		ListView g = new ListView(params[0]);
-//		g.setColumnWidth(100);
-//		g.setNumColumns(3);
+	protected Void doInBackground(Activity... params) {
+		Activity mainActivity = params[0];
+		final ListView gridview = (ListView) mainActivity.findViewById(R.id.photo_grid);
 
 		List<HashMap<String, Object>> resource = getDaysPhotoResource();
 		Logger.log("There're " + resource.size() + " photos in the exact path");
-		SimpleAdapter adp = new SimpleAdapter(params[0],//
+		final SimpleAdapter adp = new SimpleAdapter(params[0],//
 				resource, //
 				R.layout.xcamera_item,//
 				new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
 				new int[] { R.id.ItemImage });
-		g.setAdapter(adp);
-
-		return g;
+		mainActivity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				gridview.setAdapter(adp);
+			}
+		});
+		return null;
 	}
 
 	/**
