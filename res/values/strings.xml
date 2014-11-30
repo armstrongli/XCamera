@@ -24,4 +24,9 @@
     <!-- test width and height -->
     <string name="preview_width_height">30dp</string>
 
+    <!-- status of handle thread request -->
+    <string name="RELOAD_IMAGES">1</string>
+    <string name="MOVE_IMAGES">2</string>
+    <string name="COMPRESS_IMAGES">3</string>
+
 </resources>
