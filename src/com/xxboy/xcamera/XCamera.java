@@ -26,11 +26,14 @@ import android.widget.SimpleAdapter;
 
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.services.XCompressPhotosAsync;
 import com.xxboy.services.XPhotoParam;
+import com.xxboy.services.XReloadPhoto;
 import com.xxboy.services.XViewMovePhotos;
 
 public class XCamera extends Activity {
 	private String xPath, xCachePath, cameraPath;
+	private Activity self;
 
 	public static final class XCameraConst {
 		public static final String VIEW_NAMW_IMAGE_ITEM = "ItemImage";
@@ -85,6 +88,7 @@ public class XCamera extends Activity {
 
 	private XPreview xpreview;
 	private Camera mCamera;
+	private GridView gridview;
 	int numberOfCameras;
 	int defaultCameraId;
 
@@ -92,8 +96,24 @@ public class XCamera extends Activity {
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			if (msg.what == COMPLETED) {
+			if (msg.what == R.string.RELOAD_IMAGES) {
 				// stateText.setText("completed");
+			}
+			switch (msg.what) {
+			case (R.string.MOVE_IMAGES):
+				new XViewMovePhotos(new XPhotoParam(xPath, xCachePath, cameraPath)).execute();
+				new XCompressPhotosAsync(new XPhotoParam(xPath, xCachePath, cameraPath)).execute();
+			case (R.string.RELOAD_IMAGES):
+				getDaysPhotoResource();
+				List<HashMap<String, Object>> resource = getDaysPhotoResource();
+				Logger.log("There're " + resource.size() + " photos in the exact path");
+				SimpleAdapter adp = new SimpleAdapter(self,//
+						resource, //
+						R.layout.xcamera_item,//
+						new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
+						new int[] { R.id.ItemImage });
+				gridview.setAdapter(adp);
+				break;
 			}
 		}
 	};
@@ -102,6 +122,8 @@ public class XCamera extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
+
+		gridview = (GridView) findViewById(R.id.photo_grid);
 
 		initScreenParameters();
 
@@ -122,6 +144,34 @@ public class XCamera extends Activity {
 		this.xPath = getString(R.string.picture_folder_path);
 		this.xCachePath = getString(R.string.cash_picture_folder_path);
 		this.cameraPath = getString(R.string.default_picture_folder_path);
+
+		this.self = this;
+
+		// new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// List<HashMap<String, Object>> resource = getDaysPhotoResource();
+		// Logger.log("There're " + resource.size() +
+		// " photos in the exact path");
+		// SimpleAdapter adp = new SimpleAdapter(self,//
+		// resource, //
+		// R.layout.xcamera_item,//
+		// new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
+		// new int[] { R.id.ItemImage });
+		// gridview.setAdapter(adp);
+		// }
+		// }).start();
+
+		try {
+			this.gridview = new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -202,7 +252,6 @@ public class XCamera extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		GridView gridview = (GridView) findViewById(R.id.photo_grid);
 
 		XPhotoParam p = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
 		XViewMovePhotos reload = new XViewMovePhotos(p);
