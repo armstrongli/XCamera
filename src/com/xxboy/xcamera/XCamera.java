@@ -21,7 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.xxboy.log.Logger;
@@ -88,7 +88,7 @@ public class XCamera extends Activity {
 
 	private XPreview xpreview;
 	private Camera mCamera;
-	private GridView gridview;
+	private ListView gridview;
 	int numberOfCameras;
 	int defaultCameraId;
 
@@ -123,7 +123,7 @@ public class XCamera extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
 
-		gridview = (GridView) findViewById(R.id.photo_grid);
+		gridview = (ListView) findViewById(R.id.photo_grid);
 
 		initScreenParameters();
 

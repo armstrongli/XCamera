@@ -39,12 +39,11 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <GridView
+    <ListView
         android:id="@+id/photo_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:horizontalSpacing="2dp"
-        android:numColumns="3" >
-    </GridView>
+        android:layout_gravity="center_vertical" >
+    </ListView>
 
 </LinearLayout>

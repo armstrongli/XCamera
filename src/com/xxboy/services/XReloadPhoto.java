@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.widget.GridView;
-import android.widget.SimpleAdapter;
-
-public class XReloadPhoto extends AsyncTask<Activity, Void, GridView> {
+public class XReloadPhoto extends AsyncTask<Activity, Void, ListView> {
 
 	private XPhotoParam param;
 
@@ -24,10 +24,10 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, GridView> {
 	}
 
 	@Override
-	protected GridView doInBackground(Activity... params) {
-		GridView g = new GridView(params[0]);
-		g.setColumnWidth(100);
-		g.setNumColumns(3);
+	protected ListView doInBackground(Activity... params) {
+		ListView g = new ListView(params[0]);
+//		g.setColumnWidth(100);
+//		g.setNumColumns(3);
 
 		List<HashMap<String, Object>> resource = getDaysPhotoResource();
 		Logger.log("There're " + resource.size() + " photos in the exact path");
