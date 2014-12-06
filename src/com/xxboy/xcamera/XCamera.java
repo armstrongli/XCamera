@@ -27,6 +27,7 @@ import android.widget.SimpleAdapter;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.XCompressPhotosAsync;
+import com.xxboy.services.XInitial;
 import com.xxboy.services.XPhotoParam;
 import com.xxboy.services.XReloadPhoto;
 import com.xxboy.services.XViewMovePhotos;
@@ -147,6 +148,7 @@ public class XCamera extends Activity {
 
 		this.self = this;
 
+		new XInitial(new XPhotoParam(xPath, xCachePath, cameraPath)).execute();
 		new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this);
 	}
 
