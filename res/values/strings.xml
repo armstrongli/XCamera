@@ -4,7 +4,7 @@
     <!-- default image path on sdcard -->
     <string name="default_picture_folder_path">/sdcard/DCIM/Camera</string>
     <!-- the xcamera photo path -->
-    <string name="picture_folder_path">/sdcard/DCIM/XCamera</string>
+    <string name="picture_folder_path">/sdcard/XCamera</string>
     <!-- the cache img path -->
     <string name="cash_picture_folder_path">/sdcard/XCamera/.xcache</string>
 

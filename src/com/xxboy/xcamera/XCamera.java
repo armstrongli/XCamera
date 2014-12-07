@@ -314,11 +314,12 @@ public class XCamera extends Activity {
 		}
 
 		File[] photos = xcameraDateFolder.listFiles();
-		for (File photoItem : photos) {
-			HashMap<String, Object> item = new HashMap<String, Object>();
-			item.put(XCameraConst.VIEW_NAMW_IMAGE_ITEM, photoItem.getAbsolutePath());
-			photoResource.add(item);
-		}
+		if (photos != null && photos.length > 0)
+			for (File photoItem : photos) {
+				HashMap<String, Object> item = new HashMap<String, Object>();
+				item.put(XCameraConst.VIEW_NAMW_IMAGE_ITEM, photoItem.getAbsolutePath());
+				photoResource.add(item);
+			}
 
 		return photoResource;
 	}
