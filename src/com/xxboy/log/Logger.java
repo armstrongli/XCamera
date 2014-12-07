@@ -9,5 +9,6 @@ public class Logger {
 
 	public static void log(Throwable e) {
 		java.util.logging.Logger.getAnonymousLogger().log(Level.INFO, "X-->" + e.getMessage(), e);
+		e.printStackTrace();
 	}
 }

@@ -50,7 +50,7 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 	 * @return
 	 */
 	private List<HashMap<String, Object>> getDaysPhotoResource() {
-		String xcameraPath = this.param.getxPath();
+		String xcameraPath = this.param.getxCachePath();
 		File xFolder = new File(xcameraPath);
 		if (!xFolder.exists()) {
 			xFolder.mkdirs();
@@ -64,6 +64,9 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 		}
 		for (File monthFolder : xFolders) {
 			Logger.log("Going to " + monthFolder.getAbsolutePath());
+			if (!monthFolder.isDirectory() || monthFolder.isHidden()) {
+				continue;
+			}
 			File[] daysFolder = monthFolder.listFiles();
 			for (File dayFolder : daysFolder) {
 				Logger.log("Going to " + dayFolder.getAbsolutePath());
