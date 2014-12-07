@@ -74,7 +74,6 @@ public class XCompressPhotosAsync extends AsyncTask<Void, Void, Integer> {
 					} else {
 						count++;
 						Logger.log("Compressing file: " + picture.getAbsolutePath());
-						Bitmap compressed = XFunction.XCompress.comp(BitmapFactory.decodeFile(picture.getAbsolutePath()));
 
 						try {
 							String cacheFileAbsolutePath = picture.getAbsolutePath().replaceAll(xCameraPath, xCachePath);
@@ -88,8 +87,11 @@ public class XCompressPhotosAsync extends AsyncTask<Void, Void, Integer> {
 							if (!file.exists()) {
 								Logger.log("creating cache File: " + file.getAbsolutePath());
 								file.createNewFile();
+							} else {
+								continue;
 							}
 							FileOutputStream out = new FileOutputStream(file);
+							Bitmap compressed = XFunction.XCompress.comp(BitmapFactory.decodeFile(picture.getAbsolutePath()));
 							compressed.compress(Bitmap.CompressFormat.JPEG, 100, out);
 							out.flush();
 							out.close();
