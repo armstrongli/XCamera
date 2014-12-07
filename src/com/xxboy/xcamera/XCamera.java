@@ -247,6 +247,7 @@ public class XCamera extends Activity {
 			Logger.log("return~~~~");
 			return;
 		}
+		new XCompressPhotosAsync(p).execute();
 		List<HashMap<String, Object>> resource = getDaysPhotoResource();
 		Logger.log("There're " + resource.size() + " photos in the exact path");
 		SimpleAdapter adp = new SimpleAdapter(this,//
