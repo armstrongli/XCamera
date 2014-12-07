@@ -149,6 +149,11 @@ public class XCamera extends Activity {
 		this.self = this;
 
 		new XInitial(new XPhotoParam(xPath, xCachePath, cameraPath)).execute();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 		new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this);
 	}
 
