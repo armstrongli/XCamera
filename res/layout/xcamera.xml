@@ -48,7 +48,7 @@
             android:id="@+id/photo_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="fill_vertical"
             android:horizontalSpacing="1dp"
             android:numColumns="3"
             android:verticalSpacing="1dp" >

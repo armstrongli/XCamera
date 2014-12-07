@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.SimpleAdapter;
 
 import com.xxboy.log.Logger;
@@ -31,6 +30,7 @@ import com.xxboy.services.XInitial;
 import com.xxboy.services.XPhotoParam;
 import com.xxboy.services.XReloadPhoto;
 import com.xxboy.services.XViewMovePhotos;
+import com.xxboy.view.XView;
 
 public class XCamera extends Activity {
 	private String xPath, xCachePath, cameraPath;
@@ -89,7 +89,7 @@ public class XCamera extends Activity {
 
 	private XPreview xpreview;
 	private Camera mCamera;
-	private GridView gridview;
+	private XView XView;
 	int numberOfCameras;
 	int defaultCameraId;
 
@@ -113,7 +113,7 @@ public class XCamera extends Activity {
 						R.layout.xcamera_item,//
 						new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
 						new int[] { R.id.ItemImage });
-				gridview.setAdapter(adp);
+				XView.setAdapter(adp);
 				break;
 			}
 		}
@@ -124,7 +124,7 @@ public class XCamera extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
 
-		gridview = (GridView) findViewById(R.id.photo_grid);
+		XView = (XView) findViewById(R.id.photo_grid);
 
 		initScreenParameters();
 
@@ -160,7 +160,6 @@ public class XCamera extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		// GridView gridview = (GridView) findViewById(R.id.photo_grid);
 
 		this.mCamera = Camera.open(0);
 		this.xpreview.setCamera(mCamera);
@@ -168,38 +167,6 @@ public class XCamera extends Activity {
 
 		// set button click to call system default camera.
 		this.xpreview.setOnClickListener(new CallCameraListener(this, this.mCamera));
-		//
-		// final XViewParam param = new XViewParam(this,
-		// getString(R.string.picture_folder_path) + "/2014.11/2014.11.23/",
-		// gridview);
-		//
-		// XViewReloadPhotos reload = new XViewReloadPhotos(param);
-		// Integer result = null;
-		// try {
-		// result = reload.execute().get();
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (ExecutionException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } finally {
-		// Logger.log("The return result is " + result);
-		// if (result == null || COMPLETED != result) {
-		// return;
-		// }
-		// List<HashMap<String, Object>> resource = get1DayPhotoResource(new
-		// File(param.getPath()));
-		// Logger.log("There're " + resource.size() +
-		// " photos in the exact path");
-		// SimpleAdapter adp = new SimpleAdapter(param.getActivity(),//
-		// resource, //
-		// R.layout.xcamera_item,//
-		// new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
-		// new int[] { R.id.ItemImage });
-		// param.getGridView().setAdapter(adp);
-		//
-		// }
 
 	}
 
@@ -253,14 +220,15 @@ public class XCamera extends Activity {
 			return;
 		}
 		new XCompressPhotosAsync(p).execute();
-		List<HashMap<String, Object>> resource = getDaysPhotoResource();
-		Logger.log("There're " + resource.size() + " photos in the exact path");
-		SimpleAdapter adp = new SimpleAdapter(this,//
-				resource, //
-				R.layout.xcamera_item,//
-				new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
-				new int[] { R.id.ItemImage });
-		gridview.setAdapter(adp);
+		new XReloadPhoto(p).execute(this);
+//		List<HashMap<String, Object>> resource = getDaysPhotoResource();
+//		Logger.log("There're " + resource.size() + " photos in the exact path");
+//		SimpleAdapter adp = new SimpleAdapter(this,//
+//				resource, //
+//				R.layout.xcamera_item,//
+//				new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
+//				new int[] { R.id.ItemImage });
+//		XView.setAdapter(adp);
 	}
 
 	@Override
