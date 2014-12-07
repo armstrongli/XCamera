@@ -2,9 +2,9 @@ package com.xxboy.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ListView;
+import android.widget.GridView;
 
-public class XView extends ListView {
+public class XView extends GridView {
 
 	public XView(Context context) {
 		super(context);

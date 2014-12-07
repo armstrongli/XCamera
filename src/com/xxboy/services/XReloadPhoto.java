@@ -7,7 +7,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.SimpleAdapter;
 
 import com.xxboy.log.Logger;
@@ -26,7 +26,7 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 	@Override
 	protected Void doInBackground(Activity... params) {
 		Activity mainActivity = params[0];
-		final ListView gridview = (ListView) mainActivity.findViewById(R.id.photo_grid);
+		final GridView gridview = (GridView) mainActivity.findViewById(R.id.photo_grid);
 
 		List<HashMap<String, Object>> resource = getDaysPhotoResource();
 		Logger.log("There're " + resource.size() + " photos in the exact path");
