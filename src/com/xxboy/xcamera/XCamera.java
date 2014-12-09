@@ -23,6 +23,7 @@ import com.xxboy.services.XInitial;
 import com.xxboy.services.XPhotoParam;
 import com.xxboy.services.XReloadPhoto;
 import com.xxboy.services.XViewMovePhotos;
+import com.xxboy.view.XPreview;
 
 public class XCamera extends Activity {
 	private String xPath, xCachePath, cameraPath;
