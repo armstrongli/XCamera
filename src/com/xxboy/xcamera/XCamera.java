@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.FrameLayout;
 
 import com.xxboy.log.Logger;
@@ -25,7 +27,7 @@ import com.xxboy.services.XReloadPhoto;
 import com.xxboy.services.XViewMovePhotos;
 import com.xxboy.view.XPreview;
 
-public class XCamera extends Activity {
+public class XCamera extends Activity implements OnScrollListener {
 	private String xPath, xCachePath, cameraPath;
 
 	public static final class XCameraConst {
@@ -117,7 +119,11 @@ public class XCamera extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this);
+		try {
+			new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this);
+		} catch (Exception e) {
+			Logger.log(e);
+		}
 	}
 
 	@Override
@@ -196,5 +202,17 @@ public class XCamera extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO change the picture after the scroll stop.
+		Logger.log("Scrolling state: " + scrollState);
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		// TODO change loading picture and recycle picture resource.
+		Logger.log("Scroll state change and load resource: " + firstVisibleItem + "--" + visibleItemCount + "--" + totalItemCount);
 	}
 }

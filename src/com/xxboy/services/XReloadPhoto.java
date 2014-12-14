@@ -96,6 +96,7 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 			for (File photoItem : photos) {
 				HashMap<String, Object> item = new HashMap<String, Object>();
 				item.put(XCameraConst.VIEW_NAMW_IMAGE_ITEM, photoItem.getAbsolutePath());
+				item.put(XCameraConst.VIEW_NAMW_IMAGE_ITEM, R.drawable.ic_launcher);
 				photoResource.add(item);
 			}
 

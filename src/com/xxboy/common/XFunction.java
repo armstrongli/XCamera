@@ -45,8 +45,8 @@ public final class XFunction {
 		public static final Bitmap comp(Bitmap image) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			image.compress(JPEG, 100, baos);
-			// compress it until it's less than 1MB
-			while (baos.toByteArray().length / 1024 > 1024) {
+			// compress it until it's less than 50k
+			while (baos.toByteArray().length > 50 * 1024) {
 				baos.reset();
 				image.compress(JPEG, 50, baos);
 			}
@@ -57,13 +57,13 @@ public final class XFunction {
 			int picWidth = newOpts.outWidth;
 			int picHeight = newOpts.outHeight;
 			// set the with and height as the screen size.
-			float screenHeight = XCamera.XCameraConst.SCREEN_HEIGHT;
-			float screenWidth = XCamera.XCameraConst.SCREEN_WIDTH;
+			float cachedThumbHeight = XCamera.XCameraConst.SCREEN_HEIGHT / 3;
+			float cachedThumbWidth = XCamera.XCameraConst.SCREEN_WIDTH / 3;
 			int zoomPercentage = 1;
-			if (picWidth > picHeight && picWidth > screenWidth) {
-				zoomPercentage = (int) (picWidth / screenWidth);
-			} else if (picWidth < picHeight && picHeight > screenHeight) {
-				zoomPercentage = (int) (picHeight / screenHeight);
+			if (picWidth > picHeight && picWidth > cachedThumbWidth) {
+				zoomPercentage = (int) (picWidth / cachedThumbWidth);
+			} else if (picWidth < picHeight && picHeight > cachedThumbHeight) {
+				zoomPercentage = (int) (picHeight / cachedThumbHeight);
 			}
 			if (zoomPercentage <= 0)
 				zoomPercentage = 1;
