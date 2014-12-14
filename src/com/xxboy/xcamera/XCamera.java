@@ -24,6 +24,7 @@ import com.xxboy.services.XPhotoParam;
 import com.xxboy.services.XReloadPhoto;
 import com.xxboy.services.XViewMovePhotos;
 import com.xxboy.view.XPreview;
+import com.xxboy.view.XView;
 
 public class XCamera extends Activity implements OnScrollListener {
 	private String xPath, xCachePath, cameraPath;
@@ -56,6 +57,7 @@ public class XCamera extends Activity implements OnScrollListener {
 	}
 
 	private XPreview xpreview;
+	private XView xView;
 	private Camera mCamera;
 	int numberOfCameras;
 	int defaultCameraId;
@@ -71,6 +73,22 @@ public class XCamera extends Activity implements OnScrollListener {
 
 		// get components in the main view.
 		this.xpreview = new XPreview(this);
+		this.xView = (XView) findViewById(R.id.photo_grid);
+		this.xView.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// change the picture after the scroll stop.
+				Logger.log("Scrolling state: " + scrollState);
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				// change loading picture and recycle picture resource.
+				Logger.log("Scroll state change and load resource: " + firstVisibleItem + "--" + visibleItemCount + "--" + totalItemCount);
+			}
+		});
+
 		FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
 		previewLayout.addView(this.xpreview, 0);
 
@@ -189,4 +207,13 @@ public class XCamera extends Activity implements OnScrollListener {
 		// TODO change loading picture and recycle picture resource.
 		Logger.log("Scroll state change and load resource: " + firstVisibleItem + "--" + visibleItemCount + "--" + totalItemCount);
 	}
+
+	public XView getxView() {
+		return xView;
+	}
+
+	public void setxView(XView xView) {
+		this.xView = xView;
+	}
+
 }
