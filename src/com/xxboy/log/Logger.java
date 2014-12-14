@@ -4,12 +4,11 @@ import java.util.logging.Level;
 
 public class Logger {
 	public static void log(String msg) {
-		System.out.println("X-->" + msg);
-		java.util.logging.Logger.getAnonymousLogger().log(Level.INFO, "X-->" + msg);
+		java.util.logging.Logger.getLogger("XCamera").log(Level.INFO, "X-->" + msg);
 	}
 
 	public static void log(Throwable e) {
-		java.util.logging.Logger.getAnonymousLogger().log(Level.INFO, "X-->" + e.getMessage(), e);
+		java.util.logging.Logger.getLogger("XCamera").log(Level.INFO, "X-->" + e.getMessage(), e);
 		e.printStackTrace();
 	}
 }
