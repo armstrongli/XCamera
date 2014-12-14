@@ -7,17 +7,15 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.FrameLayout;
 
+import com.xxboy.listeners.CallCameraListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.XCompressPhotosAsync;
@@ -50,31 +48,6 @@ public class XCamera extends Activity implements OnScrollListener {
 
 			PHOTO_ITEM_WIDTH = width / 3;
 			PHOTO_ITEM_HEIGHT = PHOTO_ITEM_WIDTH;
-		}
-	}
-
-	public static class CallCameraListener implements OnClickListener {
-		private Activity activity;
-		private Camera camera;
-
-		public CallCameraListener(Activity activity) {
-			this.activity = activity;
-		}
-
-		public CallCameraListener(Activity activity, Camera camera) {
-			this.activity = activity;
-			this.camera = camera;
-		}
-
-		@Override
-		public void onClick(View v) {
-			this.camera.stopPreview();
-
-			Intent intent = new Intent();
-			intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-
-			// return to XCamera after take photos
-			this.activity.startActivityForResult(intent, 1);
 		}
 	}
 

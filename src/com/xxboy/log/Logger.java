@@ -4,6 +4,7 @@ import java.util.logging.Level;
 
 public class Logger {
 	public static void log(String msg) {
+		System.out.println("X-->" + msg);
 		java.util.logging.Logger.getAnonymousLogger().log(Level.INFO, "X-->" + msg);
 	}
 
