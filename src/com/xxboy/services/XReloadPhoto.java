@@ -33,8 +33,8 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 		final SimpleAdapter adp = new SimpleAdapter(params[0],//
 				resource, //
 				R.layout.xcamera_item,//
-				new String[] { XCameraConst.VIEW_NAMW_IMAGE_ITEM },//
-				new int[] { R.id.ItemImage });
+				new String[] { XCameraConst.VIEW_NAME_IMAGE_ITEM, XCameraConst.VIEW_NAME_IMAGE_RESOURCE },//
+				new int[] { R.id.ItemImage, R.id.ImageResource });
 		mainActivity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -95,8 +95,8 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 		if (photos != null && photos.length > 0)
 			for (File photoItem : photos) {
 				HashMap<String, Object> item = new HashMap<String, Object>();
-				item.put(XCameraConst.VIEW_NAMW_IMAGE_ITEM, photoItem.getAbsolutePath());
-				item.put(XCameraConst.VIEW_NAMW_IMAGE_ITEM, R.drawable.ic_launcher);
+				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.ic_launcher);
+				item.put(XCameraConst.VIEW_NAME_IMAGE_RESOURCE, photoItem.getAbsolutePath());
 				photoResource.add(item);
 			}
 

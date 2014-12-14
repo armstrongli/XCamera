@@ -31,7 +31,8 @@ public class XCamera extends Activity implements OnScrollListener {
 	private String xPath, xCachePath, cameraPath;
 
 	public static final class XCameraConst {
-		public static final String VIEW_NAMW_IMAGE_ITEM = "ItemImage";
+		public static final String VIEW_NAME_IMAGE_ITEM = "ItemImage";
+		public static final String VIEW_NAME_IMAGE_RESOURCE = "ImageResource";
 
 		/** screen width */
 		public static int SCREEN_WIDTH = -1;
