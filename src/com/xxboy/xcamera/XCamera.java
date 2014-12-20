@@ -15,6 +15,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.xxboy.listeners.CallCameraListener;
 import com.xxboy.log.Logger;
@@ -180,6 +181,8 @@ public class XCamera extends Activity implements OnScrollListener {
 			Logger.log("return~~~~");
 			return;
 		}
+		// showing message to tell it's doing reloading photos
+		Toast.makeText(this, "Reloading your photos", Toast.LENGTH_SHORT).show();
 		new XCompressPhotosAsync(p).execute();
 		new XReloadPhoto(p).execute(this);
 	}
