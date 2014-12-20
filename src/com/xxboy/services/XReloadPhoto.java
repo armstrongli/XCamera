@@ -8,8 +8,10 @@ import java.util.List;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.GridView;
-import android.widget.SimpleAdapter;
 
+import com.xxboy.adapters.XAdapter;
+import com.xxboy.adapters.XAdapterBase;
+import com.xxboy.adapters.XAdapterPicture;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.xcamera.XCamera;
@@ -29,17 +31,12 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 		Activity mainActivity = params[0];
 		final GridView gridview = ((XCamera) mainActivity).getxView();
 
-		List<HashMap<String, Object>> resource = getDaysPhotoResource();
-		Logger.log("There're " + resource.size() + " photos in the exact path");
-		final SimpleAdapter adp = new SimpleAdapter(params[0],//
-				resource, //
-				R.layout.xcamera_item,//
-				new String[] { XCameraConst.VIEW_NAME_IMAGE_ITEM, XCameraConst.VIEW_NAME_IMAGE_RESOURCE },//
-				new int[] { R.id.ItemImage, R.id.ImageResource });
+		final XAdapter xAdp = new XAdapter(mainActivity, getDaysPhotoResourceX());
+
 		mainActivity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				gridview.setAdapter(adp);
+				gridview.setAdapter(xAdp);
 			}
 		});
 		return null;
@@ -50,15 +47,15 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 	 * 
 	 * @return
 	 */
-	private List<HashMap<String, Object>> getDaysPhotoResource() {
+	private List<XAdapterBase> getDaysPhotoResourceX() {
 		String xcameraPath = this.param.getxCachePath();
 		File xFolder = new File(xcameraPath);
 		if (!xFolder.exists()) {
 			xFolder.mkdirs();
-			return new ArrayList<HashMap<String, Object>>();
+			return new ArrayList<XAdapterBase>();
 		}
 
-		List<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
+		List<XAdapterBase> result = new ArrayList<XAdapterBase>();
 		File[] xFolders = xFolder.listFiles();
 		if (xFolders == null || xFolders.length == 0) {
 			return result;
@@ -71,7 +68,7 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 			File[] daysFolder = monthFolder.listFiles();
 			for (File dayFolder : daysFolder) {
 				Logger.log("Going to " + dayFolder.getAbsolutePath());
-				List<HashMap<String, Object>> itemResult = get1DayPhotoResource(dayFolder);
+				List<XAdapterBase> itemResult = get1DayPhotoResourceX(dayFolder);
 				if (itemResult != null && itemResult.size() > 0) {
 					result.addAll(itemResult);
 				}
@@ -86,8 +83,8 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 	 * @param xcameraDateFolder
 	 * @return
 	 */
-	private List<HashMap<String, Object>> get1DayPhotoResource(File xcameraDateFolder) {
-		List<HashMap<String, Object>> photoResource = new ArrayList<HashMap<String, Object>>();
+	private List<XAdapterBase> get1DayPhotoResourceX(File xcameraDateFolder) {
+		List<XAdapterBase> photoResource = new ArrayList<XAdapterBase>();
 		if (!xcameraDateFolder.exists()) {
 			return photoResource;
 		}
@@ -95,10 +92,18 @@ public class XReloadPhoto extends AsyncTask<Activity, Void, Void> {
 		File[] photos = xcameraDateFolder.listFiles();
 		if (photos != null && photos.length > 0)
 			for (File photoItem : photos) {
+				if (photoItem.isDirectory()) {
+					Logger.log("Come up with one Directory: " + photoItem.getAbsolutePath());
+					continue;
+				} else if (photoItem.isHidden()) {
+					Logger.log("Come up with one hidden file: " + photoItem.getAbsolutePath());
+					continue;
+				}
 				HashMap<String, Object> item = new HashMap<String, Object>();
+				// TODO load from cache
 				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.ic_launcher);
 				item.put(XCameraConst.VIEW_NAME_IMAGE_RESOURCE, photoItem.getAbsolutePath());
-				photoResource.add(item);
+				photoResource.add(new XAdapterPicture(item));
 			}
 
 		return photoResource;

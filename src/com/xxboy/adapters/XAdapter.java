@@ -1,29 +1,23 @@
 package com.xxboy.adapters;
 
 import java.util.List;
-import java.util.Map;
-
-import com.xxboy.photo.R;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.SimpleAdapter.ViewBinder;
+import android.widget.TextView;
 
 public class XAdapter extends BaseAdapter {
 
 	private List<XAdapterBase> mData;
 	private LayoutInflater mInflater;
 	private ViewBinder mViewBinder;
-
-	private static final int[] mTo = { R.id.ItemImage, R.id.ImageResource };
-	private static final String[] mFrom = { XCameraConst.VIEW_NAME_IMAGE_ITEM, XCameraConst.VIEW_NAME_IMAGE_RESOURCE };
 
 	public XAdapter(Context context, List<XAdapterBase> mData) {
 		super();
@@ -38,14 +32,12 @@ public class XAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.mData.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return 0;
+		return position;
 	}
 
 	@Override
@@ -73,8 +65,8 @@ public class XAdapter extends BaseAdapter {
 		}
 
 		final ViewBinder binder = mViewBinder;
-		final String[] from = mFrom;
-		final int[] to = mTo;
+		final String[] from = dataSet.getMFrom();
+		final int[] to = dataSet.getMTo();
 		final int count = to.length;
 
 		for (int i = 0; i < count; i++) {
@@ -121,6 +113,22 @@ public class XAdapter extends BaseAdapter {
 					}
 				}
 			}
+		}
+	}
+
+	public void setViewText(TextView v, String text) {
+		v.setText(text);
+	}
+
+	public void setViewImage(ImageView v, int value) {
+		v.setImageResource(value);
+	}
+
+	public void setViewImage(ImageView v, String value) {
+		try {
+			v.setImageResource(Integer.parseInt(value));
+		} catch (NumberFormatException nfe) {
+			v.setImageURI(Uri.parse(value));
 		}
 	}
 }
