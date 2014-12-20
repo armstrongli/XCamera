@@ -1,4 +1,4 @@
-<ScrollView xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="fill_parent"
@@ -20,40 +20,26 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:orientation="horizontal" >
 
-            <RelativeLayout
+            <FrameLayout
+                android:id="@+id/camera_preview"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <FrameLayout
-                    android:id="@+id/camera_preview"
-                    android:layout_width="fill_parent"
-                    android:layout_height="107dp" >
-                </FrameLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <FrameLayout
-                    android:id="@+id/camera_preview1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="107dp" >
-                </FrameLayout>
-            </RelativeLayout>
+                android:layout_height="107dp" >
+            </FrameLayout>
         </LinearLayout>
 
-        <com.xxboy.view.XView
+        <GridView
             android:id="@+id/photo_grid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="fill_vertical"
+            android:layout_weight="0"
             android:horizontalSpacing="1dp"
             android:numColumns="3"
             android:verticalSpacing="1dp" >
-        </com.xxboy.view.XView>
+        </GridView>
     </LinearLayout>
 
-</ScrollView>
+</LinearLayout>
