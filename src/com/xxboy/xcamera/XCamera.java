@@ -11,8 +11,6 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -28,7 +26,7 @@ import com.xxboy.services.XReloadPhoto;
 import com.xxboy.services.XViewMovePhotos;
 import com.xxboy.view.XPreview;
 
-public class XCamera extends Activity implements OnScrollListener {
+public class XCamera extends Activity {
 	private String xPath, xCachePath, cameraPath;
 
 	public static final class XCameraConst {
@@ -192,18 +190,6 @@ public class XCamera extends Activity implements OnScrollListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO change the picture after the scroll stop.
-		Logger.log("Scrolling state: " + scrollState);
-	}
-
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		// TODO change loading picture and recycle picture resource.
-		Logger.log("Scroll state change and load resource: " + firstVisibleItem + "--" + visibleItemCount + "--" + totalItemCount);
 	}
 
 	public GridView getxView() {

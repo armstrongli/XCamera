@@ -3,10 +3,10 @@ package com.xxboy.services;
 import java.io.File;
 import java.io.IOException;
 
+import android.os.AsyncTask;
+
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-
-import android.os.AsyncTask;
 
 public class XInitial extends AsyncTask<Void, Void, Integer> {
 
