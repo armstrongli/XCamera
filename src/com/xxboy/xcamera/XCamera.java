@@ -18,6 +18,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.xxboy.listeners.CallCameraListener;
+import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.XCompressPhotosAsync;
@@ -77,20 +78,7 @@ public class XCamera extends Activity implements OnScrollListener {
 		// get components in the main view.
 		this.xpreview = new XPreview(this);
 		this.xView = (GridView) findViewById(R.id.photo_grid);
-		this.xView.setOnScrollListener(new OnScrollListener() {
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				// change the picture after the scroll stop.
-				Logger.log("Scrolling state: " + scrollState);
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				// change loading picture and recycle picture resource.
-				Logger.log("Scroll state change and load resource: " + firstVisibleItem + "--" + visibleItemCount + "--" + totalItemCount);
-			}
-		});
+		this.xView.setOnScrollListener(new XScrollListener(this));
 
 		FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
 		previewLayout.addView(this.xpreview, 0);
@@ -125,9 +113,14 @@ public class XCamera extends Activity implements OnScrollListener {
 	protected void onResume() {
 		super.onResume();
 
-		this.mCamera = Camera.open(0);
-		this.xpreview.setCamera(mCamera);
-		this.mCamera.startPreview();
+		try {
+			this.mCamera = Camera.open(0);
+			this.xpreview.setCamera(mCamera);
+			this.mCamera.startPreview();
+		} catch (Exception e) {
+			Toast.makeText(this, "Can't access default camera!", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+		}
 
 		// set button click to call system default camera.
 		this.xpreview.setOnClickListener(new CallCameraListener(this, this.mCamera));
