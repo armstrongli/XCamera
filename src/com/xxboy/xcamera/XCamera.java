@@ -1,17 +1,17 @@
 package com.xxboy.xcamera;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -54,15 +54,10 @@ public class XCamera extends Activity {
 		}
 	}
 
-	public XPreview getXPreview() {
-		return this.xpreview;
-	}
-
-	private XPreview xpreview;
-	private GridView xView;
-	private Camera mCamera;
-	int numberOfCameras;
-	int defaultCameraId;
+	private GridView xGridView;
+	private List<Camera> mCameras = new LinkedList<Camera>();
+	private List<XPreview> xPreviews = new LinkedList<XPreview>();
+	int numberOfCameras = -1;
 
 	public static final Integer COMPLETED = 0;
 
@@ -74,21 +69,15 @@ public class XCamera extends Activity {
 		initScreenParameters();
 
 		// get components in the main view.
-		this.xpreview = new XPreview(this);
-		this.xView = (GridView) findViewById(R.id.photo_grid);
-		this.xView.setOnScrollListener(new XScrollListener(this));
+		this.xGridView = (GridView) findViewById(R.id.photo_grid);
+		this.xGridView.setOnScrollListener(new XScrollListener(this));
 
-		FrameLayout previewLayout = (FrameLayout) findViewById(R.id.camera_preview);
-		previewLayout.addView(this.xpreview, 0);
+		// FrameLayout previewLayout = (FrameLayout)
+		// findViewById(R.id.id_camera_preview);
+		// previewLayout.addView(this.xpreview, 0);
 
-		numberOfCameras = Camera.getNumberOfCameras();
-		CameraInfo cameraInfo = new CameraInfo();
-		for (int i = 0; i < numberOfCameras; i++) {
-			Camera.getCameraInfo(i, cameraInfo);
-			if (cameraInfo.facing == CameraInfo.CAMERA_FACING_BACK) {
-				defaultCameraId = i;
-			}
-		}
+		this.numberOfCameras = Camera.getNumberOfCameras();
+		Logger.log("There're " + this.numberOfCameras + " cameras on this phone");
 
 		this.xPath = getString(R.string.picture_folder_path);
 		this.xCachePath = getString(R.string.cash_picture_folder_path);
@@ -101,38 +90,49 @@ public class XCamera extends Activity {
 	protected void onStart() {
 		super.onStart();
 		try {
-			new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this);
+			for (int cameraIndex = 0; cameraIndex < this.numberOfCameras; cameraIndex++) {
+				XPreview iPreview = new XPreview(this);
+				Camera iCamera = Camera.open(cameraIndex);
+				iCamera.startPreview();
+				iPreview.setCamera(iCamera);
+
+				iPreview.setOnClickListener(new CallCameraListener(this, iCamera));
+
+				this.mCameras.add(iCamera);
+				this.xPreviews.add(iPreview);
+			}
 		} catch (Exception e) {
-			Logger.log(e);
+			Toast.makeText(this, "Can't access cameras!", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
 		}
+
+		new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this);
 	}
 
 	@Override
 	protected void onResume() {
-		super.onResume();
-
 		try {
-			this.mCamera = Camera.open(0);
-			this.xpreview.setCamera(mCamera);
-			this.mCamera.startPreview();
+			for (int cameraIndex = 0; cameraIndex < this.numberOfCameras; cameraIndex++) {
+				this.mCameras.get(cameraIndex).reconnect();
+				this.mCameras.get(cameraIndex).startPreview();
+			}
 		} catch (Exception e) {
-			Toast.makeText(this, "Can't access default camera!", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
-
-		// set button click to call system default camera.
-		this.xpreview.setOnClickListener(new CallCameraListener(this, this.mCamera));
-
+		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		super.onPause();
-		if (this.mCamera != null) {
-			this.xpreview.setCamera(null);
-			this.mCamera.release();
-			this.mCamera = null;
+		try {
+			for (Camera iCamera : this.mCameras) {
+				iCamera.stopPreview();
+				iCamera.release();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		super.onPause();
 	}
 
 	private void initScreenParameters() {
@@ -146,10 +146,16 @@ public class XCamera extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		this.xpreview.surfaceDestroyed(null);
-		if (this.mCamera != null) {
-			this.mCamera.stopPreview();
-			this.mCamera.release();
+		try {
+			for (XPreview iPreview : this.xPreviews) {
+				iPreview.surfaceDestroyed(null);
+			}
+			for (Camera iCamera : this.mCameras) {
+				iCamera.stopPreview();
+				iCamera.release();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		super.onDestroy();
 	}
@@ -193,11 +199,11 @@ public class XCamera extends Activity {
 	}
 
 	public GridView getxView() {
-		return xView;
+		return xGridView;
 	}
 
 	public void setxView(GridView xView) {
-		this.xView = xView;
+		this.xGridView = xView;
 	}
 
 }

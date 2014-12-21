@@ -2,15 +2,18 @@ package com.xxboy.adapters;
 
 import java.util.Map;
 
+import android.app.Activity;
+
 import com.xxboy.photo.R;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XAdapterCamera extends XAdapterBase {
-
+	private Activity activity;
 	private Map<String, ?> data;
 
-	public XAdapterCamera(Map<String, ?> data) {
+	public XAdapterCamera(Activity activity, Map<String, ?> data) {
 		super();
+		this.activity = activity;
 		this.data = data;
 	}
 

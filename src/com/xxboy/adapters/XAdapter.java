@@ -2,6 +2,8 @@ package com.xxboy.adapters;
 
 import java.util.List;
 
+import com.xxboy.log.Logger;
+
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
@@ -22,6 +25,9 @@ public class XAdapter extends BaseAdapter {
 	public XAdapter(Context context, List<XAdapterBase> mData) {
 		super();
 		this.mData = mData;
+
+		Logger.log("There're " + mData.size() + " pictures in total");
+
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -108,6 +114,8 @@ public class XAdapter extends BaseAdapter {
 						} else {
 							setViewImage((ImageView) v, text);
 						}
+					} else if (v instanceof FrameLayout) {
+						FrameLayout cameraFrame = (FrameLayout) v;
 					} else {
 						throw new IllegalStateException(v.getClass().getName() + " is not a " + " view that can be bounds by this SimpleAdapter");
 					}
