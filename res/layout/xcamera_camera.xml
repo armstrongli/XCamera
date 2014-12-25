@@ -6,10 +6,12 @@
     android:background="#aaaaaa"
     android:gravity="center_horizontal" >
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/id_camera_preview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </FrameLayout>
+        android:layout_height="fill_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+    </LinearLayout>
 
 </LinearLayout>

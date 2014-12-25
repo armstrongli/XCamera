@@ -1,11 +1,14 @@
 package com.xxboy.xcamera;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -28,6 +31,8 @@ import com.xxboy.view.XPreview;
 
 public class XCamera extends Activity {
 	private String xPath, xCachePath, cameraPath;
+	public static int count = 20;
+	public static Map<String, Bitmap> imageCache = new LinkedHashMap<String, Bitmap>();
 
 	public static final class XCameraConst {
 		public static final String VIEW_NAME_IMAGE_ITEM = "ItemImage";
@@ -56,7 +61,6 @@ public class XCamera extends Activity {
 
 	private GridView xGridView;
 	private List<Camera> mCameras = new LinkedList<Camera>();
-	private List<XPreview> xPreviews = new LinkedList<XPreview>();
 	int numberOfCameras = -1;
 
 	public static final Integer COMPLETED = 0;
@@ -71,10 +75,6 @@ public class XCamera extends Activity {
 		// get components in the main view.
 		this.xGridView = (GridView) findViewById(R.id.photo_grid);
 		this.xGridView.setOnScrollListener(new XScrollListener(this));
-
-		// FrameLayout previewLayout = (FrameLayout)
-		// findViewById(R.id.id_camera_preview);
-		// previewLayout.addView(this.xpreview, 0);
 
 		this.numberOfCameras = Camera.getNumberOfCameras();
 		Logger.log("There're " + this.numberOfCameras + " cameras on this phone");
@@ -99,14 +99,14 @@ public class XCamera extends Activity {
 				iPreview.setOnClickListener(new CallCameraListener(this, iCamera));
 
 				this.mCameras.add(iCamera);
-				this.xPreviews.add(iPreview);
 			}
 		} catch (Exception e) {
 			Toast.makeText(this, "Can't access cameras!", Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
+			Logger.log(e);
 		}
-
-		new XReloadPhoto(new XPhotoParam(xPath, xCachePath, cameraPath)).execute(this);
+		moveAndLoadPhotos();
+		// new XReloadPhoto(this, new XPhotoParam(xPath, xCachePath,
+		// cameraPath)).execute();
 	}
 
 	@Override
@@ -147,11 +147,8 @@ public class XCamera extends Activity {
 	@Override
 	protected void onDestroy() {
 		try {
-			for (XPreview iPreview : this.xPreviews) {
-				iPreview.surfaceDestroyed(null);
-			}
 			for (Camera iCamera : this.mCameras) {
-				iCamera.stopPreview();
+				// iCamera.stopPreview();
 				iCamera.release();
 			}
 		} catch (Exception e) {
@@ -163,9 +160,12 @@ public class XCamera extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		moveAndLoadPhotos();
+	}
 
-		XPhotoParam p = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
-		XViewMovePhotos reload = new XViewMovePhotos(p);
+	private void moveAndLoadPhotos() {
+		XPhotoParam photoParam = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
+		XViewMovePhotos reload = new XViewMovePhotos(photoParam);
 		Integer result = null;
 		try {
 			result = reload.execute().get();
@@ -179,11 +179,12 @@ public class XCamera extends Activity {
 		if (result == null || result <= 0) {
 			Logger.log("return~~~~");
 			return;
+		} else {
+			// showing message to tell it's doing reloading photos
+			Toast.makeText(this, "Reloading your photos", Toast.LENGTH_SHORT).show();
+			new XCompressPhotosAsync(photoParam).execute();
 		}
-		// showing message to tell it's doing reloading photos
-		Toast.makeText(this, "Reloading your photos", Toast.LENGTH_SHORT).show();
-		new XCompressPhotosAsync(p).execute();
-		new XReloadPhoto(p).execute(this);
+		new XReloadPhoto(this, photoParam).execute();
 	}
 
 	@Override
@@ -204,6 +205,14 @@ public class XCamera extends Activity {
 
 	public void setxView(GridView xView) {
 		this.xGridView = xView;
+	}
+
+	public List<Camera> getmCameras() {
+		return mCameras;
+	}
+
+	public void setmCameras(List<Camera> mCameras) {
+		this.mCameras = mCameras;
 	}
 
 }

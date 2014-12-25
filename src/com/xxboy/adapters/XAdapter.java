@@ -2,28 +2,33 @@ package com.xxboy.adapters;
 
 import java.util.List;
 
-import com.xxboy.log.Logger;
-
+import android.app.Activity;
 import android.content.Context;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
+
+import com.xxboy.log.Logger;
+import com.xxboy.view.XPreview;
 
 public class XAdapter extends BaseAdapter {
 
 	private List<XAdapterBase> mData;
 	private LayoutInflater mInflater;
 	private ViewBinder mViewBinder;
+	private Activity context;
 
-	public XAdapter(Context context, List<XAdapterBase> mData) {
+	public XAdapter(Activity context, List<XAdapterBase> mData) {
 		super();
+		this.context = context;
 		this.mData = mData;
 
 		Logger.log("There're " + mData.size() + " pictures in total");
@@ -114,8 +119,11 @@ public class XAdapter extends BaseAdapter {
 						} else {
 							setViewImage((ImageView) v, text);
 						}
-					} else if (v instanceof FrameLayout) {
-						FrameLayout cameraFrame = (FrameLayout) v;
+					} else if (v instanceof LinearLayout) {
+						LinearLayout camera = (LinearLayout) v;
+						XPreview preview = new XPreview(this.context);
+						preview.setCamera((Camera) data);
+						camera.addView(preview);
 					} else {
 						throw new IllegalStateException(v.getClass().getName() + " is not a " + " view that can be bounds by this SimpleAdapter");
 					}

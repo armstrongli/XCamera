@@ -12,6 +12,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xxboy.listeners.CallCameraListener;
+
 /**
  * 
  * @author Armstrong
@@ -25,9 +27,11 @@ public class XPreview extends ViewGroup implements SurfaceHolder.Callback {
 	Size mPreviewSize;
 	List<Size> mSupportedPreviewSizes;
 	Camera mCamera;
+	private Context context;
 
 	public XPreview(Context context) {
 		super(context);
+		this.context = context;
 
 		mSurfaceView = new SurfaceView(context);
 		addView(mSurfaceView);
@@ -37,6 +41,13 @@ public class XPreview extends ViewGroup implements SurfaceHolder.Callback {
 		mHolder = mSurfaceView.getHolder();
 		mHolder.addCallback(this);
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+	}
+
+	@Override
+	public void setOnClickListener(OnClickListener l) {
+		// TODO Auto-generated method stub
+		new CallCameraListener(this.context, mCamera);
+		super.setOnClickListener(l);
 	}
 
 	public void setCamera(Camera camera) {
