@@ -3,6 +3,8 @@ package com.xxboy.view;
 import java.io.IOException;
 import java.util.List;
 
+import com.xxboy.log.Logger;
+
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
@@ -11,8 +13,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.xxboy.listeners.CallCameraListener;
 
 /**
  * 
@@ -27,11 +27,9 @@ public class XPreview extends ViewGroup implements SurfaceHolder.Callback {
 	Size mPreviewSize;
 	List<Size> mSupportedPreviewSizes;
 	Camera mCamera;
-	private Context context;
 
 	public XPreview(Context context) {
 		super(context);
-		this.context = context;
 
 		mSurfaceView = new SurfaceView(context);
 		addView(mSurfaceView);
@@ -43,16 +41,14 @@ public class XPreview extends ViewGroup implements SurfaceHolder.Callback {
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 
-	@Override
-	public void setOnClickListener(OnClickListener l) {
-		// TODO Auto-generated method stub
-		new CallCameraListener(this.context, mCamera);
-		super.setOnClickListener(l);
-	}
-
 	public void setCamera(Camera camera) {
 		mCamera = camera;
 		if (mCamera != null) {
+			try {
+				mCamera.reconnect();
+			} catch (IOException e) {
+				Logger.log(e);
+			}
 			mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
 			requestLayout();
 		}

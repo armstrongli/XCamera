@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 
+import com.xxboy.listeners.CallCameraListener;
 import com.xxboy.log.Logger;
 import com.xxboy.view.XPreview;
 import com.xxboy.xcamera.XCamera;
@@ -123,6 +124,7 @@ public class XAdapter extends BaseAdapter {
 						LinearLayout camera = (LinearLayout) v;
 						XPreview preview = new XPreview(this.context);
 						preview.setCamera((Camera) data);
+						camera.setOnClickListener(new CallCameraListener(this.context, (Camera) data));
 						camera.addView(preview);
 					} else {
 						throw new IllegalStateException(v.getClass().getName() + " is not a " + " view that can be bounds by this SimpleAdapter");

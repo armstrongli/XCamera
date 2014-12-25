@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_weight="0"
-    android:background="#aaaaaa"
+    android:background="#ffff00"
     android:gravity="center_horizontal" >
 
     <LinearLayout
@@ -11,6 +11,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center_horizontal"
+        android:minHeight="50dp"
+        android:minWidth="100dp"
         android:orientation="vertical" >
     </LinearLayout>
 
