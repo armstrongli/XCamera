@@ -104,7 +104,7 @@ public class XCamera extends Activity {
 			Toast.makeText(this, "Can't access cameras!", Toast.LENGTH_SHORT).show();
 			Logger.log(e);
 		}
-		moveAndLoadPhotos();
+		moveAndLoadPhotos(true);
 		// new XReloadPhoto(this, new XPhotoParam(xPath, xCachePath,
 		// cameraPath)).execute();
 	}
@@ -160,10 +160,10 @@ public class XCamera extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		moveAndLoadPhotos();
+		moveAndLoadPhotos(false);
 	}
 
-	private void moveAndLoadPhotos() {
+	private void moveAndLoadPhotos(boolean reloadFlag) {
 		XPhotoParam photoParam = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
 		XViewMovePhotos reload = new XViewMovePhotos(photoParam);
 		Integer result = null;
@@ -184,7 +184,9 @@ public class XCamera extends Activity {
 			Toast.makeText(this, "Reloading your photos", Toast.LENGTH_SHORT).show();
 			new XCompressPhotosAsync(photoParam).execute();
 		}
-		new XReloadPhoto(this, photoParam).execute();
+		if (reloadFlag || result > 0) {
+			new XReloadPhoto(this, photoParam).execute();
+		}
 	}
 
 	@Override
