@@ -2,7 +2,6 @@ package com.xxboy.adapters;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -18,15 +17,16 @@ import android.widget.TextView;
 
 import com.xxboy.log.Logger;
 import com.xxboy.view.XPreview;
+import com.xxboy.xcamera.XCamera;
 
 public class XAdapter extends BaseAdapter {
 
 	private List<XAdapterBase> mData;
 	private LayoutInflater mInflater;
 	private ViewBinder mViewBinder;
-	private Activity context;
+	private XCamera context;
 
-	public XAdapter(Activity context, List<XAdapterBase> mData) {
+	public XAdapter(XCamera context, List<XAdapterBase> mData) {
 		super();
 		this.context = context;
 		this.mData = mData;

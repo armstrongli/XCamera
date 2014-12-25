@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.widget.GridView;
@@ -23,10 +22,10 @@ import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 
-	private Activity activity;
+	private XCamera activity;
 	private XPhotoParam param;
 
-	public XReloadPhoto(Activity activity, XPhotoParam param) {
+	public XReloadPhoto(XCamera activity, XPhotoParam param) {
 		super();
 		this.activity = activity;
 		this.param = param;
@@ -34,16 +33,15 @@ public class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... param) {
-		Activity mainActivity = this.activity;
-		final GridView gridview = ((XCamera) mainActivity).getxView();
+		final GridView gridview = (this.activity).getxView();
 
 		List<XAdapterBase> imageResources = getDaysPhotoResourceX();
 		List<XAdapterBase> cameraResources = getCameraPreviewsX();
 		List<XAdapterBase> allResources = cameraResources;
 		allResources.addAll(imageResources);
-		final XAdapter xAdp = new XAdapter(mainActivity, allResources);
+		final XAdapter xAdp = new XAdapter(this.activity, allResources);
 
-		mainActivity.runOnUiThread(new Runnable() {
+		this.activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				gridview.setAdapter(xAdp);
