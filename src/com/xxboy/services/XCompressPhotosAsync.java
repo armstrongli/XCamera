@@ -88,6 +88,7 @@ public class XCompressPhotosAsync extends AsyncTask<Void, Void, Integer> {
 								Logger.log("creating cache File: " + file.getAbsolutePath());
 								file.createNewFile();
 							} else {
+								// if the cache image exists, jump it
 								continue;
 							}
 							FileOutputStream out = new FileOutputStream(file);

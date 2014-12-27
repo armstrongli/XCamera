@@ -11,4 +11,10 @@ public class Logger {
 		java.util.logging.Logger.getLogger("XCamera").log(Level.INFO, "X-->" + e.getMessage(), e);
 		e.printStackTrace();
 	}
+
+	public static void log(String logMSG, Throwable e) {
+		log(logMSG);
+		java.util.logging.Logger.getLogger("XCamera").log(Level.INFO, "X-->" + e.getMessage(), e);
+		e.printStackTrace();
+	}
 }
