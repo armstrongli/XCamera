@@ -87,9 +87,9 @@ public class XCamera extends Activity {
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
+	protected void onResume() {
 		try {
+			this.mCameras.clear();
 			for (int cameraIndex = 0; cameraIndex < this.numberOfCameras; cameraIndex++) {
 				XPreview iPreview = new XPreview(this);
 				Camera iCamera = Camera.open(cameraIndex);
@@ -101,25 +101,10 @@ public class XCamera extends Activity {
 				this.mCameras.add(iCamera);
 			}
 		} catch (Exception e) {
-			Toast.makeText(this, "Can't access cameras!", Toast.LENGTH_SHORT).show();
 			Logger.log(e);
 		}
-		moveAndLoadPhotos(true);
-		// new XReloadPhoto(this, new XPhotoParam(xPath, xCachePath,
-		// cameraPath)).execute();
-	}
-
-	@Override
-	protected void onResume() {
-		try {
-			for (int cameraIndex = 0; cameraIndex < this.numberOfCameras; cameraIndex++) {
-				this.mCameras.get(cameraIndex).reconnect();
-				this.mCameras.get(cameraIndex).startPreview();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		super.onResume();
+		moveAndLoadPhotos(true);
 	}
 
 	@Override
