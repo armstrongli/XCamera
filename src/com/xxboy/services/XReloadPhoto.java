@@ -56,7 +56,7 @@ public class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * @return
 	 */
 	private List<XAdapterBase> getCameraPreviewsX() {
-		List<Camera> cameras = XCameraManagement.getCameras();
+		List<Camera> cameras = XCameraAsyncTask.getCameras();
 		List<XAdapterBase> cameraResources = new LinkedList<XAdapterBase>();
 		for (Camera cameraItem : cameras) {
 			Map<String, Object> res = new HashMap<String, Object>();

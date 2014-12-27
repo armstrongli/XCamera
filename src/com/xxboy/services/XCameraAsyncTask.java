@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 
 import com.xxboy.log.Logger;
 
-public final class XCameraManagement extends AsyncTask<Void, Void, Void> {
+public final class XCameraAsyncTask extends AsyncTask<Void, Void, Void> {
 	private static final List<Camera> cameras = new LinkedList<Camera>();
 	private static final int cameraAmount = Camera.getNumberOfCameras();
 
@@ -20,9 +20,9 @@ public final class XCameraManagement extends AsyncTask<Void, Void, Void> {
 	 */
 	public static final List<Camera> getCameras() {
 		if (cameraAmount != cameras.size()) {
-			new XCameraManagement().execute();
+			new XCameraAsyncTask().execute();
 		}
-		return XCameraManagement.cameras;
+		return XCameraAsyncTask.cameras;
 	}
 
 	public static final void releaseCameras() {

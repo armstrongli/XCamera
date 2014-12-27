@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.XCameraManagement;
+import com.xxboy.services.XCameraAsyncTask;
 import com.xxboy.services.XCompressPhotosAsync;
 import com.xxboy.services.XInitial;
 import com.xxboy.services.XPhotoParam;
@@ -80,7 +80,7 @@ public class XCamera extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		new XCameraManagement().execute();
+		new XCameraAsyncTask().execute();
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class XCamera extends Activity {
 
 	@Override
 	protected void onPause() {
-		XCameraManagement.releaseCameras();
+		XCameraAsyncTask.releaseCameras();
 		super.onPause();
 	}
 
@@ -106,7 +106,7 @@ public class XCamera extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		XCameraManagement.releaseCameras();
+		XCameraAsyncTask.releaseCameras();
 		super.onDestroy();
 	}
 
