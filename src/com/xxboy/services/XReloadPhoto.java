@@ -176,7 +176,8 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 					// if the cache image exists, jump it
 					return;
 				}
-				new XToast(xCamera, "Compressing Photo: " + picture.getAbsolutePath()).execute();
+				// new XToast(xCamera, "Compressing Photo: " +
+				// picture.getAbsolutePath()).execute();
 				FileOutputStream out = new FileOutputStream(file);
 				Bitmap compressed = XFunction.XCompress.comp(BitmapFactory.decodeFile(picture.getAbsolutePath()));
 				compressed.compress(Bitmap.CompressFormat.JPEG, 100, out);

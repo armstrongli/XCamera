@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 
+import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera;
 
 public final class XFunction {
@@ -47,10 +48,22 @@ public final class XFunction {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			image.compress(JPEG, 100, baos);
 			// compress it until it's less than 50k
-			while (baos.toByteArray().length > 50 * 1024) {
+			int preLength = Integer.MAX_VALUE, coLength = Integer.MAX_VALUE;
+			int count = 0;
+			while (coLength > 50 * 1024 || count >= 10) {
+				preLength = baos.toByteArray().length;
 				baos.reset();
 				image.compress(JPEG, 50, baos);
+				count++;
+				coLength = baos.toByteArray().length;
+				if (coLength / preLength > 0.8) {
+					// if the compress doesn't take effects, break the loop.
+					// take the percent to 80%
+					break;
+				}
 			}
+			Logger.log("Compress count: " + count);
+
 			ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
 			BitmapFactory.Options newOpts = new BitmapFactory.Options();
 			newOpts.inJustDecodeBounds = true;
