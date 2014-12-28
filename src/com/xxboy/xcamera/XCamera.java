@@ -17,11 +17,9 @@ import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.XCameraAsyncTask;
-import com.xxboy.services.XCompressPhotosAsync;
 import com.xxboy.services.XInitial;
 import com.xxboy.services.XPhotoParam;
 import com.xxboy.services.XReloadPhoto;
-import com.xxboy.services.XViewMovePhotos;
 
 public class XCamera extends Activity {
 	private String xPath, xCachePath, cameraPath;
@@ -117,8 +115,6 @@ public class XCamera extends Activity {
 
 	private void moveAndLoadPhotos(boolean reloadFlag) {
 		XPhotoParam photoParam = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
-		new XViewMovePhotos(photoParam).execute();
-		new XCompressPhotosAsync(photoParam, this).execute();
 		new XReloadPhoto(this, photoParam).execute();
 	}
 

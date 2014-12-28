@@ -88,52 +88,64 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 
 	protected static final class Compressor {
 		public static final int compressPhotos(XCamera xCamera, XPhotoParam param) {
-			String xCameraPath = param.getxCameraPath();
-			String xCachePath = param.getxCachePath();
-
 			// remove unsynchronized cache files
+			Logger.log("Synchronizing cache folders");
 			syncCacheFolder(param);
 
-			Integer count = 0;
 			Logger.log("Compress photos begin");
-			File cameraFolder = new File(xCameraPath);// XCamera/
+			File xCameraFolder = new File(param.getxCameraPath());
 
 			Logger.log("Compress photos: begin checking date folders");
-			File[] xFolders = cameraFolder.listFiles();// XCamera/YYYY.MM[]
-			if (xFolders == null || xFolders.length == 0) {
-				Logger.log("Compress photos: There're no XCamera date folders in path.");
+			return compressXFolder(xCameraFolder, xCamera, param);
+		}
+
+		private static final int compressXFolder(File xCameraFolder, XCamera xCamera, XPhotoParam param) {
+			int count = 0;
+			File[] yyyymmFolders = xCameraFolder.listFiles();
+			for (File yyyymmFolder : yyyymmFolders) {
+				count += compress1yyyymmFolder(yyyymmFolder, xCamera, param);
+			}
+			return count;
+		}
+
+		private static final int compress1yyyymmFolder(File yyyymmFolder, XCamera xCamera, XPhotoParam param) {
+			if (yyyymmFolder.isHidden()) {
+				return 0;
+			}
+			int count = 0;
+			File[] yyyymmddFolders = yyyymmFolder.listFiles();
+			for (File yyyymmddFolder : yyyymmddFolders) {
+				count += compress1FolderPhotos(yyyymmddFolder, xCamera, param);
+			}
+			return count;
+		}
+
+		/**
+		 * compress one bunch of photos
+		 * 
+		 * @param pictureFolder
+		 *            it's one date folder.yyyy.mm.dd
+		 * @param xCamera
+		 * @param param
+		 * @return
+		 */
+		private static final int compress1FolderPhotos(File pictureFolder, XCamera xCamera, XPhotoParam param) {
+			int count = 0;
+			File[] pictures = pictureFolder.listFiles();
+			if (pictures == null || pictures.length == 0) {
+				Logger.log("Compress photos: no files in [" + pictureFolder.getAbsolutePath() + "]");
 				return count;
 			}
-
-			for (File xFolder : xFolders) {
-				if (!xFolder.isDirectory() || xFolder.isHidden()) {
+			for (File picture : pictures) {
+				Logger.log("Compress photos: compressing file [" + picture.getAbsolutePath() + "]");
+				if (picture.isDirectory()) {
 					continue;
-				}
-				Logger.log("Compress photos: begin checking date detail folders");
-				File[] pictureDates = xFolder.listFiles();// XCamera/YYYY.MM/YYYY.MM.DD[]
-				if (pictureDates == null || pictureDates.length == 0) {
-					Logger.log("Compress photos: no date files in date detail folders");
+				} else if (picture.isHidden()) {
 					continue;
-				}
-
-				for (File pictureFolder : pictureDates) {
-					File[] pictures = pictureFolder.listFiles();
-					if (pictures == null || pictures.length == 0) {
-						Logger.log("Compress photos: no files in [" + pictureFolder.getAbsolutePath() + "]");
-						continue;
-					}
-					for (File picture : pictures) {
-						Logger.log("Compress photos: compressing file [" + picture.getAbsolutePath() + "]");
-						if (picture.isDirectory()) {
-							continue;
-						} else if (picture.isHidden()) {
-							continue;
-						} else {
-							count++;
-							Logger.log("Compressing file: " + picture.getAbsolutePath());
-							compress1Photo(picture, xCamera, param);
-						}
-					}
+				} else {
+					count++;
+					Logger.log("Compressing file: " + picture.getAbsolutePath());
+					compress1Photo(picture, xCamera, param);
 				}
 			}
 			return count;
@@ -143,6 +155,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		 * compress 1 photo to cache folder
 		 * 
 		 * @param picture
+		 *            it's one picture
 		 * @param xCamera
 		 * @param param
 		 */
