@@ -121,11 +121,11 @@ public class XAdapter extends BaseAdapter {
 							setViewImage((ImageView) v, text);
 						}
 					} else if (v instanceof LinearLayout) {
-						LinearLayout camera = (LinearLayout) v;
+						LinearLayout cameraContainerLinearLayout = (LinearLayout) v;
 						XPreview preview = new XPreview(this.context);
 						preview.setCamera((Camera) data);
-						camera.setOnClickListener(new CallCameraListener(this.context, (Camera) data));
-						camera.addView(preview);
+						cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context, (Camera) data));
+						cameraContainerLinearLayout.addView(preview);
 					} else {
 						throw new IllegalStateException(v.getClass().getName() + " is not a " + " view that can be bounds by this SimpleAdapter");
 					}
