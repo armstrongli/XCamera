@@ -234,7 +234,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		List<XAdapterBase> imageResources = getDaysPhotoResourceX();
 		List<XAdapterBase> cameraResources = getCameraPreviewsX();
 		List<XAdapterBase> allResources = cameraResources;
-		allResources.addAll(imageResources.subList(0, 10 < imageResources.size() ? 10 : imageResources.size()));
+		allResources.addAll(imageResources);
 		final XAdapter xAdp = new XAdapter(this.activity, allResources);
 
 		this.activity.runOnUiThread(new Runnable() {
