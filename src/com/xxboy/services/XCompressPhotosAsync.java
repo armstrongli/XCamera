@@ -27,6 +27,7 @@ public class XCompressPhotosAsync extends AsyncTask<Void, Void, Integer> {
 	public XCompressPhotosAsync(XPhotoParam param, XCamera xCamera) {
 		super();
 		this.param = param;
+		this.xCamera = xCamera;
 	}
 
 	@Override

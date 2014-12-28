@@ -1,5 +1,6 @@
 package com.xxboy.services;
 
+import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera;
 
 import android.os.AsyncTask;
@@ -17,13 +18,16 @@ public class XToast extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		this.xCamera.runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				Toast.makeText(xCamera, toastMessage, Toast.LENGTH_SHORT).show();
-			}
-		});
+		try {
+			this.xCamera.runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(xCamera, toastMessage, Toast.LENGTH_SHORT).show();
+				}
+			});
+		} catch (Exception e) {
+			Logger.log(e.getMessage(), e);
+		}
 		return null;
 	}
 
