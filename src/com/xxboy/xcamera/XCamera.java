@@ -132,7 +132,7 @@ public class XCamera extends Activity {
 		if (result > 0) {
 			// showing message to tell it's doing reloading photos
 			Toast.makeText(this, "Reloading your photos", Toast.LENGTH_SHORT).show();
-			new XCompressPhotosAsync(photoParam).execute();
+			new XCompressPhotosAsync(photoParam, this).execute();
 		}
 		if (reloadFlag || result > 0) {
 			new XReloadPhoto(this, photoParam).execute();

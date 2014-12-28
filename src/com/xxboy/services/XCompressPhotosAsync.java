@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
+import com.xxboy.xcamera.XCamera;
 
 /**
  * xcamera folder
@@ -21,8 +22,9 @@ import com.xxboy.log.Logger;
 public class XCompressPhotosAsync extends AsyncTask<Void, Void, Integer> {
 
 	private XPhotoParam param;
+	private XCamera xCamera;
 
-	public XCompressPhotosAsync(XPhotoParam param) {
+	public XCompressPhotosAsync(XPhotoParam param, XCamera xCamera) {
 		super();
 		this.param = param;
 	}
@@ -91,6 +93,7 @@ public class XCompressPhotosAsync extends AsyncTask<Void, Void, Integer> {
 								// if the cache image exists, jump it
 								continue;
 							}
+							new XToast(xCamera, "Compressing Photo: " + picture.getAbsolutePath()).execute();
 							FileOutputStream out = new FileOutputStream(file);
 							Bitmap compressed = XFunction.XCompress.comp(BitmapFactory.decodeFile(picture.getAbsolutePath()));
 							compressed.compress(Bitmap.CompressFormat.JPEG, 100, out);
