@@ -17,7 +17,7 @@ import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.XCameraAsyncTask;
-import com.xxboy.services.XInitial;
+import com.xxboy.services.XInitialAsyncTask;
 import com.xxboy.services.XPhotoParam;
 import com.xxboy.services.XReloadPhoto;
 
@@ -70,7 +70,7 @@ public class XCamera extends Activity {
 		this.xCachePath = getString(R.string.cash_picture_folder_path);
 		this.cameraPath = getString(R.string.default_picture_folder_path);
 
-		new XInitial(new XPhotoParam(xPath, xCachePath, cameraPath)).execute();
+		new XInitialAsyncTask(new XPhotoParam(xPath, xCachePath, cameraPath)).execute();
 	}
 
 	@Override

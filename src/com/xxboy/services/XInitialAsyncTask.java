@@ -8,11 +8,11 @@ import android.os.AsyncTask;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 
-public class XInitial extends AsyncTask<Void, Void, Integer> {
+public class XInitialAsyncTask extends AsyncTask<Void, Void, Integer> {
 
 	private XPhotoParam param;
 
-	public XInitial(XPhotoParam param) {
+	public XInitialAsyncTask(XPhotoParam param) {
 		super();
 		this.param = param;
 	}
