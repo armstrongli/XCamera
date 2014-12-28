@@ -1,12 +1,18 @@
 package com.xxboy.services;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.widget.GridView;
@@ -15,12 +21,183 @@ import com.xxboy.adapters.XAdapter;
 import com.xxboy.adapters.XAdapterBase;
 import com.xxboy.adapters.XAdapterCamera;
 import com.xxboy.adapters.XAdapterPicture;
+import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
-public class XReloadPhoto extends AsyncTask<Void, Void, Void> {
+public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
+
+	protected static final class Mover {
+		public static Integer movePhotos(XCamera xCamera, XPhotoParam param) {
+			File[] freshFile = checkExistingImages(param);
+			if (freshFile == null || freshFile.length == 0) {
+				return 0;
+			}
+			Logger.log("Begin moving photos");
+			int movedPhotosCount = movePhotos(param);
+			Logger.log("Moved " + movedPhotosCount + " photos");
+			return movedPhotosCount;
+		}
+
+		/**
+		 * check whether there're images in the default image path
+		 * 
+		 * @return
+		 */
+		private static File[] checkExistingImages(XPhotoParam param) {
+			File defaultFolder = new File(param.getDefaultCameraPath());
+			if (!defaultFolder.exists()) {
+				return null;
+			}
+			return defaultFolder.listFiles();
+		}
+
+		/**
+		 * generate current date folder and move camera photos to the date
+		 * folder.
+		 */
+		private static int movePhotos(XPhotoParam param) {
+			File[] pictures = checkExistingImages(param);
+			if (pictures != null && pictures.length > 0) {
+				Logger.log(">>>>>>Begin moving files: " + pictures.length);
+				XFunction.XDate date = new XFunction.XDate();
+				String currentTargetFolderName = ""//
+						+ param.getxCameraPath()//
+						+ File.separator + date.getYear() + "." + date.getMonth() //
+						+ File.separator//
+						+ date.getYear() + "." + date.getMonth() + "." + date.getDay();
+
+				/** get picture folder and create system locale date folder */
+				File pictureFolder = new File(currentTargetFolderName);
+				if (!pictureFolder.exists()) {
+					pictureFolder.mkdirs();
+				}
+
+				/** moving pictures */
+				for (File pictureItem : pictures) {
+					pictureItem.renameTo(new File(currentTargetFolderName + File.separator + pictureItem.getName()));
+				}
+			} else {
+				Logger.log("There're no files in the default camera folder");
+			}
+			return pictures.length;
+		}
+	}
+
+	protected static final class Compressor {
+		public static final int compressPhotos(XCamera xCamera, XPhotoParam param) {
+			String xCameraPath = param.getxCameraPath();
+			String xCachePath = param.getxCachePath();
+
+			// remove unsynchronized cache files
+			syncCacheFolder(param);
+
+			Integer count = 0;
+			Logger.log("Compress photos begin");
+			File cameraFolder = new File(xCameraPath);// XCamera/
+
+			Logger.log("Compress photos: begin checking date folders");
+			File[] xFolders = cameraFolder.listFiles();// XCamera/YYYY.MM[]
+			if (xFolders == null || xFolders.length == 0) {
+				Logger.log("Compress photos: There're no XCamera date folders in path.");
+				return count;
+			}
+
+			for (File xFolder : xFolders) {
+				if (!xFolder.isDirectory() || xFolder.isHidden()) {
+					continue;
+				}
+				Logger.log("Compress photos: begin checking date detail folders");
+				File[] pictureDates = xFolder.listFiles();// XCamera/YYYY.MM/YYYY.MM.DD[]
+				if (pictureDates == null || pictureDates.length == 0) {
+					Logger.log("Compress photos: no date files in date detail folders");
+					continue;
+				}
+
+				for (File pictureFolder : pictureDates) {
+					File[] pictures = pictureFolder.listFiles();
+					if (pictures == null || pictures.length == 0) {
+						Logger.log("Compress photos: no files in [" + pictureFolder.getAbsolutePath() + "]");
+						continue;
+					}
+					for (File picture : pictures) {
+						Logger.log("Compress photos: compressing file [" + picture.getAbsolutePath() + "]");
+						if (picture.isDirectory()) {
+							continue;
+						} else if (picture.isHidden()) {
+							continue;
+						} else {
+							count++;
+							Logger.log("Compressing file: " + picture.getAbsolutePath());
+							compress1Photo(picture, xCamera, param);
+						}
+					}
+				}
+			}
+			return count;
+		}
+
+		/**
+		 * compress 1 photo to cache folder
+		 * 
+		 * @param picture
+		 * @param xCamera
+		 * @param param
+		 */
+		private static final void compress1Photo(File picture, XCamera xCamera, XPhotoParam param) {
+			try {
+				String cacheFileAbsolutePath = picture.getAbsolutePath().replaceAll(param.getxCameraPath(), param.getxCachePath());
+				Logger.log("Compressing file to cache file: " + cacheFileAbsolutePath);
+				File file = new File(cacheFileAbsolutePath);
+				File cacheFolder = new File(file.getParent());
+				if (!cacheFolder.exists()) {
+					Logger.log("Creating cache dirs: " + cacheFolder.getAbsolutePath());
+					cacheFolder.mkdirs();
+				}
+				if (!file.exists()) {
+					Logger.log("creating cache File: " + file.getAbsolutePath());
+					file.createNewFile();
+				} else {
+					// if the cache image exists, jump it
+					return;
+				}
+				new XToast(xCamera, "Compressing Photo: " + picture.getAbsolutePath()).execute();
+				FileOutputStream out = new FileOutputStream(file);
+				Bitmap compressed = XFunction.XCompress.comp(BitmapFactory.decodeFile(picture.getAbsolutePath()));
+				compressed.compress(Bitmap.CompressFormat.JPEG, 100, out);
+				out.flush();
+				out.close();
+			} catch (FileNotFoundException e) {
+				Logger.log(e);
+			} catch (IOException e) {
+				Logger.log(e);
+			}
+		}
+
+		/**
+		 * check whether years folder match the cache folder.<br/>
+		 * yyyy.mm
+		 * 
+		 * @param param
+		 */
+		private static final void syncCacheFolder(XPhotoParam param) {
+			File xCameraFolder = new File(param.getxCameraPath());
+			File xCacheFolder = new File(param.getxCachePath());
+
+			File[] xYearMonthFolder = xCameraFolder.listFiles();
+			File[] cYearMonthFolder = xCacheFolder.listFiles();
+
+			// remove unsynchronized cache files.
+			List<File> cacheFolders = Arrays.asList(cYearMonthFolder);
+			cacheFolders.removeAll(Arrays.asList(xYearMonthFolder));
+			for (File item : cacheFolders) {
+				XFunction.removeFolder(item);
+			}
+		}
+
+	}
 
 	private XCamera activity;
 	private XPhotoParam param;
@@ -33,6 +210,11 @@ public class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... param) {
+		// moving files
+		Mover.movePhotos(this.activity, this.param);
+		// compressing files
+		Compressor.compressPhotos(this.activity, this.param);
+		// reloading grid view
 		final GridView gridview = (this.activity).getxView();
 
 		List<XAdapterBase> imageResources = getDaysPhotoResourceX();

@@ -20,7 +20,7 @@ public class XInitial extends AsyncTask<Void, Void, Integer> {
 	@Override
 	protected Integer doInBackground(Void... params) {
 		String xCachePath = this.param.getxCachePath();
-		String xPath = this.param.getxPath();
+		String xPath = this.param.getxCameraPath();
 
 		File cacheFolder = new File(xCachePath), xFolder = new File(xPath);
 		Logger.log("checking xcamera cache folder: " + cacheFolder.getAbsolutePath());

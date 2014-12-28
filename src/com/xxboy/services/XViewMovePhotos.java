@@ -32,7 +32,7 @@ public final class XViewMovePhotos extends AsyncTask<Void, Void, Integer> {
 	 * @return
 	 */
 	private File[] checkExistingImages() {
-		File defaultFolder = new File(this.param.getCameraPath());
+		File defaultFolder = new File(this.param.getDefaultCameraPath());
 		if (!defaultFolder.exists()) {
 			return null;
 		}
@@ -48,7 +48,7 @@ public final class XViewMovePhotos extends AsyncTask<Void, Void, Integer> {
 			Logger.log(">>>>>>Begin moving files: " + pictures.length);
 			XFunction.XDate date = new XFunction.XDate();
 			String currentTargetFolderName = ""//
-					+ this.param.getxPath()//
+					+ this.param.getxCameraPath()//
 					+ File.separator + date.getYear() + "." + date.getMonth() //
 					+ File.separator//
 					+ date.getYear() + "." + date.getMonth() + "." + date.getDay();

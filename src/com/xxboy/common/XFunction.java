@@ -2,6 +2,7 @@ package com.xxboy.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -108,4 +109,22 @@ public final class XFunction {
 
 	}
 
+	/**
+	 * remove folder(including sub-files)
+	 * 
+	 * @param path
+	 */
+	public static final void removeFolder(File path) {
+		if (path.exists()) {
+			if (path.isFile()) {
+				path.delete();
+			} else {
+				File[] subFiles = path.listFiles();
+				for (File subFile : subFiles) {
+					removeFolder(subFile);
+				}
+				path.delete();
+			}
+		}
+	}
 }

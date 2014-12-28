@@ -32,7 +32,7 @@ public class XCompressPhotosAsync extends AsyncTask<Void, Void, Integer> {
 
 	@Override
 	protected Integer doInBackground(Void... params) {
-		String xCameraPath = this.param.getxPath();
+		String xCameraPath = this.param.getxCameraPath();
 		String xCachePath = this.param.getxCachePath();
 
 		Integer count = 0;

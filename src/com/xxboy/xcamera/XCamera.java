@@ -2,7 +2,6 @@ package com.xxboy.xcamera;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
@@ -80,6 +78,7 @@ public class XCamera extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		// prepare cameras
 		new XCameraAsyncTask().execute();
 	}
 
@@ -118,25 +117,9 @@ public class XCamera extends Activity {
 
 	private void moveAndLoadPhotos(boolean reloadFlag) {
 		XPhotoParam photoParam = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
-		XViewMovePhotos reload = new XViewMovePhotos(photoParam);
-		Integer result = null;
-		try {
-			result = reload.execute().get();
-		} catch (InterruptedException e) {
-			Logger.log(e);
-		} catch (ExecutionException e) {
-			Logger.log(e);
-		}
-
-		Logger.log("The return result is " + result);
-		if (result > 0) {
-			// showing message to tell it's doing reloading photos
-			Toast.makeText(this, "Reloading your photos", Toast.LENGTH_SHORT).show();
-			new XCompressPhotosAsync(photoParam, this).execute();
-		}
-		if (reloadFlag || result > 0) {
-			new XReloadPhoto(this, photoParam).execute();
-		}
+		new XViewMovePhotos(photoParam).execute();
+		new XCompressPhotosAsync(photoParam, this).execute();
+		new XReloadPhoto(this, photoParam).execute();
 	}
 
 	@Override

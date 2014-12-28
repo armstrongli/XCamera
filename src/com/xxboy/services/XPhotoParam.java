@@ -1,24 +1,24 @@
 package com.xxboy.services;
 
 public class XPhotoParam {
-	private String xPath;
+	private String xCameraPath;
 	private String xCachePath;
 
-	private String cameraPath;
+	private String defaultCameraPath;
 
-	public XPhotoParam(String xPath, String xCachePath, String cameraPath) {
+	public XPhotoParam(String xCameraPath, String xCachePath, String defaultCameraPath) {
 		super();
-		this.xPath = xPath;
+		this.xCameraPath = xCameraPath;
 		this.xCachePath = xCachePath;
-		this.cameraPath = cameraPath;
+		this.defaultCameraPath = defaultCameraPath;
 	}
 
-	public String getxPath() {
-		return xPath;
+	public String getxCameraPath() {
+		return xCameraPath;
 	}
 
-	public void setxPath(String xPath) {
-		this.xPath = xPath;
+	public void setxCameraPath(String xCameraPath) {
+		this.xCameraPath = xCameraPath;
 	}
 
 	public String getxCachePath() {
@@ -29,12 +29,12 @@ public class XPhotoParam {
 		this.xCachePath = xCachePath;
 	}
 
-	public String getCameraPath() {
-		return cameraPath;
+	public String getDefaultCameraPath() {
+		return defaultCameraPath;
 	}
 
-	public void setCameraPath(String cameraPath) {
-		this.cameraPath = cameraPath;
+	public void setDefaultCameraPath(String defaultCameraPath) {
+		this.defaultCameraPath = defaultCameraPath;
 	}
 
 }
