@@ -20,8 +20,9 @@ public class XCache {
 			if (size() > HARD_CACHE_CAPACITY) {
 				sSoftBitmapCache.put(eldest.getKey(), new SoftReference<Bitmap>(eldest.getValue()));
 				return true;
-			} else
+			} else {
 				return false;
+			}
 		}
 	};
 	// Soft cache for bitmap kicked out of hard cache
