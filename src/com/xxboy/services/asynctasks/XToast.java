@@ -1,4 +1,4 @@
-package com.xxboy.services;
+package com.xxboy.services.asynctasks;
 
 import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera;

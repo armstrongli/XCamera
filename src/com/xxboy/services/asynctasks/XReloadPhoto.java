@@ -1,4 +1,4 @@
-package com.xxboy.services;
+package com.xxboy.services.asynctasks;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +24,7 @@ import com.xxboy.adapters.XAdapterPicture;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.services.XPhotoParam;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 

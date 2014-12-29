@@ -1,4 +1,4 @@
-package com.xxboy.services;
+package com.xxboy.services.asynctasks;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.services.XPhotoParam;
 
 public class XInitialAsyncTask extends AsyncTask<Void, Void, Integer> {
 

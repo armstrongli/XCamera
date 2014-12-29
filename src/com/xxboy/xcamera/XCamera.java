@@ -16,10 +16,10 @@ import android.widget.GridView;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.XCameraAsyncTask;
-import com.xxboy.services.XInitialAsyncTask;
 import com.xxboy.services.XPhotoParam;
-import com.xxboy.services.XReloadPhoto;
+import com.xxboy.services.asynctasks.XCameraAsyncTask;
+import com.xxboy.services.asynctasks.XInitialAsyncTask;
+import com.xxboy.services.asynctasks.XReloadPhoto;
 
 public class XCamera extends Activity {
 	private String xPath, xCachePath, cameraPath;

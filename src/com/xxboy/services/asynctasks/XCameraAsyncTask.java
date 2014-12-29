@@ -1,4 +1,4 @@
-package com.xxboy.services;
+package com.xxboy.services.asynctasks;
 
 import java.util.LinkedList;
 import java.util.List;
