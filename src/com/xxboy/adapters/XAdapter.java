@@ -3,8 +3,8 @@ package com.xxboy.adapters;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 
+import com.xxboy.common.XCache;
 import com.xxboy.listeners.CallCameraListener;
 import com.xxboy.log.Logger;
+import com.xxboy.photo.R;
+import com.xxboy.services.asynctasks.XBitmapCacheAsyncTask;
 import com.xxboy.view.XPreview;
 import com.xxboy.xcamera.XCamera;
 
@@ -144,10 +147,18 @@ public class XAdapter extends BaseAdapter {
 	}
 
 	public void setViewImage(ImageView v, String value) {
-		try {
-			v.setImageResource(Integer.parseInt(value));
-		} catch (NumberFormatException nfe) {
-			v.setImageURI(Uri.parse(value));
+		loadImage(value, v);
+		// v.setImageURI(Uri.parse(value));
+	}
+
+	private void loadImage(String imagePath, ImageView imageView) {
+		Bitmap resource = XCache.getFromMemCache(imagePath);
+		if (resource == null) {
+			imageView.setImageResource(R.drawable.big_load);
+			new XBitmapCacheAsyncTask(imagePath, imageView, this.context).execute();
+		} else {
+			imageView.setImageBitmap(resource);
 		}
+
 	}
 }

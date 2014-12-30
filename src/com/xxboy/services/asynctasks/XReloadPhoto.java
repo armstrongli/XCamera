@@ -56,8 +56,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		}
 
 		/**
-		 * generate current date folder and move camera photos to the date
-		 * folder.
+		 * generate current date folder and move camera photos to the date folder.
 		 */
 		private static int movePhotos(XPhotoParam param) {
 			File[] pictures = checkExistingImages(param);
@@ -233,10 +232,10 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		final GridView gridview = (this.activity).getxView();
 
 		List<XAdapterBase> imageResources = getDaysPhotoResourceX();
-		List<XAdapterBase> cameraResources = getCameraPreviewsX();
-		List<XAdapterBase> allResources = cameraResources;
-		allResources.addAll(imageResources);
-		final XAdapter xAdp = new XAdapter(this.activity, allResources);
+		// List<XAdapterBase> cameraResources = getCameraPreviewsX();
+		// List<XAdapterBase> allResources = cameraResources;
+		// allResources.addAll(imageResources);
+		final XAdapter xAdp = new XAdapter(this.activity, imageResources);
 
 		this.activity.runOnUiThread(new Runnable() {
 			@Override
@@ -321,8 +320,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 					continue;
 				}
 				HashMap<String, Object> item = new HashMap<String, Object>();
-				// TODO load from cache
-				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.ic_launcher);
+				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, photoItem.getAbsolutePath());// load picture
 				item.put(XCameraConst.VIEW_NAME_IMAGE_RESOURCE, photoItem.getAbsolutePath());
 				photoResource.add(new XAdapterPicture(item));
 			}
