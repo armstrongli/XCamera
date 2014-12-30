@@ -184,8 +184,8 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 					continue;
 				}
 				HashMap<String, Object> item = new HashMap<String, Object>();
+				// item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.big_load);
 				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, photoItem.getAbsolutePath());
-				item.put(XCameraConst.VIEW_NAME_IMAGE_RESOURCE, photoItem.getAbsolutePath());
 				photoResource.add(new XAdapterPicture(item));
 			}
 

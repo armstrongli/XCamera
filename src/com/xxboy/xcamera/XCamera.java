@@ -28,7 +28,6 @@ public class XCamera extends Activity {
 
 	public static final class XCameraConst {
 		public static final String VIEW_NAME_IMAGE_ITEM = "ItemImage";
-		public static final String VIEW_NAME_IMAGE_RESOURCE = "ImageResource";
 
 		public static final String VIEW_NAME_CAMERA_ID = "id_camera_preview";
 

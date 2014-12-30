@@ -14,8 +14,8 @@ public class XAdapterPicture extends XAdapterBase {
 		this.data = data;
 	}
 
-	private static final int[] mTo = { R.id.ItemImage, R.id.ImageResource };
-	private static final String[] mFrom = { XCameraConst.VIEW_NAME_IMAGE_ITEM, XCameraConst.VIEW_NAME_IMAGE_RESOURCE };
+	private static final int[] mTo = { R.id.ItemImage };
+	private static final String[] mFrom = { XCameraConst.VIEW_NAME_IMAGE_ITEM };
 
 	@Override
 	public int getResource() {

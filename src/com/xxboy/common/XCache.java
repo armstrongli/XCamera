@@ -1,5 +1,7 @@
 package com.xxboy.common;
 
+import com.xxboy.log.Logger;
+
 import android.graphics.Bitmap;
 import android.util.LruCache;
 
@@ -13,12 +15,14 @@ public class XCache {
 	};
 
 	public static void push2MemCache(String id, Bitmap bitmap) {
+		Logger.log("Pushing " + id);
 		if (getFromMemCache(id) == null) {
 			mMemoryCache.put(id, bitmap);
 		}
 	}
 
 	public static Bitmap getFromMemCache(String id) {
+		Logger.log("Getting " + id);
 		return mMemoryCache.get(id);
 	}
 
