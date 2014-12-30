@@ -52,6 +52,7 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		opt.outWidth = cal_width;
 
 		Logger.log("cal_height: " + cal_height + "==cal_width:" + cal_width);
+		opt.inSampleSize = computeInitialSampleSize(opt, -1, cal_height * cal_width);
 		opt.inJustDecodeBounds = false;
 
 		try {
@@ -71,4 +72,21 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		return null;
 	}
 
+	private static int computeInitialSampleSize(BitmapFactory.Options options, int minSideLength, int maxNumOfPixels) {
+		double w = options.outWidth;
+		double h = options.outHeight;
+		int lowerBound = (maxNumOfPixels == -1) ? 1 : (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels));
+		int upperBound = (minSideLength == -1) ? 128 : (int) Math.min(Math.floor(w / minSideLength), Math.floor(h / minSideLength));
+		if (upperBound < lowerBound) {
+			// return the larger one when there is no overlapping zone.
+			return lowerBound;
+		}
+		if ((maxNumOfPixels == -1) && (minSideLength == -1)) {
+			return 1;
+		} else if (minSideLength == -1) {
+			return lowerBound;
+		} else {
+			return upperBound;
+		}
+	}
 }
