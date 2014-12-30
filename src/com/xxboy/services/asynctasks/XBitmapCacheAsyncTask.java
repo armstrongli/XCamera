@@ -50,10 +50,12 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		}
 		opt.outHeight = cal_height;
 		opt.outWidth = cal_width;
+		Logger.log("cal_height: " + cal_height + "==cal_width:" + cal_width);
 		opt.inJustDecodeBounds = false;
 
 		try {
 			final Bitmap resizedBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);
+			Logger.log("Bitmap size:" + resizedBitmap.getByteCount());
 			XCache.push2MemCache(this.resourcePath, resizedBitmap);
 			xCamera.runOnUiThread(new Runnable() {
 				@Override
