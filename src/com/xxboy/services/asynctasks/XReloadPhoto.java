@@ -132,7 +132,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * @return
 	 */
 	private List<XAdapterBase> getDaysPhotoResourceX() {
-		String xcameraPath = this.param.getxCachePath();
+		String xcameraPath = this.param.getxCameraPath();
 		File xFolder = new File(xcameraPath);
 		if (!xFolder.exists()) {
 			xFolder.mkdirs();
