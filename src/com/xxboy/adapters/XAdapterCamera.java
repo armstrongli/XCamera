@@ -40,4 +40,14 @@ public class XAdapterCamera extends XAdapterBase {
 		return this.data.get(key);
 	}
 
+	@Override
+	public void set2Resource() {
+		throw new RuntimeException("Camera adapter doesn't support this function");
+	}
+
+	@Override
+	public void set2Default() {
+		throw new RuntimeException("Camera adapter doesn't support this function");
+	}
+
 }

@@ -7,9 +7,9 @@ import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XAdapterPicture extends XAdapterBase {
 
-	private Map<String, ?> data;
+	private Map<String, Object> data;
 
-	public XAdapterPicture(Map<String, ?> data) {
+	public XAdapterPicture(Map<String, Object> data) {
 		super();
 		this.data = data;
 	}
@@ -37,4 +37,17 @@ public class XAdapterPicture extends XAdapterBase {
 		return this.data.get(key);
 	}
 
+	private void setImage(Object resource) {
+		this.data.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, resource);
+	}
+
+	@Override
+	public void set2Default() {
+		setImage(R.drawable.big_load);
+	}
+
+	@Override
+	public void set2Resource() {
+		setImage(this.data.get(XCameraConst.VIEW_NAME_IMAGE_RESC));
+	}
 }

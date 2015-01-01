@@ -1,6 +1,5 @@
 package com.xxboy.listeners;
 
-import android.app.Activity;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
@@ -8,9 +7,9 @@ import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera;
 
 public class XScrollListener implements OnScrollListener {
-	private Activity activity;
+	private XCamera activity;
 
-	public XScrollListener(Activity activity) {
+	public XScrollListener(XCamera activity) {
 		super();
 		this.activity = activity;
 	}
@@ -28,5 +27,17 @@ public class XScrollListener implements OnScrollListener {
 		if (XCamera.count < visibleItemCount) {
 			XCamera.count = visibleItemCount;
 		}
+		int minIndex = firstVisibleItem;
+		int maxIndex = firstVisibleItem + visibleItemCount;
+		for (int i = 0; i < minIndex; i++) {
+			activity.getXAdapter().getXItem(i).set2Default();
+		}
+		for (int i = minIndex; i < maxIndex; i++) {
+			activity.getXAdapter().getXItem(i).set2Resource();
+		}
+		for (int i = maxIndex; i < totalItemCount; i++) {
+			activity.getXAdapter().getXItem(i).set2Default();
+		}
+		activity.getXAdapter().notifyDataSetChanged();
 	}
 }

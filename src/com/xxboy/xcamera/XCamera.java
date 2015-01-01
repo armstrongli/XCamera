@@ -1,6 +1,8 @@
 package com.xxboy.xcamera;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
@@ -13,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.GridView;
 
+import com.xxboy.adapters.XAdapter;
+import com.xxboy.adapters.XAdapterBase;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
@@ -25,9 +29,11 @@ public class XCamera extends Activity {
 	private String xPath, xCachePath, cameraPath;
 	public static int count = 20;
 	public static Map<String, Bitmap> imageCache = new LinkedHashMap<String, Bitmap>();
+	private XAdapter xAdp = null;
 
 	public static final class XCameraConst {
 		public static final String VIEW_NAME_IMAGE_ITEM = "ItemImage";
+		public static final String VIEW_NAME_IMAGE_RESC = "ItemResource";
 
 		public static final String VIEW_NAME_CAMERA_ID = "id_camera_preview";
 
@@ -64,6 +70,7 @@ public class XCamera extends Activity {
 		setContentView(R.layout.xcamera);
 
 		initScreenParameters();
+		this.xAdp = new XAdapter(this, new LinkedList<XAdapterBase>());
 
 		// get components in the main view.
 		this.xGridView = (GridView) findViewById(R.id.photo_grid);
@@ -141,4 +148,11 @@ public class XCamera extends Activity {
 		this.xGridView = xView;
 	}
 
+	public XAdapter getXAdapter(List<XAdapterBase> data) {
+		return this.xAdp.setData(data);
+	}
+
+	public XAdapter getXAdapter() {
+		return this.xAdp;
+	}
 }

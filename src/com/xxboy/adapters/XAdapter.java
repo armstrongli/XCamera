@@ -40,6 +40,11 @@ public class XAdapter extends BaseAdapter {
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	public XAdapter setData(List<XAdapterBase> data) {
+		this.mData = data;
+		return this;
+	}
+
 	@Override
 	public int getCount() {
 		return this.mData.size();
@@ -47,6 +52,10 @@ public class XAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
+		return this.mData.get(position);
+	}
+
+	public XAdapterBase getXItem(int position) {
 		return this.mData.get(position);
 	}
 
@@ -148,7 +157,6 @@ public class XAdapter extends BaseAdapter {
 
 	public void setViewImage(ImageView v, String value) {
 		loadImage(value, v);
-		// v.setImageURI(Uri.parse(value));
 	}
 
 	private void loadImage(String imagePath, ImageView imageView) {

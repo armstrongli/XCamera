@@ -17,6 +17,7 @@ import com.xxboy.adapters.XAdapterCamera;
 import com.xxboy.adapters.XAdapterPicture;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
+import com.xxboy.photo.R;
 import com.xxboy.services.XPhotoParam;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
@@ -99,7 +100,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		// List<XAdapterBase> cameraResources = getCameraPreviewsX();
 		// List<XAdapterBase> allResources = cameraResources;
 		// allResources.addAll(imageResources);
-		final XAdapter xAdp = new XAdapter(this.activity, imageResources);
+		final XAdapter xAdp = this.activity.getXAdapter(imageResources);
 
 		this.activity.runOnUiThread(new Runnable() {
 			@Override
@@ -184,8 +185,8 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 					continue;
 				}
 				HashMap<String, Object> item = new HashMap<String, Object>();
-				// item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.big_load);
-				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, photoItem.getAbsolutePath());
+				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.big_load);
+				item.put(XCameraConst.VIEW_NAME_IMAGE_RESC, photoItem.getAbsolutePath());
 				photoResource.add(new XAdapterPicture(item));
 			}
 
