@@ -59,7 +59,7 @@ public class XCamera extends Activity {
 			SCREEN_HEIGHT = height;
 
 			PHOTO_ITEM_WIDTH = width / 3;
-			PHOTO_ITEM_HEIGHT = (PHOTO_ITEM_WIDTH * 4) / 5;
+			PHOTO_ITEM_HEIGHT = (PHOTO_ITEM_WIDTH * 4) / 6;
 
 			WIDTH_DIVIDE_HEIGHT = PHOTO_ITEM_WIDTH / PHOTO_ITEM_HEIGHT;
 		}

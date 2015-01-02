@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter.ViewBinder;
@@ -22,6 +21,7 @@ import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XBitmapCacheAsyncTask;
 import com.xxboy.view.XPreview;
 import com.xxboy.xcamera.XCamera;
+import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XAdapter extends BaseAdapter {
 
@@ -89,65 +89,20 @@ public class XAdapter extends BaseAdapter {
 			return;
 		}
 
-		final ViewBinder binder = mViewBinder;
-		final String[] from = dataSet.getMFrom();
-		final int[] to = dataSet.getMTo();
-		final int count = to.length;
-
 		if (dataSet.getResource() == R.layout.xcamera_camera) {
-
+			Logger.log("Setting camera");
+			Camera data = (Camera) dataSet.get(XCameraConst.VIEW_NAME_CAMERA_ID);
+			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
+			XPreview preview = new XPreview(this.context);
+			preview.setCamera(data);
+			cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context, data));
+			cameraContainerLinearLayout.addView(preview);
 		} else if (dataSet.getResource() == R.layout.xcamera_item) {
-			for (int i = 0; i < count; i++) {
-				final View v = view.findViewById(to[i]);
-				if (v != null) {
-					final Object data = dataSet.get(from[i]);
-					String text = data == null ? "" : data.toString();
-					if (text == null) {
-						text = "";
-					}
+			final LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
+			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);
 
-					boolean bound = false;
-					if (binder != null) {
-						bound = binder.setViewValue(v, data, text);
-					}
-
-					if (!bound) {
-						if (v instanceof Checkable) {
-							if (data instanceof Boolean) {
-								((Checkable) v).setChecked((Boolean) data);
-							} else if (v instanceof TextView) {
-								// Note: keep the instanceof TextView check at the
-								// bottom of these
-								// ifs since a lot of views are TextViews (e.g.
-								// CheckBoxes).
-								setViewText((TextView) v, text);
-							} else {
-								throw new IllegalStateException(v.getClass().getName() + " should be bound to a Boolean, not a " + (data == null ? "<unknown type>" : data.getClass()));
-							}
-						} else if (v instanceof TextView) {
-							// Note: keep the instanceof TextView check at the
-							// bottom of these
-							// ifs since a lot of views are TextViews (e.g.
-							// CheckBoxes).
-							setViewText((TextView) v, text);
-						} else if (v instanceof ImageView) {
-							if (data instanceof Integer) {
-								setViewImage((ImageView) v, (Integer) data);
-							} else {
-								setViewImage((ImageView) v, text);
-							}
-						} else if (v instanceof LinearLayout) {
-							LinearLayout cameraContainerLinearLayout = (LinearLayout) v;
-							XPreview preview = new XPreview(this.context);
-							preview.setCamera((Camera) data);
-							cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context, (Camera) data));
-							cameraContainerLinearLayout.addView(preview);
-						} else {
-							throw new IllegalStateException(v.getClass().getName() + " is not a " + " view that can be bounds by this SimpleAdapter");
-						}
-					}
-				}
-			}
+			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT;
+			setViewImage(Image, dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString());
 		}
 
 	}
