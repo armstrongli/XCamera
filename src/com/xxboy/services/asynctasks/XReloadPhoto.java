@@ -1,7 +1,6 @@
 package com.xxboy.services.asynctasks;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +16,6 @@ import com.xxboy.adapters.XAdapterCamera;
 import com.xxboy.adapters.XAdapterPicture;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
-import com.xxboy.photo.R;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
@@ -134,10 +132,10 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		File xFolder = new File(xcameraPath);
 		if (!xFolder.exists()) {
 			xFolder.mkdirs();
-			return new ArrayList<XAdapterBase>();
+			return new LinkedList<XAdapterBase>();
 		}
 
-		List<XAdapterBase> result = new ArrayList<XAdapterBase>();
+		List<XAdapterBase> result = new LinkedList<XAdapterBase>();
 		File[] xFolders = xFolder.listFiles();
 		if (xFolders == null || xFolders.length == 0) {
 			return result;
@@ -166,7 +164,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * @return
 	 */
 	private List<XAdapterBase> get1DayPhotoResourceX(File xcameraDateFolder) {
-		List<XAdapterBase> photoResource = new ArrayList<XAdapterBase>();
+		List<XAdapterBase> photoResource = new LinkedList<XAdapterBase>();
 		if (!xcameraDateFolder.exists()) {
 			return photoResource;
 		}
@@ -182,7 +180,8 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 					continue;
 				}
 				HashMap<String, Object> item = new HashMap<String, Object>();
-				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.big_load);
+				// item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.big_load);
+				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, photoItem.getAbsolutePath());
 				item.put(XCameraConst.VIEW_NAME_IMAGE_RESC, photoItem.getAbsolutePath());
 				photoResource.add(new XAdapterPicture(item));
 			}

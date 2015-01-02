@@ -28,17 +28,34 @@ public class XCache {
 		if (getFromMemCache(id) == null) {
 			mMemoryCache.put(id, bitmap);
 		}
+		push2DiskCache(id, bitmap);
 	}
 
 	public static Bitmap getFromMemCache(String id) {
-		Logger.log("Getting " + id);
-		return mMemoryCache.get(id);
+		Logger.log("Getting From memcache: " + id);
+		// check whether it's in memory cache
+		Bitmap bitmap = mMemoryCache.get(id);
+		if (bitmap == null) {
+			// not in memory cache, check whether in disk cache
+			bitmap = getFromDiskCache(id);
+			if (bitmap != null) {
+				// in disk cache
+				push2MemCache(id, bitmap);
+				return bitmap;
+			}
+		} else {
+			// in memory cache
+			return bitmap;
+		}
+		// neither memory cache, nor disk cache
+		return null;
 	}
 
 	private static final int M_DISK_CACHE_SIZE = 20 * 1024 * 1024;// 20M
 	private static DiskLruCache mDiskCache;
 
 	public static Bitmap getFromDiskCache(String id) {
+		Logger.log("Getting from diskCache: " + id);
 		try {
 			DiskLruCache.Editor editor = getDiskCache().edit(hashKeyForDisk(id));
 			if (editor != null) {
