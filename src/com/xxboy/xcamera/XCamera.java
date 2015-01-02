@@ -7,6 +7,9 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -17,6 +20,7 @@ import android.widget.GridView;
 
 import com.xxboy.adapters.XAdapter;
 import com.xxboy.adapters.XAdapterBase;
+import com.xxboy.common.XCache;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
@@ -31,6 +35,8 @@ public class XCamera extends Activity {
 	private XAdapter xAdp = null;
 
 	public static final class XCameraConst {
+		public static int VERSION = -1;
+
 		public static final String VIEW_NAME_IMAGE_ITEM = "ItemImage";
 		public static final String VIEW_NAME_IMAGE_RESC = "ItemResource";
 
@@ -72,7 +78,7 @@ public class XCamera extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera);
 
-		initScreenParameters();
+		initParameters();
 		this.xAdp = new XAdapter(this, new LinkedList<XAdapterBase>());
 
 		// get components in the main view.
@@ -102,16 +108,25 @@ public class XCamera extends Activity {
 	@Override
 	protected void onPause() {
 		XCameraAsyncTask.releaseCameras();
+		XCache.closeDiskCache();
 		super.onPause();
 	}
 
-	private void initScreenParameters() {
+	private void initParameters() {
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		XCameraConst.setWidthHeight(metric.widthPixels, metric.heightPixels);
 
 		Logger.log("SCREEN_WIDTH: " + XCameraConst.SCREEN_WIDTH);
 		Logger.log("SCREEN_HEIGHT: " + XCameraConst.SCREEN_HEIGHT);
+
+		try {
+			PackageManager pm = this.getPackageManager();
+			PackageInfo pkgInfo = pm.getPackageInfo(this.getPackageName(), 0);
+			XCameraConst.VERSION = pkgInfo.versionCode;
+		} catch (NameNotFoundException e) {
+			Logger.log(e.getMessage(), e);
+		}
 	}
 
 	@Override

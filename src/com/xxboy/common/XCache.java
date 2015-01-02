@@ -23,48 +23,59 @@ public class XCache {
 		}
 	};
 
+	public static final Bitmap getFromCache(String id) {
+		Bitmap bitmapFromMem = getFromMemCache(id);
+		if (bitmapFromMem != null) {
+			return bitmapFromMem;
+		} else {
+			Bitmap bitmapFromDisk = getFromDiskCache(id);
+			if (bitmapFromDisk != null) {
+				push2MemCache(id, bitmapFromDisk);
+				return bitmapFromDisk;
+			} else {
+				return null;
+			}
+		}
+	}
+
+	public static final void pushToCache(String id, Bitmap bitmap) {
+		Bitmap bitmapFromMem = getFromMemCache(id);
+		if (bitmapFromMem == null) {
+			push2MemCache(id, bitmap);
+		}
+		Bitmap bitmapFromDisk = getFromDiskCache(id);
+		if (bitmapFromDisk == null) {
+			push2DiskCache(id, bitmap);
+		}
+	}
+
 	public static void push2MemCache(String id, Bitmap bitmap) {
 		Logger.log("Pushing " + id);
-		if (getFromMemCache(id) == null) {
-			mMemoryCache.put(id, bitmap);
-		}
-		push2DiskCache(id, bitmap);
+		mMemoryCache.put(id, bitmap);
 	}
 
 	public static Bitmap getFromMemCache(String id) {
 		Logger.log("Getting From memcache: " + id);
 		// check whether it's in memory cache
-		Bitmap bitmap = mMemoryCache.get(id);
-		if (bitmap == null) {
-			// not in memory cache, check whether in disk cache
-			bitmap = getFromDiskCache(id);
-			if (bitmap != null) {
-				// in disk cache
-				push2MemCache(id, bitmap);
-				return bitmap;
-			}
-		} else {
-			// in memory cache
-			return bitmap;
-		}
-		// neither memory cache, nor disk cache
-		return null;
+		return mMemoryCache.get(id);
 	}
 
-	private static final int M_DISK_CACHE_SIZE = 20 * 1024 * 1024;// 20M
+	private static final long M_DISK_CACHE_SIZE = 32l * 1024l * 1024l;// 20M
 	private static DiskLruCache mDiskCache;
 
 	public static Bitmap getFromDiskCache(String id) {
 		Logger.log("Getting from diskCache: " + id);
 		try {
-			DiskLruCache.Editor editor = getDiskCache().edit(hashKeyForDisk(id));
-			if (editor != null) {
-				InputStream input = editor.newInputStream(0);
-				Bitmap bitmap = BitmapFactory.decodeStream(input);
-				if (input != null) {
-					input.close();
+			DiskLruCache.Snapshot snapshot = getDiskCache().get(hashKeyForDisk(id));
+			if (snapshot != null) {
+				InputStream bitmapInputStream = snapshot.getInputStream(0);
+				try {
+					return BitmapFactory.decodeStream(bitmapInputStream);
+				} finally {
+					if (bitmapInputStream != null) {
+						bitmapInputStream.close();
+					}
 				}
-				return bitmap;
 			}
 		} catch (IOException e) {
 			Logger.log(e.getMessage(), e);
@@ -75,20 +86,18 @@ public class XCache {
 	}
 
 	public static void push2DiskCache(String id, Bitmap bitmap) {
-		Bitmap cachedBitmap = getFromDiskCache(id);
-		if (cachedBitmap != null) {
-			return;
-		}
+		Logger.log("Pushing to disk cache: " + id);
 		try {
-			DiskLruCache.Editor editor = getDiskCache().edit(hashKeyForDisk(id));
+			String editorKey = hashKeyForDisk(id);
+			Logger.log("Editor key is: " + editorKey);
+			DiskLruCache.Editor editor = getDiskCache().edit(editorKey);
 			if (editor != null) {
 				OutputStream outputStream = editor.newOutputStream(0);
-				bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
 				editor.commit();
 				if (outputStream != null) {
 					outputStream.close();
 				}
-
 				getDiskCache().flush();
 			}
 		} catch (IOException e) {
@@ -101,7 +110,8 @@ public class XCache {
 	private static final DiskLruCache getDiskCache() {
 		if (mDiskCache == null || mDiskCache.isClosed()) {
 			try {
-				mDiskCache = DiskLruCache.open(new File(XCameraConst.GLOBAL_X_CACHE_PATH), 1, 1, M_DISK_CACHE_SIZE);
+				Logger.log("The cache version is: " + XCameraConst.VERSION);
+				mDiskCache = DiskLruCache.open(new File(XCameraConst.GLOBAL_X_CACHE_PATH), XCameraConst.VERSION, 1, M_DISK_CACHE_SIZE);
 			} catch (IOException e) {
 				Logger.log(e.getMessage(), e);
 			}
@@ -109,15 +119,19 @@ public class XCache {
 		return mDiskCache;
 	}
 
+	private static MessageDigest mDigest = null;
+	static {
+		try {
+			mDigest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			Logger.log(e.getMessage(), e);
+		}
+	}
+
 	private static final String hashKeyForDisk(String key) {
 		String cacheKey;
-		try {
-			final MessageDigest mDigest = MessageDigest.getInstance("MD5");
-			mDigest.update(key.getBytes());
-			cacheKey = bytesToHexString(mDigest.digest());
-		} catch (NoSuchAlgorithmException e) {
-			cacheKey = String.valueOf(key.hashCode());
-		}
+		mDigest.update(key.getBytes());
+		cacheKey = bytesToHexString(mDigest.digest());
 		return cacheKey;
 	}
 
@@ -131,5 +145,17 @@ public class XCache {
 			sb.append(hex);
 		}
 		return sb.toString();
+	}
+
+	public static final void closeDiskCache() {
+		try {
+			if (!mDiskCache.isClosed()) {
+				mDiskCache.close();
+			}
+		} catch (IOException e) {
+			Logger.log("Error when closing disk cache: " + e.getMessage(), e);
+		} catch (Exception e) {
+			Logger.log("Error when closing disk cache: " + e.getMessage(), e);
+		}
 	}
 }
