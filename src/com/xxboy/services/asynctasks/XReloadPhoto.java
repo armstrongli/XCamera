@@ -18,20 +18,19 @@ import com.xxboy.adapters.XAdapterPicture;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.XPhotoParam;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 
 	protected static final class Mover {
-		public static Integer movePhotos(XCamera xCamera, XPhotoParam param) {
-			File[] freshFile = checkExistingImages(param);
+		public static Integer movePhotos(XCamera xCamera) {
+			File[] freshFile = checkExistingImages();
 			if (freshFile == null || freshFile.length == 0) {
 				return 0;
 			}
 			Logger.log("Begin moving photos");
-			int movedPhotosCount = movePhotos(param);
+			int movedPhotosCount = movePhotos();
 			Logger.log("Moved " + movedPhotosCount + " photos");
 			return movedPhotosCount;
 		}
@@ -41,8 +40,8 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		 * 
 		 * @return
 		 */
-		private static File[] checkExistingImages(XPhotoParam param) {
-			File defaultFolder = new File(param.getDefaultCameraPath());
+		private static File[] checkExistingImages() {
+			File defaultFolder = new File(XCameraConst.GLOBAL_X_DEFAULT_CAMERA_PATH);
 			if (!defaultFolder.exists()) {
 				return null;
 			}
@@ -52,13 +51,13 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		/**
 		 * generate current date folder and move camera photos to the date folder.
 		 */
-		private static int movePhotos(XPhotoParam param) {
-			File[] pictures = checkExistingImages(param);
+		private static int movePhotos() {
+			File[] pictures = checkExistingImages();
 			if (pictures != null && pictures.length > 0) {
 				Logger.log(">>>>>>Begin moving files: " + pictures.length);
 				XFunction.XDate date = new XFunction.XDate();
 				String currentTargetFolderName = ""//
-						+ param.getxCameraPath()//
+						+ XCameraConst.GLOBAL_X_CAMERA_PATH//
 						+ File.separator + date.getYear() + "." + date.getMonth() //
 						+ File.separator//
 						+ date.getYear() + "." + date.getMonth() + "." + date.getDay();
@@ -81,18 +80,16 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	}
 
 	private XCamera activity;
-	private XPhotoParam param;
 
-	public XReloadPhoto(XCamera activity, XPhotoParam param) {
+	public XReloadPhoto(XCamera activity) {
 		super();
 		this.activity = activity;
-		this.param = param;
 	}
 
 	@Override
 	protected Void doInBackground(Void... param) {
 		// moving files
-		Mover.movePhotos(this.activity, this.param);
+		Mover.movePhotos(this.activity);
 		// reloading grid view
 		final GridView gridview = (this.activity).getxView();
 
@@ -133,7 +130,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * @return
 	 */
 	private List<XAdapterBase> getDaysPhotoResourceX() {
-		String xcameraPath = this.param.getxCameraPath();
+		String xcameraPath = XCameraConst.GLOBAL_X_CAMERA_PATH;
 		File xFolder = new File(xcameraPath);
 		if (!xFolder.exists()) {
 			xFolder.mkdirs();

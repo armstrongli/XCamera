@@ -38,6 +38,5 @@ public class XScrollListener implements OnScrollListener {
 		for (int i = maxIndex; i < totalItemCount; i++) {
 			activity.getXAdapter().getXItem(i).set2Default();
 		}
-		activity.getXAdapter().notifyDataSetChanged();
 	}
 }

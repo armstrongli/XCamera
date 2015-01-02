@@ -7,21 +7,18 @@ import android.os.AsyncTask;
 
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.XPhotoParam;
+import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XInitialAsyncTask extends AsyncTask<Void, Void, Integer> {
 
-	private XPhotoParam param;
-
-	public XInitialAsyncTask(XPhotoParam param) {
+	public XInitialAsyncTask() {
 		super();
-		this.param = param;
 	}
 
 	@Override
 	protected Integer doInBackground(Void... params) {
-		String xCachePath = this.param.getxCachePath();
-		String xPath = this.param.getxCameraPath();
+		String xCachePath = XCameraConst.GLOBAL_X_CACHE_PATH;
+		String xPath = XCameraConst.GLOBAL_X_CAMERA_PATH;
 
 		File cacheFolder = new File(xCachePath), xFolder = new File(xPath);
 		Logger.log("checking xcamera cache folder: " + cacheFolder.getAbsolutePath());

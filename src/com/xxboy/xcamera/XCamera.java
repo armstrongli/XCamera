@@ -20,13 +20,12 @@ import com.xxboy.adapters.XAdapterBase;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.XPhotoParam;
 import com.xxboy.services.asynctasks.XCameraAsyncTask;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
 
 public class XCamera extends Activity {
-	private String xPath, xCachePath, cameraPath;
+	// private String xPath, xCachePath, cameraPath;
 	public static int count = 20;
 	public static Map<String, Bitmap> imageCache = new LinkedHashMap<String, Bitmap>();
 	private XAdapter xAdp = null;
@@ -58,6 +57,10 @@ public class XCamera extends Activity {
 
 			WIDTH_DIVIDE_HEIGHT = PHOTO_ITEM_WIDTH / PHOTO_ITEM_HEIGHT;
 		}
+
+		public static String GLOBAL_X_CACHE_PATH = null;
+		public static String GLOBAL_X_DEFAULT_CAMERA_PATH = null;
+		public static String GLOBAL_X_CAMERA_PATH = null;
 	}
 
 	private GridView xGridView;
@@ -76,11 +79,11 @@ public class XCamera extends Activity {
 		this.xGridView = (GridView) findViewById(R.id.photo_grid);
 		this.xGridView.setOnScrollListener(new XScrollListener(this));
 
-		this.xPath = getString(R.string.picture_folder_path);
-		this.xCachePath = getString(R.string.cash_picture_folder_path);
-		this.cameraPath = getString(R.string.default_picture_folder_path);
+		XCameraConst.GLOBAL_X_CAMERA_PATH = getString(R.string.picture_folder_path);
+		XCameraConst.GLOBAL_X_CACHE_PATH = getString(R.string.cash_picture_folder_path);
+		XCameraConst.GLOBAL_X_DEFAULT_CAMERA_PATH = getString(R.string.default_picture_folder_path);
 
-		new XInitialAsyncTask(new XPhotoParam(xPath, xCachePath, cameraPath)).execute();
+		new XInitialAsyncTask().execute();
 	}
 
 	@Override
@@ -124,8 +127,7 @@ public class XCamera extends Activity {
 	}
 
 	private void moveAndLoadPhotos(boolean reloadFlag) {
-		XPhotoParam photoParam = new XPhotoParam(this.xPath, this.xCachePath, this.cameraPath);
-		new XReloadPhoto(this, photoParam).execute();
+		new XReloadPhoto(this).execute();
 	}
 
 	@Override

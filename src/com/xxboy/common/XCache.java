@@ -84,7 +84,7 @@ public class XCache {
 	private static final DiskLruCache getDiskCache() {
 		if (mDiskCache == null || mDiskCache.isClosed()) {
 			try {
-				mDiskCache = DiskLruCache.open(new File(XCameraConst.xCachePath), 1, 1, M_DISK_CACHE_SIZE);
+				mDiskCache = DiskLruCache.open(new File(XCameraConst.GLOBAL_X_CACHE_PATH), 1, 1, M_DISK_CACHE_SIZE);
 			} catch (IOException e) {
 				Logger.log(e.getMessage(), e);
 			}
