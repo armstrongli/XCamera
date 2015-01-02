@@ -92,9 +92,10 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		final GridView gridview = (this.activity).getxView();
 
 		List<XAdapterBase> imageResources = getDaysPhotoResourceX();
-		// List<XAdapterBase> cameraResources = getCameraPreviewsX();
-		// List<XAdapterBase> allResources = cameraResources;
-		// allResources.addAll(imageResources);
+		List<XAdapterBase> cameraResources = getCameraPreviewsX();
+		List<XAdapterBase> allResources = new LinkedList<XAdapterBase>();
+		allResources.addAll(cameraResources);
+		allResources.addAll(imageResources);
 		final XAdapter xAdp = this.activity.getXAdapter(imageResources);
 
 		this.activity.runOnUiThread(new Runnable() {
