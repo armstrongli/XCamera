@@ -26,6 +26,7 @@ import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XCameraAsyncTask;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
+import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
 
 public class XCamera extends Activity {
@@ -97,6 +98,7 @@ public class XCamera extends Activity {
 		super.onStart();
 		// prepare cameras
 		new XCameraAsyncTask().execute();
+		new XPreCacheLoaderAsyncTask().execute();
 	}
 
 	@Override
