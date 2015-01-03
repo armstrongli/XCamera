@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +17,7 @@ import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XCache {
-	private static final int M_MEMORY_CACHE_SIZE = 10 * 1024 * 1024;// 10M
+	private static final int M_MEMORY_CACHE_SIZE = 5 * 1024 * 1024;// 10M
 	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE) {
 		@Override
 		protected int sizeOf(String key, Bitmap value) {
@@ -28,12 +30,19 @@ public class XCache {
 		if (bitmapFromMem != null) {
 			return bitmapFromMem;
 		} else {
-			Bitmap bitmapFromDisk = getFromDiskCache(id);
-			if (bitmapFromDisk != null) {
-				push2MemCache(id, bitmapFromDisk);
-				return bitmapFromDisk;
+			Bitmap bitmapFromSoft = getFromSoftCache(id);
+			if (bitmapFromSoft != null) {
+				pushToMemCache(id, bitmapFromSoft);
+				return bitmapFromSoft;
 			} else {
-				return null;
+				Bitmap bitmapFromDisk = getFromDiskCache(id);
+				if (bitmapFromDisk != null) {
+					pushToMemCache(id, bitmapFromDisk);
+					pushToSoftCache(id, bitmapFromDisk);
+					return bitmapFromDisk;
+				} else {
+					return null;
+				}
 			}
 		}
 	}
@@ -41,15 +50,19 @@ public class XCache {
 	public static final void pushToCache(String id, Bitmap bitmap) {
 		Bitmap bitmapFromMem = getFromMemCache(id);
 		if (bitmapFromMem == null) {
-			push2MemCache(id, bitmap);
+			pushToMemCache(id, bitmap);
+		}
+		Bitmap bitmapFromSoft = getFromSoftCache(id);
+		if (bitmapFromSoft == null) {
+			pushToSoftCache(id, bitmap);
 		}
 		Bitmap bitmapFromDisk = getFromDiskCache(id);
 		if (bitmapFromDisk == null) {
-			push2DiskCache(id, bitmap);
+			pushToDiskCache(id, bitmap);
 		}
 	}
 
-	public static void push2MemCache(String id, Bitmap bitmap) {
+	public static void pushToMemCache(String id, Bitmap bitmap) {
 		Logger.log("Pushing " + id);
 		mMemoryCache.put(id, bitmap);
 	}
@@ -60,10 +73,20 @@ public class XCache {
 		return mMemoryCache.get(id);
 	}
 
-	private static final long M_DISK_CACHE_SIZE = 32l * 1024l * 1024l;// 20M
+	private static final int M_DISK_CACHE_SIZE = 5 * 1024 * 1024;// 20M
+	private static ConcurrentHashMap<String, SoftReference<Bitmap>> xSoftCache = null;
 	private static DiskLruCache mDiskCache;
 
-	public static Bitmap getFromDiskCache(String id) {
+	private static final Bitmap getFromSoftCache(String id) {
+		SoftReference<Bitmap> softCache = xSoftCache.get(id);
+		return softCache != null ? softCache.get() : null;
+	}
+
+	private static final void pushToSoftCache(String id, Bitmap bitmap) {
+		xSoftCache.put(id, new SoftReference<Bitmap>(bitmap));
+	}
+
+	private static Bitmap getFromDiskCache(String id) {
 		Logger.log("Getting from diskCache: " + id);
 		try {
 			DiskLruCache.Snapshot snapshot = getDiskCache().get(hashKeyForDisk(id));
@@ -85,7 +108,7 @@ public class XCache {
 		return null;
 	}
 
-	public static void push2DiskCache(String id, Bitmap bitmap) {
+	private static void pushToDiskCache(String id, Bitmap bitmap) {
 		Logger.log("Pushing to disk cache: " + id);
 		try {
 			String editorKey = hashKeyForDisk(id);
@@ -124,6 +147,12 @@ public class XCache {
 		try {
 			mDigest = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
+			Logger.log(e.getMessage(), e);
+		}
+
+		try {
+			xSoftCache = new ConcurrentHashMap<String, SoftReference<Bitmap>>(M_DISK_CACHE_SIZE);
+		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
 		}
 	}
