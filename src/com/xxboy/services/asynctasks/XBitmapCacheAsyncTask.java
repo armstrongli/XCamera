@@ -16,6 +16,8 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 	private ImageView imageView;
 	private XCamera xCamera;
 
+	private Bitmap varBitmap;
+
 	public XBitmapCacheAsyncTask(String resourcePath, ImageView imageView, XCamera xCamera) {
 		super();
 		this.resourcePath = resourcePath;
@@ -59,15 +61,24 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		opt.inJustDecodeBounds = false;
 
 		try {
-			final Bitmap resizedBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);
-			Logger.log("Bitmap size:" + resizedBitmap.getByteCount());
-			XCache.pushToCache(this.resourcePath, resizedBitmap);
-			xCamera.runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					imageView.setImageBitmap(resizedBitmap);
+			this.varBitmap = XCache.getFromCache(this.resourcePath);
+			if (this.varBitmap == null) {
+				try {
+					this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);
+					Logger.log("Bitmap size:" + this.varBitmap.getByteCount());
+				} catch (Exception e) {
+					this.varBitmap = null;
 				}
-			});
+			}
+
+			if (this.varBitmap != null) {
+				xCamera.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						imageView.setImageBitmap(varBitmap);
+					}
+				});
+			}
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
 		}
