@@ -17,12 +17,21 @@ import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XCache {
-	private static final int M_MEMORY_CACHE_SIZE = 5 * 1024 * 1024;// 5M
+	private static final int M_MEMORY_CACHE_SIZE = 10 * 1024 * 1024;// 10M
 	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE) {
 		@Override
 		protected int sizeOf(String key, Bitmap value) {
 			return value.getByteCount();
 		}
+
+		@Override
+		protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
+			if (!oldValue.isRecycled()) {
+				oldValue.recycle();
+			}
+			super.entryRemoved(evicted, key, oldValue, newValue);
+		}
+
 	};
 
 	public static final Bitmap getFromCache(String id) {
@@ -31,7 +40,7 @@ public class XCache {
 			return bitmapFromMem;
 		} else {
 			Bitmap bitmapFromSoft = getFromSoftCache(id);
-			if (bitmapFromSoft != null) {
+			if (bitmapFromSoft != null && !bitmapFromSoft.isRecycled()) {
 				pushToMemCache(id, bitmapFromSoft);
 				return bitmapFromSoft;
 			} else {
