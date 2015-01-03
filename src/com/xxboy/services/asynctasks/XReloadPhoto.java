@@ -1,6 +1,7 @@
 package com.xxboy.services.asynctasks;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,6 +96,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		List<XAdapterBase> cameraResources = getCameraPreviewsX();
 		List<XAdapterBase> allResources = new LinkedList<XAdapterBase>();
 		allResources.addAll(cameraResources);
+		Collections.reverse(imageResources);
 		allResources.addAll(imageResources);
 		final XAdapter xAdp = this.activity.getXAdapter(allResources);
 
@@ -130,26 +132,26 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 */
 	private List<XAdapterBase> getDaysPhotoResourceX() {
 		String xcameraPath = XCameraConst.GLOBAL_X_CAMERA_PATH;
-		File xFolder = new File(xcameraPath);
-		if (!xFolder.exists()) {
-			xFolder.mkdirs();
+		File xCameraFolder = new File(xcameraPath);
+		if (!xCameraFolder.exists()) {
+			xCameraFolder.mkdirs();
 			return new LinkedList<XAdapterBase>();
 		}
 
 		List<XAdapterBase> result = new LinkedList<XAdapterBase>();
-		File[] xFolders = xFolder.listFiles();
-		if (xFolders == null || xFolders.length == 0) {
+		File[] xyyyymmFolders = xCameraFolder.listFiles();
+		if (xyyyymmFolders == null || xyyyymmFolders.length == 0) {
 			return result;
 		}
-		for (File monthFolder : xFolders) {
-			Logger.log("Going to " + monthFolder.getAbsolutePath());
-			if (!monthFolder.isDirectory() || monthFolder.isHidden()) {
+		for (File yyyymmFolder : xyyyymmFolders) {
+			Logger.log("Going to " + yyyymmFolder.getAbsolutePath());
+			if (!yyyymmFolder.isDirectory() || yyyymmFolder.isHidden()) {
 				continue;
 			}
-			File[] daysFolder = monthFolder.listFiles();
-			for (File dayFolder : daysFolder) {
-				Logger.log("Going to " + dayFolder.getAbsolutePath());
-				List<XAdapterBase> itemResult = get1DayPhotoResourceX(dayFolder);
+			File[] yyyymmddFolders = yyyymmFolder.listFiles();
+			for (File yyyymmddFolder : yyyymmddFolders) {
+				Logger.log("Going to " + yyyymmddFolder.getAbsolutePath());
+				List<XAdapterBase> itemResult = get1DayPhotoResourceX(yyyymmddFolder);
 				if (itemResult != null && itemResult.size() > 0) {
 					result.addAll(itemResult);
 				}
