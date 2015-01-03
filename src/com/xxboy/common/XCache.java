@@ -17,7 +17,7 @@ import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XCache {
-	private static final int M_MEMORY_CACHE_SIZE = 5 * 1024 * 1024;// 10M
+	private static final int M_MEMORY_CACHE_SIZE = 10 * 1024 * 1024;// 10M
 	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE) {
 		@Override
 		protected int sizeOf(String key, Bitmap value) {
@@ -73,7 +73,7 @@ public class XCache {
 		return mMemoryCache.get(id);
 	}
 
-	private static final int M_DISK_CACHE_SIZE = 5 * 1024 * 1024;// 20M
+	private static final long M_DISK_CACHE_SIZE = 20 * 1024 * 1024;// 20M
 	private static ConcurrentHashMap<String, SoftReference<Bitmap>> xSoftCache = null;
 	private static DiskLruCache mDiskCache;
 
@@ -151,7 +151,7 @@ public class XCache {
 		}
 
 		try {
-			xSoftCache = new ConcurrentHashMap<String, SoftReference<Bitmap>>(M_DISK_CACHE_SIZE);
+			xSoftCache = new ConcurrentHashMap<String, SoftReference<Bitmap>>(1024);
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
 		}
