@@ -78,13 +78,16 @@ public class XAdapter extends BaseAdapter {
 			v = convertView;
 		}
 
-		bindView(position, v);
+		final XAdapterBase dataSet = mData.get(position);
+		if ((dataSet.getResource() == R.layout.xcamera_item && v.findViewById(R.id.ImageContainer) == null) || (dataSet.getResource() == R.layout.xcamera_camera && v.findViewById(R.id.id_camera_preview) == null)) {
+			v = mInflater.inflate(resource, parent, false);
+		}
+		bindView(position, v, dataSet);
 
 		return v;
 	}
 
-	private void bindView(int position, View view) {
-		final XAdapterBase dataSet = mData.get(position);
+	private void bindView(int position, View view, XAdapterBase dataSet) {
 		if (dataSet == null) {
 			return;
 		}
