@@ -64,13 +64,13 @@ public class XCache {
 
 	public static void pushToMemCache(String id, Bitmap bitmap) {
 		Logger.log("Pushing " + id);
-		mMemoryCache.put(id, bitmap);
+		mMemoryCache.put(hashKeyForDisk(id), bitmap);
 	}
 
 	public static Bitmap getFromMemCache(String id) {
-		Logger.log("Getting From memcache: " + id);
+		Logger.log("Getting From memcache(" + mMemoryCache.size() + "): " + id);
 		// check whether it's in memory cache
-		return mMemoryCache.get(id);
+		return mMemoryCache.get(hashKeyForDisk(id));
 	}
 
 	private static final long M_DISK_CACHE_SIZE = 20 * 1024 * 1024;// 20M
@@ -78,12 +78,13 @@ public class XCache {
 	private static DiskLruCache mDiskCache;
 
 	private static final Bitmap getFromSoftCache(String id) {
-		SoftReference<Bitmap> softCache = xSoftCache.get(id);
+		Logger.log("Getting from softcache(" + xSoftCache.size() + "): " + id);
+		SoftReference<Bitmap> softCache = xSoftCache.get(hashKeyForDisk(id));
 		return softCache != null ? softCache.get() : null;
 	}
 
 	private static final void pushToSoftCache(String id, Bitmap bitmap) {
-		xSoftCache.put(id, new SoftReference<Bitmap>(bitmap));
+		xSoftCache.put(hashKeyForDisk(id), new SoftReference<Bitmap>(bitmap));
 	}
 
 	private static Bitmap getFromDiskCache(String id) {

@@ -66,6 +66,7 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 				try {
 					this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);
 					Logger.log("Bitmap size:" + this.varBitmap.getByteCount());
+					XCache.pushToCache(this.resourcePath, this.varBitmap);
 				} catch (Exception e) {
 					this.varBitmap = null;
 				}
