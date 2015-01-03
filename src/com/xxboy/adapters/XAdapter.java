@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 
 import com.xxboy.common.XCache;
@@ -27,7 +26,6 @@ public class XAdapter extends BaseAdapter {
 
 	private List<XAdapterBase> mData;
 	private LayoutInflater mInflater;
-	private ViewBinder mViewBinder;
 	private XCamera context;
 
 	public XAdapter(XCamera context, List<XAdapterBase> mData) {
