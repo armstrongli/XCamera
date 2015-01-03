@@ -98,6 +98,7 @@ public class XAdapter extends BaseAdapter {
 			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
 			XPreview preview = new XPreview(this.context);
 			preview.setCamera(data);
+			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT;
 			cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context, data));
 			cameraContainerLinearLayout.addView(preview);
 		} else if (dataSet.getResource() == R.layout.xcamera_item) {
