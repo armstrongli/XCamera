@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.xxboy.common.XCache;
 import com.xxboy.log.Logger;
+import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
@@ -61,12 +61,12 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		opt.inJustDecodeBounds = false;
 
 		try {
-			this.varBitmap = XCache.getFromCache(this.resourcePath);
+			this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);
 			if (this.varBitmap == null) {
 				try {
 					this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);
 					Logger.log("Bitmap size:" + this.varBitmap.getByteCount());
-					XCache.pushToCache(this.resourcePath, this.varBitmap);
+					XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
 				} catch (Exception e) {
 					this.varBitmap = null;
 				}

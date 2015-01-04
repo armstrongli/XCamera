@@ -17,7 +17,6 @@ import android.widget.GridView;
 
 import com.xxboy.adapters.XAdapter;
 import com.xxboy.adapters.XAdapterBase;
-import com.xxboy.common.XCache;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
@@ -25,6 +24,7 @@ import com.xxboy.services.asynctasks.XCameraAsyncTask;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
 import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
+import com.xxboy.utils.XCacheUtil;
 
 public class XCamera extends Activity {
 	private static XAdapter xAdp = null;
@@ -106,7 +106,7 @@ public class XCamera extends Activity {
 	@Override
 	protected void onPause() {
 		XCameraAsyncTask.releaseCameras();
-		XCache.closeDiskCache();
+		XCacheUtil.closeDiskCache();
 		super.onPause();
 	}
 

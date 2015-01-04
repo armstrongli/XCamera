@@ -2,7 +2,7 @@ package com.xxboy.services.asynctasks;
 
 import java.io.File;
 
-import com.xxboy.common.XCache;
+import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 import android.os.AsyncTask;
@@ -40,7 +40,7 @@ public class XPreCacheLoaderAsyncTask extends AsyncTask<Void, Void, Void> {
 					break;
 				}
 				for (int k = pictures.length - 1; k >= 0; k--) {
-					XCache.getFromCache(pictures[k].getAbsolutePath());
+					XCacheUtil.getFromCache(pictures[k].getAbsolutePath());
 					cashedCount--;
 					if (cashedCount <= 0) {
 						break;

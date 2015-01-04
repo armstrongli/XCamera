@@ -12,11 +12,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xxboy.common.XCache;
 import com.xxboy.listeners.CallCameraListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XBitmapCacheAsyncTask;
+import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
@@ -122,7 +122,7 @@ public class XAdapter extends BaseAdapter {
 	}
 
 	private void loadImage(String imagePath, ImageView imageView) {
-		Bitmap bitmapFromMemCache = XCache.getFromMemCache(imagePath);
+		Bitmap bitmapFromMemCache = XCacheUtil.getFromMemCache(imagePath);
 		if (bitmapFromMemCache != null) {
 			imageView.setImageBitmap(bitmapFromMemCache);
 		} else {

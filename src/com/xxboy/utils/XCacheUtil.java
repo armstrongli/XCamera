@@ -1,4 +1,4 @@
-package com.xxboy.common;
+package com.xxboy.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,10 +13,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.LruCache;
 
+import com.xxboy.common.DiskLruCache;
+import com.xxboy.common.DiskLruCache.Editor;
+import com.xxboy.common.DiskLruCache.Snapshot;
 import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
-public class XCache {
+public class XCacheUtil {
 	private static final int M_MEMORY_CACHE_SIZE = 10 * 1024 * 1024;// 10M
 	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE) {
 		@Override
