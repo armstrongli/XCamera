@@ -121,6 +121,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 			Map<String, Object> res = new HashMap<String, Object>();
 			res.put(XCameraConst.VIEW_NAME_CAMERA_ID, cameraItem);
 			cameraResources.add(new XAdapterCamera(this.activity, res));
+			break;
 		}
 		return cameraResources;
 	}
