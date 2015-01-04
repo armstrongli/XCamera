@@ -9,9 +9,7 @@ import java.util.Map;
 
 import android.hardware.Camera;
 import android.os.AsyncTask;
-import android.widget.GridView;
 
-import com.xxboy.adapters.XAdapter;
 import com.xxboy.adapters.XAdapterBase;
 import com.xxboy.adapters.XAdapterCamera;
 import com.xxboy.adapters.XAdapterPicture;
@@ -23,7 +21,7 @@ import com.xxboy.xcamera.XCamera.XCameraConst;
 public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 
 	protected static final class Mover {
-		public static Integer movePhotos(XCamera xCamera) {
+		public static Integer moveAllPhotos() {
 			File[] freshFile = checkExistingImages();
 			if (freshFile == null || freshFile.length == 0) {
 				return 0;
@@ -78,19 +76,10 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		}
 	}
 
-	private XCamera activity;
-
-	public XReloadPhoto(XCamera activity) {
-		super();
-		this.activity = activity;
-	}
-
 	@Override
 	protected Void doInBackground(Void... param) {
 		// moving files
-		Mover.movePhotos(this.activity);
-		// reloading grid view
-		final GridView gridview = (this.activity).getxView();
+		Mover.moveAllPhotos();
 
 		List<XAdapterBase> imageResources = getDaysPhotoResourceX();
 		List<XAdapterBase> cameraResources = getCameraPreviewsX();
@@ -98,14 +87,10 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		allResources.addAll(cameraResources);
 		Collections.reverse(imageResources);
 		allResources.addAll(imageResources);
-		final XAdapter xAdp = this.activity.getXAdapter(allResources);
-
-		this.activity.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				gridview.setAdapter(xAdp);
-			}
-		});
+		/**
+		 * reload gridview images
+		 */
+		XCamera.reloadGridview(allResources);
 		return null;
 	}
 
@@ -115,14 +100,12 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * @return
 	 */
 	private List<XAdapterBase> getCameraPreviewsX() {
-		List<Camera> cameras = XCameraAsyncTask.getCameras();
 		List<XAdapterBase> cameraResources = new LinkedList<XAdapterBase>();
-		for (Camera cameraItem : cameras) {
+		if (Camera.getNumberOfCameras() > 0) {
 			Map<String, Object> res = new HashMap<String, Object>();
-			res.put(XCameraConst.VIEW_NAME_CAMERA_ID, cameraItem);
-			cameraResources.add(new XAdapterCamera(this.activity, res));
-			break;
+			cameraResources.add(new XAdapterCamera(res));
 		}
+
 		return cameraResources;
 	}
 

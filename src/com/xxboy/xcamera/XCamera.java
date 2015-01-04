@@ -1,16 +1,13 @@
 package com.xxboy.xcamera;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -30,10 +27,8 @@ import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
 
 public class XCamera extends Activity {
-	// private String xPath, xCachePath, cameraPath;
-	public static int count = 20;
-	public static Map<String, Bitmap> imageCache = new LinkedHashMap<String, Bitmap>();
-	private XAdapter xAdp = null;
+	private static XAdapter xAdp = null;
+	private static XCamera xCamera = null;
 
 	public static final class XCameraConst {
 		public static int VERSION = -1;
@@ -70,7 +65,7 @@ public class XCamera extends Activity {
 		public static String GLOBAL_X_CAMERA_PATH = null;
 	}
 
-	private GridView xGridView;
+	private static GridView xGridView;
 
 	public static final Integer COMPLETED = 0;
 
@@ -80,17 +75,18 @@ public class XCamera extends Activity {
 		setContentView(R.layout.xcamera);
 
 		initParameters();
-		this.xAdp = new XAdapter(this, new LinkedList<XAdapterBase>());
+		xAdp = new XAdapter(this, new LinkedList<XAdapterBase>());
 
 		// get components in the main view.
-		this.xGridView = (GridView) findViewById(R.id.photo_grid);
-		this.xGridView.setOnScrollListener(new XScrollListener(this));
+		xGridView = (GridView) findViewById(R.id.photo_grid);
+		xGridView.setOnScrollListener(new XScrollListener(this));
 
 		XCameraConst.GLOBAL_X_CAMERA_PATH = getString(R.string.picture_folder_path);
 		XCameraConst.GLOBAL_X_CACHE_PATH = this.getCacheDir().getAbsolutePath();
 		XCameraConst.GLOBAL_X_DEFAULT_CAMERA_PATH = getString(R.string.default_picture_folder_path);
 
 		new XInitialAsyncTask().execute();
+		XCamera.xCamera = this;
 	}
 
 	@Override
@@ -144,7 +140,7 @@ public class XCamera extends Activity {
 	}
 
 	private void moveAndLoadPhotos(boolean reloadFlag) {
-		new XReloadPhoto(this).execute();
+		new XReloadPhoto().execute();
 	}
 
 	@Override
@@ -159,19 +155,29 @@ public class XCamera extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public GridView getxView() {
-		return xGridView;
+	public static GridView getxView() {
+		return XCamera.xGridView;
 	}
 
-	public void setxView(GridView xView) {
-		this.xGridView = xView;
+	public static void setxView(GridView xView) {
+		XCamera.xGridView = xView;
 	}
 
-	public XAdapter getXAdapter(List<XAdapterBase> data) {
-		return this.xAdp.setData(data);
+	private static XAdapter getXAdapter(List<XAdapterBase> data) {
+		return XCamera.xAdp.setData(data != null ? data : new LinkedList<XAdapterBase>());
 	}
 
-	public XAdapter getXAdapter() {
-		return this.xAdp;
+	public static void reloadGridview(final List<XAdapterBase> data) {
+		try {
+			XCamera.xCamera.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					XCamera.xGridView.setAdapter(getXAdapter(data));
+				}
+			});
+		} catch (Exception e) {
+			Logger.log(e.getMessage(), e);
+		}
 	}
 }
