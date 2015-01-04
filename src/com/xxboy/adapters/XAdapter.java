@@ -4,12 +4,10 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,7 +17,6 @@ import com.xxboy.listeners.CallCameraListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XBitmapCacheAsyncTask;
-import com.xxboy.view.XPreview;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
@@ -93,13 +90,15 @@ public class XAdapter extends BaseAdapter {
 
 		if (dataSet.getResource() == R.layout.xcamera_camera) {
 			Logger.log("Setting camera");
-			Camera data = (Camera) dataSet.get(XCameraConst.VIEW_NAME_CAMERA_ID);
-			FrameLayout cameraContainerLinearLayout = (FrameLayout) view.findViewById(R.id.id_camera_preview);
-			XPreview preview = new XPreview(this.context);
-			preview.setCamera(data);
+			// Camera data = (Camera) dataSet.get(XCameraConst.VIEW_NAME_CAMERA_ID);
+			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
+			ImageView Image = (ImageView) view.findViewById(R.id.id_camera_image);
+			setViewImage(Image, R.drawable.ic_menu_camera);
+			// XPreview preview = new XPreview(this.context);
+			// preview.setCamera(data);
 			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT;
-			cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context, data));
-			cameraContainerLinearLayout.addView(preview);
+			cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context));
+			// cameraContainerLinearLayout.addView(preview);
 		} else if (dataSet.getResource() == R.layout.xcamera_item) {
 			final LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
 			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);

@@ -12,6 +12,10 @@ public class CallCameraListener implements OnClickListener {
 	private XCamera activity;
 	private Camera camera;
 
+	public CallCameraListener(XCamera context) {
+		this.activity = context;
+	}
+
 	public CallCameraListener(XCamera context, Camera camera) {
 		this.activity = context;
 		this.camera = camera;
@@ -19,8 +23,10 @@ public class CallCameraListener implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		this.camera.stopPreview();
-		this.camera.release();
+		if (this.camera != null) {
+			this.camera.stopPreview();
+			this.camera.release();
+		}
 
 		Intent intent = new Intent();
 		intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
