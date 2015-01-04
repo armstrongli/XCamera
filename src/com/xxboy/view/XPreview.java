@@ -120,10 +120,22 @@ public class XPreview extends ViewGroup implements SurfaceHolder.Callback {
 		}
 	}
 
+	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// Surface will be destroyed when we return, so stop the preview.
 		if (mCamera != null) {
-			mCamera.stopPreview();
+			try {
+				mCamera.stopPreview();
+			} catch (Exception e) {
+				Logger.log("Warn: camera has been released while stopping preview");
+			}
+			try {
+				if (this.mCamera != null) {
+					this.mCamera.release();
+				}
+			} catch (Exception e) {
+				Logger.log("Warn: camera has been released while releasing");
+			}
 		}
 	}
 

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -93,7 +94,7 @@ public class XAdapter extends BaseAdapter {
 		if (dataSet.getResource() == R.layout.xcamera_camera) {
 			Logger.log("Setting camera");
 			Camera data = (Camera) dataSet.get(XCameraConst.VIEW_NAME_CAMERA_ID);
-			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
+			FrameLayout cameraContainerLinearLayout = (FrameLayout) view.findViewById(R.id.id_camera_preview);
 			XPreview preview = new XPreview(this.context);
 			preview.setCamera(data);
 			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT;
