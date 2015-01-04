@@ -26,7 +26,7 @@ public class XCache {
 
 		@Override
 		protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
-			if (!oldValue.isRecycled()) {
+			if (oldValue != null && !oldValue.isRecycled()) {
 				oldValue.recycle();
 			}
 			super.entryRemoved(evicted, key, oldValue, newValue);
