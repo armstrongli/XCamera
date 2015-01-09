@@ -93,7 +93,12 @@ public class XCacheUtil {
 			return null;
 		}
 		SoftReference<Bitmap> softCache = xSoftCache.get(hashKeyForDisk(id));
-		return softCache != null ? softCache.get() : null;
+		Bitmap bitmap = softCache.get();
+		if (bitmap.isRecycled()) {
+			return null;
+		} else {
+			return bitmap;
+		}
 	}
 
 	private static final void pushToSoftCache(String id, Bitmap bitmap) {
