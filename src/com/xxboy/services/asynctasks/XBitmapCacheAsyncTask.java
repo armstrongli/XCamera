@@ -24,6 +24,41 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
+		try {
+			this.varBitmap = XCacheUtil.getFromMemCache(this.resourcePath);// get from memory cache, the fastest
+			if (this.varBitmap == null) {
+				this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);// get from soft reference cache or disk cache, the 2nd fast.
+				if (this.varBitmap == null) {
+					try {
+						this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, this.getOptionsInCalculate());// the slowest one, from file to decode.
+						Logger.log("Bitmap size:" + this.varBitmap.getByteCount());
+						XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
+					} catch (Exception e) {
+						this.varBitmap = null;
+					}
+				}
+			}
+
+			if (this.varBitmap != null) {
+				if (this.imageView == null) {
+					Logger.log("There is one exception it shouldn't be: " + this.resourcePath + ", and the image view is null");
+				} else {
+					this.imageView.getHandler().post(new Runnable() {
+						@Override
+						public void run() {
+							imageView.setImageBitmap(varBitmap);
+						}
+					});
+				}
+			}
+		} catch (Exception e) {
+			Logger.log(e.getMessage(), e);
+		}
+
+		return null;
+	}
+
+	private BitmapFactory.Options getOptionsInCalculate() {
 		BitmapFactory.Options opt = new BitmapFactory.Options();
 
 		opt.inJustDecodeBounds = true;
@@ -56,35 +91,6 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 
 		Logger.log("cal_height: " + cal_height + "==cal_width:" + cal_width + "==inSampleSize:" + opt.inSampleSize);
 		opt.inJustDecodeBounds = false;
-
-		try {
-			this.varBitmap = XCacheUtil.getFromMemCache(this.resourcePath);// get from memory cache, the fastest
-			if (this.varBitmap == null) {
-				this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);// get from soft reference cache or disk cache, the 2nd fast.
-				if (this.varBitmap == null) {
-					try {
-						this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);// the slowest one, from file to decode.
-						Logger.log("Bitmap size:" + this.varBitmap.getByteCount());
-						XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
-					} catch (Exception e) {
-						this.varBitmap = null;
-					}
-				}
-			}
-
-			if (this.varBitmap != null) {
-				this.imageView.getHandler().post(new Runnable() {
-					@Override
-					public void run() {
-						imageView.setImageBitmap(varBitmap);
-					}
-				});
-			}
-		} catch (Exception e) {
-			Logger.log(e.getMessage(), e);
-		}
-
-		return null;
+		return opt;
 	}
-
 }
