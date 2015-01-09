@@ -89,6 +89,9 @@ public class XCacheUtil {
 
 	private static final Bitmap getFromSoftCache(String id) {
 		Logger.log("Getting from softcache(" + xSoftCache.size() + "): " + id);
+		if (!xSoftCache.containsKey(hashKeyForDisk(id))) {
+			return null;
+		}
 		SoftReference<Bitmap> softCache = xSoftCache.get(hashKeyForDisk(id));
 		return softCache != null ? softCache.get() : null;
 	}
