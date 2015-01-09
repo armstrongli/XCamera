@@ -14,14 +14,12 @@ import android.graphics.BitmapFactory;
 import android.util.LruCache;
 
 import com.xxboy.common.DiskLruCache;
-import com.xxboy.common.DiskLruCache.Editor;
-import com.xxboy.common.DiskLruCache.Snapshot;
 import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XCacheUtil {
-	private static final int M_MEMORY_CACHE_SIZE = 10 * 1024 * 1024;// 10M
-	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE) {
+	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 10M
+	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE.intValue()) {
 		@Override
 		protected int sizeOf(String key, Bitmap value) {
 			return value.getByteCount();

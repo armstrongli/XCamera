@@ -7,22 +7,19 @@ import android.widget.ImageView;
 
 import com.xxboy.log.Logger;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	private String resourcePath;
 	private ImageView imageView;
-	private XCamera xCamera;
 
 	private Bitmap varBitmap;
 
-	public XBitmapCacheAsyncTask(String resourcePath, ImageView imageView, XCamera xCamera) {
+	public XBitmapCacheAsyncTask(String resourcePath, ImageView imageView) {
 		super();
 		this.resourcePath = resourcePath;
 		this.imageView = imageView;
-		this.xCamera = xCamera;
 	}
 
 	@Override
@@ -61,7 +58,7 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		opt.inJustDecodeBounds = false;
 
 		try {
-			this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);
+			this.varBitmap = XCacheUtil.getFromMemCache(this.resourcePath);
 			if (this.varBitmap == null) {
 				try {
 					this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);
@@ -73,7 +70,8 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 			}
 
 			if (this.varBitmap != null) {
-				xCamera.runOnUiThread(new Runnable() {
+				this.imageView.getHandler().post(new Runnable() {
+
 					@Override
 					public void run() {
 						imageView.setImageBitmap(varBitmap);

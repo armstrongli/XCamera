@@ -127,7 +127,7 @@ public class XAdapter extends BaseAdapter {
 			imageView.setImageBitmap(bitmapFromMemCache);
 		} else {
 			imageView.setImageResource(R.drawable.big_load);
-			new XBitmapCacheAsyncTask(imagePath, imageView, this.context).execute();
+			new XBitmapCacheAsyncTask(imagePath, imageView).execute();
 		}
 	}
 }
