@@ -87,7 +87,7 @@ public class XCacheUtil {
 	private static ConcurrentHashMap<String, SoftReference<Bitmap>> xSoftCache = null;
 	private static DiskLruCache mDiskCache;
 
-	private static final Bitmap getFromSoftCache(String id) {
+	public static final Bitmap getFromSoftCache(String id) {
 		Logger.log("Getting from softcache(" + xSoftCache.size() + "): " + id);
 		if (!xSoftCache.containsKey(hashKeyForDisk(id))) {
 			return null;

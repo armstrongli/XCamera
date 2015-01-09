@@ -58,20 +58,22 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		opt.inJustDecodeBounds = false;
 
 		try {
-			this.varBitmap = XCacheUtil.getFromMemCache(this.resourcePath);
+			this.varBitmap = XCacheUtil.getFromMemCache(this.resourcePath);// get from memory cache, the fastest
 			if (this.varBitmap == null) {
-				try {
-					this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);
-					Logger.log("Bitmap size:" + this.varBitmap.getByteCount());
-					XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
-				} catch (Exception e) {
-					this.varBitmap = null;
+				this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);// get from soft reference cache or disk cache, the 2nd fast.
+				if (this.varBitmap == null) {
+					try {
+						this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, opt);// the slowest one, from file to decode.
+						Logger.log("Bitmap size:" + this.varBitmap.getByteCount());
+						XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
+					} catch (Exception e) {
+						this.varBitmap = null;
+					}
 				}
 			}
 
 			if (this.varBitmap != null) {
 				this.imageView.getHandler().post(new Runnable() {
-
 					@Override
 					public void run() {
 						imageView.setImageBitmap(varBitmap);
