@@ -46,7 +46,9 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 					this.imageView.getHandler().post(new Runnable() {
 						@Override
 						public void run() {
+							Logger.log("Setting bitmap begin");
 							imageView.setImageBitmap(varBitmap);
+							Logger.log("Setting bitmap end");
 						}
 					});
 				}

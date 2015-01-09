@@ -79,7 +79,7 @@ public class XCamera extends Activity {
 
 		// get components in the main view.
 		xGridView = (GridView) findViewById(R.id.photo_grid);
-		xGridView.setOnScrollListener(new XScrollListener(this));
+		xGridView.setOnScrollListener(new XScrollListener());
 
 		XCameraConst.GLOBAL_X_CAMERA_PATH = getString(R.string.picture_folder_path);
 		XCameraConst.GLOBAL_X_CACHE_PATH = this.getCacheDir().getAbsolutePath();

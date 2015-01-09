@@ -28,7 +28,7 @@ public class XCacheUtil {
 		@Override
 		protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
 			if (oldValue != null && !oldValue.isRecycled()) {
-				oldValue.recycle();
+				XCacheUtil.pushToSoftCache(key, oldValue);
 			}
 			super.entryRemoved(evicted, key, oldValue, newValue);
 		}
@@ -37,18 +37,18 @@ public class XCacheUtil {
 
 	public static final Bitmap getFromCache(String id) {
 		Bitmap bitmapFromMem = getFromMemCache(id);
-		if (bitmapFromMem != null) {
+		if (bitmapFromMem != null && !bitmapFromMem.isRecycled()) {
 			return bitmapFromMem;
 		} else {
 			Bitmap bitmapFromSoft = getFromSoftCache(id);
 			if (bitmapFromSoft != null && !bitmapFromSoft.isRecycled()) {
 				pushToMemCache(id, bitmapFromSoft);
+				deleteFromSoftCache(id);
 				return bitmapFromSoft;
 			} else {
 				Bitmap bitmapFromDisk = getFromDiskCache(id);
-				if (bitmapFromDisk != null) {
+				if (bitmapFromDisk != null && !bitmapFromDisk.isRecycled()) {
 					pushToMemCache(id, bitmapFromDisk);
-					pushToSoftCache(id, bitmapFromDisk);
 					return bitmapFromDisk;
 				} else {
 					return null;
@@ -80,7 +80,8 @@ public class XCacheUtil {
 	public static Bitmap getFromMemCache(String id) {
 		Logger.log("Getting From memcache(" + mMemoryCache.size() + "): " + id);
 		// check whether it's in memory cache
-		return mMemoryCache.get(hashKeyForDisk(id));
+		Bitmap bitmap = mMemoryCache.get(hashKeyForDisk(id));
+		return (bitmap != null && !bitmap.isRecycled()) ? bitmap : null;
 	}
 
 	private static final long M_DISK_CACHE_SIZE = 20 * 1024 * 1024;// 20M
@@ -93,8 +94,12 @@ public class XCacheUtil {
 			return null;
 		}
 		SoftReference<Bitmap> softCache = xSoftCache.get(hashKeyForDisk(id));
+		if (softCache == null) {
+			return null;
+		}
 		Bitmap bitmap = softCache.get();
 		if (bitmap.isRecycled()) {
+			Logger.log("Bitmap has been recycled: " + id);
 			return null;
 		} else {
 			return bitmap;
@@ -103,6 +108,15 @@ public class XCacheUtil {
 
 	private static final void pushToSoftCache(String id, Bitmap bitmap) {
 		xSoftCache.put(hashKeyForDisk(id), new SoftReference<Bitmap>(bitmap));
+	}
+
+	/**
+	 * remove cache from softreference cache
+	 * 
+	 * @param id
+	 */
+	private static final void deleteFromSoftCache(String id) {
+		xSoftCache.remove(hashKeyForDisk(id));
 	}
 
 	private static Bitmap getFromDiskCache(String id) {
@@ -128,6 +142,9 @@ public class XCacheUtil {
 	}
 
 	private static void pushToDiskCache(String id, Bitmap bitmap) {
+		if (bitmap == null || bitmap.isRecycled()) {
+			return;
+		}
 		Logger.log("Pushing to disk cache: " + id);
 		try {
 			String editorKey = hashKeyForDisk(id);
@@ -135,7 +152,7 @@ public class XCacheUtil {
 			DiskLruCache.Editor editor = getDiskCache().edit(editorKey);
 			if (editor != null) {
 				OutputStream outputStream = editor.newOutputStream(0);
-				bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
 				editor.commit();
 				if (outputStream != null) {
 					outputStream.close();
