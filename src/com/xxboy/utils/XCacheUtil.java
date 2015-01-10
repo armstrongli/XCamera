@@ -73,8 +73,12 @@ public class XCacheUtil {
 	}
 
 	public static void pushToMemCache(String id, Bitmap bitmap) {
-		Logger.log("Pushing " + id);
-		mMemoryCache.put(hashKeyForDisk(id), bitmap);
+		Logger.log("Pushing to memory cache: " + id);
+		try {
+			mMemoryCache.put(hashKeyForDisk(id), bitmap);
+		} catch (Exception e) {
+			Logger.log(e.getMessage(), e);
+		}
 	}
 
 	public static Bitmap getFromMemCache(String id) {
@@ -88,7 +92,7 @@ public class XCacheUtil {
 	private static ConcurrentHashMap<String, SoftReference<Bitmap>> xSoftCache = null;
 	private static DiskLruCache mDiskCache;
 
-	public static final Bitmap getFromSoftCache(String id) {
+	private static final Bitmap getFromSoftCache(String id) {
 		Logger.log("Getting from softcache(" + xSoftCache.size() + "): " + id);
 		if (!xSoftCache.containsKey(hashKeyForDisk(id))) {
 			return null;
@@ -107,6 +111,7 @@ public class XCacheUtil {
 	}
 
 	private static final void pushToSoftCache(String id, Bitmap bitmap) {
+		Logger.log("Pushing to soft reference cache: " + id);
 		xSoftCache.put(hashKeyForDisk(id), new SoftReference<Bitmap>(bitmap));
 	}
 
@@ -127,6 +132,8 @@ public class XCacheUtil {
 				InputStream bitmapInputStream = snapshot.getInputStream(0);
 				try {
 					return BitmapFactory.decodeStream(bitmapInputStream);
+				} catch (Exception e) {
+					Logger.log(e.getMessage(), e);
 				} finally {
 					if (bitmapInputStream != null) {
 						bitmapInputStream.close();
