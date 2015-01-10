@@ -62,10 +62,10 @@ public class XCacheUtil {
 		if (bitmapFromMem == null) {
 			pushToMemCache(id, bitmap);
 		}
-		Bitmap bitmapFromSoft = getFromSoftCache(id);
-		if (bitmapFromSoft == null) {
-			pushToSoftCache(id, bitmap);
-		}
+		// Bitmap bitmapFromSoft = getFromSoftCache(id);
+		// if (bitmapFromSoft == null) {
+		// pushToSoftCache(id, bitmap);
+		// }
 		Bitmap bitmapFromDisk = getFromDiskCache(id);
 		if (bitmapFromDisk == null) {
 			pushToDiskCache(id, bitmap);
