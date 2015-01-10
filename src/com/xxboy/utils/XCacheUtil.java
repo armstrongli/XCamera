@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -66,10 +65,6 @@ public class XCacheUtil {
 		if (bitmapFromMem == null) {
 			pushToMemCache(id, bitmap);
 		}
-		// Bitmap bitmapFromSoft = getFromSoftCache(id);
-		// if (bitmapFromSoft == null) {
-		// pushToSoftCache(id, bitmap);
-		// }
 		Bitmap bitmapFromDisk = getFromDiskCache(id);
 		if (bitmapFromDisk == null) {
 			pushToDiskCache(id, bitmap);
@@ -108,8 +103,26 @@ public class XCacheUtil {
 		return null;
 	}
 
-	private static final long M_DISK_CACHE_SIZE = 20 * 1024 * 1024;// 20M
-	private static ConcurrentHashMap<String, SoftReference<Bitmap>> xSoftCache = null;
+	private static final Long M_DISK_CACHE_SIZE = 20l * 1024l * 1024l;// 20M
+	private static LruCache<String, SoftReference<Bitmap>> xSoftCache = new LruCache<String, SoftReference<Bitmap>>(M_DISK_CACHE_SIZE.intValue()) {
+
+		@Override
+		protected int sizeOf(String key, SoftReference<Bitmap> value) {
+			return value.get().getByteCount();
+		}
+
+		@Override
+		protected void entryRemoved(boolean evicted, String key, SoftReference<Bitmap> oldValue, SoftReference<Bitmap> newValue) {
+			if (oldValue != null) {
+				Bitmap oldBitmap = oldValue.get();
+				if (oldBitmap != null && !oldBitmap.isRecycled()) {
+					oldBitmap.recycle();
+				}
+			}
+			super.entryRemoved(evicted, key, oldValue, newValue);
+		}
+
+	};
 	private static DiskLruCache mDiskCache;
 
 	/**
@@ -122,11 +135,11 @@ public class XCacheUtil {
 	private static final Bitmap getFromSoftCache(String id) {
 		try {
 			Logger.log("Getting from softcache(" + xSoftCache.size() + "): " + id);
-			if (!xSoftCache.containsKey(hashKeyForDisk(id))) {
-				return null;
-			}
-			SoftReference<Bitmap> softCache = xSoftCache.get(hashKeyForDisk(id));
+			String xkey = hashKeyForDisk(id);
+			SoftReference<Bitmap> softCache = xSoftCache.get(xkey);
 			if (softCache == null) {
+				Logger.log("Getting from softcache NONE " + id);
+				xSoftCache.remove(xkey);
 				return null;
 			}
 			Bitmap bitmap = softCache.get();
@@ -157,9 +170,7 @@ public class XCacheUtil {
 	 */
 	private static final void deleteFromSoftCache(String id) {
 		String xkey = hashKeyForDisk(id);
-		if (xSoftCache.containsKey(xkey)) {
-			xSoftCache.remove(xkey);
-		}
+		xSoftCache.remove(xkey);
 	}
 
 	private static Bitmap getFromDiskCache(String id) {
@@ -223,26 +234,21 @@ public class XCacheUtil {
 		return mDiskCache;
 	}
 
-	private static MessageDigest mDigest = null;
-	static {
-		try {
-			mDigest = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			Logger.log(e.getMessage(), e);
-		}
-
-		try {
-			xSoftCache = new ConcurrentHashMap<String, SoftReference<Bitmap>>(32);
-		} catch (Exception e) {
-			Logger.log(e.getMessage(), e);
-		}
-	}
-
 	private static final String hashKeyForDisk(String key) {
 		String cacheKey;
+		MessageDigest mDigest = getMsgDgst();
 		mDigest.update(key.getBytes());
 		cacheKey = bytesToHexString(mDigest.digest());
 		return cacheKey;
+	}
+
+	private static final MessageDigest getMsgDgst() {
+		try {
+			return MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			Logger.log(e);
+		}
+		return null;
 	}
 
 	private static final String bytesToHexString(byte[] bytes) {
