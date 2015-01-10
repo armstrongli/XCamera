@@ -3,6 +3,7 @@ package com.xxboy.services.asynctasks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.widget.ImageView;
 
 import com.xxboy.log.Logger;
@@ -43,14 +44,19 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 				if (this.imageView == null) {
 					Logger.log("There is one exception it shouldn't be: " + this.resourcePath + ", and the image view is null");
 				} else {
-					this.imageView.getHandler().post(new Runnable() {
-						@Override
-						public void run() {
-							Logger.log("Setting bitmap begin");
-							imageView.setImageBitmap(varBitmap);
-							Logger.log("Setting bitmap end");
-						}
-					});
+					Handler handler = this.imageView.getHandler();
+					if (handler != null) {
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								Logger.log("Setting bitmap begin");
+								imageView.setImageBitmap(varBitmap);
+								Logger.log("Setting bitmap end");
+							}
+						});
+					} else {
+						Logger.log("Handler from image view is null");
+					}
 				}
 			}
 		} catch (Exception e) {
