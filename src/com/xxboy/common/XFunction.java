@@ -93,11 +93,13 @@ public final class XFunction {
 		public static final String YEAR_FORMAT = "yyyy";
 		public static final String MONTH_FORMAT = "MM";
 		public static final String DAY_FORMAT = "dd";
+		private static final String FULL_FORMAT = "yyyy-MM-dd hh:mm:ss SSS";
 
 		private String year = null;
 		private String month = null;
 		private String day = null;
 
+		private static SimpleDateFormat FULL_SDF = new SimpleDateFormat(FULL_FORMAT, Locale.getDefault());
 		private static SimpleDateFormat YEAR_SDF = new SimpleDateFormat(YEAR_FORMAT, Locale.getDefault());
 		private static SimpleDateFormat MONTH_SDF = new SimpleDateFormat(MONTH_FORMAT, Locale.getDefault());
 		private static SimpleDateFormat DAY_SDF = new SimpleDateFormat(DAY_FORMAT, Locale.getDefault());
@@ -120,6 +122,9 @@ public final class XFunction {
 			return day != null ? day : (day = DAY_SDF.format(this.date));
 		}
 
+		public String getFull() {
+			return FULL_SDF.format(this.date);
+		}
 	}
 
 	/**
