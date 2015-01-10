@@ -28,6 +28,7 @@ public class XCacheUtil {
 		@Override
 		protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
 			if (oldValue != null && !oldValue.isRecycled()) {
+				Logger.log("Moving cache from memory cache to soft referene cache: " + key + ", old value: " + oldValue);
 				XCacheUtil.pushToSoftCache(key, oldValue);
 			}
 			super.entryRemoved(evicted, key, oldValue, newValue);
@@ -152,7 +153,10 @@ public class XCacheUtil {
 	 * @param id
 	 */
 	private static final void deleteFromSoftCache(String id) {
-		xSoftCache.remove(hashKeyForDisk(id));
+		String xkey = hashKeyForDisk(id);
+		if (xSoftCache.containsKey(xkey)) {
+			xSoftCache.remove(xkey);
+		}
 	}
 
 	private static Bitmap getFromDiskCache(String id) {
@@ -225,7 +229,7 @@ public class XCacheUtil {
 		}
 
 		try {
-			xSoftCache = new ConcurrentHashMap<String, SoftReference<Bitmap>>(1024);
+			xSoftCache = new ConcurrentHashMap<String, SoftReference<Bitmap>>(32);
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
 		}
