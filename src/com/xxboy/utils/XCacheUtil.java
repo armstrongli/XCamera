@@ -96,7 +96,11 @@ public class XCacheUtil {
 			Logger.log("Getting From memcache(" + mMemoryCache.size() + "): " + id);
 			// check whether it's in memory cache
 			Bitmap bitmap = mMemoryCache.get(hashKeyForDisk(id));
-			return (bitmap != null && !bitmap.isRecycled()) ? bitmap : null;
+			if (bitmap != null && !bitmap.isRecycled()) {
+				Logger.log("hit in cache: memory cache");
+				return bitmap;
+			}
+			return null;
 		} catch (Exception e) {
 			Logger.log("Error when getting bitmap from memory cache with id: " + id, e);
 		}
