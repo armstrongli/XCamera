@@ -38,17 +38,20 @@ public class XCacheUtil {
 	public static final Bitmap getFromCache(String id) {
 		Bitmap bitmapFromMem = getFromMemCache(id);
 		if (bitmapFromMem != null && !bitmapFromMem.isRecycled()) {
+			Logger.log("hit in cache: memory cache");
 			return bitmapFromMem;
 		} else {
 			Bitmap bitmapFromSoft = getFromSoftCache(id);
 			if (bitmapFromSoft != null && !bitmapFromSoft.isRecycled()) {
 				pushToMemCache(id, bitmapFromSoft);
 				deleteFromSoftCache(id);
+				Logger.log("hit in cache: soft reference cache");
 				return bitmapFromSoft;
 			} else {
 				Bitmap bitmapFromDisk = getFromDiskCache(id);
 				if (bitmapFromDisk != null && !bitmapFromDisk.isRecycled()) {
 					pushToMemCache(id, bitmapFromDisk);
+					Logger.log("hit in cache: disk cache");
 					return bitmapFromDisk;
 				} else {
 					return null;
