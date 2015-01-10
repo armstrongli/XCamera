@@ -18,7 +18,7 @@ import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XCacheUtil {
-	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 10M
+	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 1/4 of runtime max memory
 	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE.intValue()) {
 		@Override
 		protected int sizeOf(String key, Bitmap value) {
