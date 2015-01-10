@@ -81,33 +81,57 @@ public class XCacheUtil {
 		}
 	}
 
+	/**
+	 * getting bitmap from hard memory cache.
+	 * 
+	 * @param id
+	 *            the primary path id of image.
+	 * @return
+	 */
 	public static Bitmap getFromMemCache(String id) {
-		Logger.log("Getting From memcache(" + mMemoryCache.size() + "): " + id);
-		// check whether it's in memory cache
-		Bitmap bitmap = mMemoryCache.get(hashKeyForDisk(id));
-		return (bitmap != null && !bitmap.isRecycled()) ? bitmap : null;
+		try {
+			Logger.log("Getting From memcache(" + mMemoryCache.size() + "): " + id);
+			// check whether it's in memory cache
+			Bitmap bitmap = mMemoryCache.get(hashKeyForDisk(id));
+			return (bitmap != null && !bitmap.isRecycled()) ? bitmap : null;
+		} catch (Exception e) {
+			Logger.log("Error when getting bitmap from memory cache with id: " + id, e);
+		}
+		return null;
 	}
 
 	private static final long M_DISK_CACHE_SIZE = 20 * 1024 * 1024;// 20M
 	private static ConcurrentHashMap<String, SoftReference<Bitmap>> xSoftCache = null;
 	private static DiskLruCache mDiskCache;
 
+	/**
+	 * getting bitmap from soft reference
+	 * 
+	 * @param id
+	 *            image path
+	 * @return
+	 */
 	private static final Bitmap getFromSoftCache(String id) {
-		Logger.log("Getting from softcache(" + xSoftCache.size() + "): " + id);
-		if (!xSoftCache.containsKey(hashKeyForDisk(id))) {
-			return null;
+		try {
+			Logger.log("Getting from softcache(" + xSoftCache.size() + "): " + id);
+			if (!xSoftCache.containsKey(hashKeyForDisk(id))) {
+				return null;
+			}
+			SoftReference<Bitmap> softCache = xSoftCache.get(hashKeyForDisk(id));
+			if (softCache == null) {
+				return null;
+			}
+			Bitmap bitmap = softCache.get();
+			if (bitmap == null || bitmap.isRecycled()) {
+				Logger.log("Bitmap has been recycled: " + id);
+				return null;
+			} else {
+				return bitmap;
+			}
+		} catch (Exception e) {
+			Logger.log("Error when getting bitmap from soft reference cache: " + id, e);
 		}
-		SoftReference<Bitmap> softCache = xSoftCache.get(hashKeyForDisk(id));
-		if (softCache == null) {
-			return null;
-		}
-		Bitmap bitmap = softCache.get();
-		if (bitmap == null || bitmap.isRecycled()) {
-			Logger.log("Bitmap has been recycled: " + id);
-			return null;
-		} else {
-			return bitmap;
-		}
+		return null;
 	}
 
 	private static final void pushToSoftCache(String id, Bitmap bitmap) {
