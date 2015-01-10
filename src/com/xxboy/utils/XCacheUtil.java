@@ -102,7 +102,7 @@ public class XCacheUtil {
 			return null;
 		}
 		Bitmap bitmap = softCache.get();
-		if (bitmap.isRecycled()) {
+		if (bitmap == null || bitmap.isRecycled()) {
 			Logger.log("Bitmap has been recycled: " + id);
 			return null;
 		} else {
