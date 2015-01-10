@@ -144,7 +144,10 @@ public class XCacheUtil {
 
 	private static final void pushToSoftCache(String id, Bitmap bitmap) {
 		Logger.log("Pushing to soft reference cache: " + id);
-		xSoftCache.put(hashKeyForDisk(id), new SoftReference<Bitmap>(bitmap));
+		String xkey = hashKeyForDisk(id);
+		Logger.log("Soft reference cache size is: " + xSoftCache.size());
+		xSoftCache.put(xkey, new SoftReference<Bitmap>(bitmap));
+		Logger.log("Soft reference cache size up to: " + xSoftCache.size());
 	}
 
 	/**
