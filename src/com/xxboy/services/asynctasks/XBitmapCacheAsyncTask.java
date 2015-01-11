@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.widget.ImageView;
 
 import com.xxboy.log.Logger;
+import com.xxboy.services.runnable.ImageLoader;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
 import com.xxboy.xcamera.XCamera.XCameraConst;
@@ -27,37 +28,16 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... params) {
 		try {
-			this.varBitmap = XCacheUtil.getFromMemCache(this.resourcePath);// get from memory cache, the fastest
+			this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);// get from soft reference cache or disk cache, the 2nd fast.
 			if (this.varBitmap == null) {
-				this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);// get from soft reference cache or disk cache, the 2nd fast.
-				if (this.varBitmap == null) {
-					try {
-						this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, this.getOptionsInCalculate());// the slowest one, from file to decode.
-						Logger.log("Bitmap size:" + this.varBitmap.getByteCount());
-						XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
-					} catch (Exception e) {
-						this.varBitmap = null;
-					}
-				}
+				this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, this.getOptionsInCalculate());// the slowest one, from file to decode.
+				XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
 			}
 
 			if (this.varBitmap != null) {
-				if (this.imageView == null) {
-					Logger.log("There is one exception it shouldn't be: " + this.resourcePath + ", and the image view is null");
-				} else {
-					XQueueUtil.addTasks(this.position, new Runnable() {
-						public void run() {
-							if (Thread.interrupted()) {
-								Logger.log("Thread interrupted");
-								return;
-							}
-
-							Logger.log("Setting bitmap begin");
-							imageView.setImageBitmap(varBitmap);
-							Logger.log("Setting bitmap end");
-						}
-					});
-				}
+				XQueueUtil.addTasks(this.position, new ImageLoader(imageView, varBitmap));
+			} else {
+				Logger.log("File can't be decoded: " + this.resourcePath);
 			}
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
