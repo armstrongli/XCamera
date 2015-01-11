@@ -66,14 +66,12 @@ public class XCamera extends Activity {
 		public static String GLOBAL_X_DEFAULT_CAMERA_PATH = null;
 		public static String GLOBAL_X_CAMERA_PATH = null;
 
-		public static int GLOBAL_X_GRIDVIEW_VISIABLE_COUNT = 0;
+		public static int GLOBAL_X_GRIDVIEW_VISIABLE_COUNT = 20;
 	}
 
 	private static GridView xGridView;
 
 	public static final Integer COMPLETED = 0;
-
-	private Handler handler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +92,7 @@ public class XCamera extends Activity {
 		new XInitialAsyncTask().execute();
 		XCamera.xCamera = this;
 
-		XQueueUtil.setHandler(this.handler = new Handler());
+		XQueueUtil.setHandler(new Handler());
 	}
 
 	@Override
