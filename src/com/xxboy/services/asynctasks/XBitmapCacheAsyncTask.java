@@ -31,11 +31,11 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 			this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);// get from soft reference cache or disk cache, the 2nd fast.
 			if (this.varBitmap == null) {
 				this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, this.getOptionsInCalculate());// the slowest one, from file to decode.
-				XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
 			}
 
 			if (this.varBitmap != null) {
 				XQueueUtil.addTasks(this.position, new ImageLoader(imageView, varBitmap));
+				XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
 			} else {
 				Logger.log("File can't be decoded: " + this.resourcePath);
 			}

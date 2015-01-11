@@ -17,13 +17,23 @@ public final class XQueueUtil {
 		XQueueUtil.handler = handler;
 	}
 
+	private static boolean AUTO_LOAD_DIRECTLY = false;
+
 	private static List<Integer> kQueue = new LinkedList<Integer>();
 	private static Map<Integer, Runnable> rQueue = new LinkedHashMap<Integer, Runnable>();
 
 	public static synchronized final void run() {
+		// AUTO_LOAD_DIRECTLY = true;
 		while (kQueue.size() > 0) {
 			XQueueUtil.handler.post(rQueue.remove(kQueue.remove(0)));
 		}
+	}
+
+	/**
+	 * reset not auto load
+	 */
+	public static synchronized final void resetAutoLoad() {
+		AUTO_LOAD_DIRECTLY = false;
 	}
 
 	public static synchronized final void addTasks(Integer taskIndex, Runnable r) {
@@ -44,6 +54,10 @@ public final class XQueueUtil {
 		/* add new task */
 		if (kQueue.add(taskIndex)) {
 			rQueue.put(taskIndex, r);
+		}
+
+		if (AUTO_LOAD_DIRECTLY) {
+			run();
 		}
 	}
 

@@ -16,6 +16,9 @@ public class XScrollListener implements OnScrollListener {
 		switch (scrollState) {
 		case SCROLL_STATE_IDLE:
 			XQueueUtil.run();
+			break;
+		default:
+			XQueueUtil.resetAutoLoad();
 		}
 	}
 
