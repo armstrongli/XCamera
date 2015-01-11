@@ -3,22 +3,23 @@ package com.xxboy.services.asynctasks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.widget.ImageView;
 
 import com.xxboy.log.Logger;
 import com.xxboy.utils.XCacheUtil;
+import com.xxboy.utils.XQueueUtil;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
-
+	private int position;
 	private String resourcePath;
 	private ImageView imageView;
 
 	private Bitmap varBitmap;
 
-	public XBitmapCacheAsyncTask(String resourcePath, ImageView imageView) {
+	public XBitmapCacheAsyncTask(Integer position, String resourcePath, ImageView imageView) {
 		super();
+		this.position = position;
 		this.resourcePath = resourcePath;
 		this.imageView = imageView;
 	}
@@ -44,19 +45,18 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 				if (this.imageView == null) {
 					Logger.log("There is one exception it shouldn't be: " + this.resourcePath + ", and the image view is null");
 				} else {
-					Handler handler = this.imageView.getHandler();
-					if (handler != null) {
-						handler.post(new Runnable() {
-							@Override
-							public void run() {
-								Logger.log("Setting bitmap begin");
-								imageView.setImageBitmap(varBitmap);
-								Logger.log("Setting bitmap end");
+					XQueueUtil.addTasks(this.position, new Runnable() {
+						public void run() {
+							if (Thread.interrupted()) {
+								Logger.log("Thread interrupted");
+								return;
 							}
-						});
-					} else {
-						Logger.log("Handler from image view is null");
-					}
+
+							Logger.log("Setting bitmap begin");
+							imageView.setImageBitmap(varBitmap);
+							Logger.log("Setting bitmap end");
+						}
+					});
 				}
 			}
 		} catch (Exception e) {

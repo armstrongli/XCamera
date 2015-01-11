@@ -108,7 +108,16 @@ public class XCacheUtil {
 
 		@Override
 		protected int sizeOf(String key, SoftReference<Bitmap> value) {
-			return value.get().getByteCount();
+			if (value == null) {
+				return 0;
+			} else {
+				Bitmap b = value.get();
+				if (b == null || b.isRecycled()) {
+					return 0;
+				} else {
+					return b.getByteCount();
+				}
+			}
 		}
 
 		@Override

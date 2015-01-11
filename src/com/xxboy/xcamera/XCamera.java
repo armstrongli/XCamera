@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +26,7 @@ import com.xxboy.services.asynctasks.XInitialAsyncTask;
 import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
 import com.xxboy.utils.XCacheUtil;
+import com.xxboy.utils.XQueueUtil;
 
 public class XCamera extends Activity {
 	private static XAdapter xAdp = null;
@@ -63,11 +65,15 @@ public class XCamera extends Activity {
 		public static String GLOBAL_X_CACHE_PATH = null;
 		public static String GLOBAL_X_DEFAULT_CAMERA_PATH = null;
 		public static String GLOBAL_X_CAMERA_PATH = null;
+
+		public static int GLOBAL_X_GRIDVIEW_VISIABLE_COUNT = 0;
 	}
 
 	private static GridView xGridView;
 
 	public static final Integer COMPLETED = 0;
+
+	private Handler handler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +93,8 @@ public class XCamera extends Activity {
 
 		new XInitialAsyncTask().execute();
 		XCamera.xCamera = this;
+
+		XQueueUtil.setHandler(this.handler = new Handler());
 	}
 
 	@Override

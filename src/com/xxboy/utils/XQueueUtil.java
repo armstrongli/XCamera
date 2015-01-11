@@ -1,9 +1,60 @@
 package com.xxboy.utils;
 
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-public class XQueueUtil {
-	BlockingDeque<Runnable> rQueue = new LinkedBlockingDeque<Runnable>();
-	
+import android.os.Handler;
+
+import com.xxboy.log.Logger;
+import com.xxboy.xcamera.XCamera;
+
+public final class XQueueUtil {
+	private static Handler handler;
+
+	public static final void setHandler(Handler handler) {
+		XQueueUtil.handler = handler;
+	}
+
+	private static List<Integer> kQueue = new LinkedList<Integer>();
+	private static Map<Integer, Runnable> rQueue = new LinkedHashMap<Integer, Runnable>();
+
+	public static synchronized final void run() {
+		while (kQueue.size() > 0) {
+			XQueueUtil.handler.post(rQueue.remove(kQueue.remove(0)));
+		}
+	}
+
+	public static synchronized final void addTasks(Integer taskIndex, Runnable r) {
+		/* reduce the task queue to small size */
+		int toBeRemovedCount = kQueue.size() - XCamera.XCameraConst.GLOBAL_X_GRIDVIEW_VISIABLE_COUNT;
+		while (toBeRemovedCount > 0) {
+			removeRunningTasks(rQueue.remove(kQueue.remove(0)));
+			toBeRemovedCount--;
+		}
+		/* remove unused tasks */
+		while (true) {
+			if (kQueue.size() > 0 && Math.abs(taskIndex - kQueue.get(0)) > XCamera.XCameraConst.GLOBAL_X_GRIDVIEW_VISIABLE_COUNT) {
+				removeRunningTasks(rQueue.remove(kQueue.remove(0)));
+			} else {
+				break;
+			}
+		}
+		/* add new task */
+		if (kQueue.add(taskIndex)) {
+			rQueue.put(taskIndex, r);
+		}
+	}
+
+	private static void removeRunningTasks(Runnable r) {
+		if (r == null) {
+			return;
+		}
+		try {
+			handler.removeCallbacks(r);
+		} catch (Exception e) {
+			Logger.log("Removing unused tasks");
+		}
+	}
 }

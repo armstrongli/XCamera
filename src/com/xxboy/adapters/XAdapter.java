@@ -100,7 +100,7 @@ public class XAdapter extends BaseAdapter {
 			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);
 
 			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT;
-			setViewImage(Image, dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString());
+			setViewImage(position, Image, dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString());
 		}
 
 	}
@@ -113,17 +113,17 @@ public class XAdapter extends BaseAdapter {
 		v.setImageResource(value);
 	}
 
-	public void setViewImage(ImageView v, String value) {
-		loadImage(value, v);
+	public void setViewImage(int position, ImageView v, String value) {
+		loadImage(position, value, v);
 	}
 
-	private void loadImage(String imagePath, ImageView imageView) {
+	private void loadImage(int position, String imagePath, ImageView imageView) {
 		Bitmap bitmapFromMemCache = XCacheUtil.getFromMemCache(imagePath);
 		if (bitmapFromMemCache != null) {
 			imageView.setImageBitmap(bitmapFromMemCache);
 		} else {
 			imageView.setImageResource(R.drawable.big_load);
-			new XBitmapCacheAsyncTask(imagePath, imageView).execute();
+			new XBitmapCacheAsyncTask(position, imagePath, imageView).execute();
 		}
 	}
 }
