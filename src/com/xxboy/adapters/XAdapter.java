@@ -17,6 +17,7 @@ import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XBitmapCacheAsyncTask;
 import com.xxboy.utils.XCacheUtil;
+import com.xxboy.utils.XQueueUtil;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
@@ -63,6 +64,7 @@ public class XAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Logger.log("Loading: " + position);
+		XQueueUtil.addMaskTask(position);
 		return createViewFromResource(position, convertView, parent, this.mData.get(position).getResource());
 	}
 
@@ -122,7 +124,7 @@ public class XAdapter extends BaseAdapter {
 		if (bitmapFromMemCache != null) {
 			imageView.setImageBitmap(bitmapFromMemCache);
 		} else {
-			imageView.setImageResource(R.drawable.big_load);
+			imageView.setImageResource(R.drawable.loading);
 			new XBitmapCacheAsyncTask(position, imagePath, imageView).execute();
 		}
 	}

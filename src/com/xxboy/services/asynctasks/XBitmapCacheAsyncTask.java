@@ -27,6 +27,9 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
+		if (!XQueueUtil.checkInMask(this.position)) {
+			return null;
+		}
 		try {
 			this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);// get from soft reference cache or disk cache, the 2nd fast.
 			if (this.varBitmap == null) {

@@ -43,7 +43,7 @@ public class XAdapterPicture extends XAdapterBase {
 
 	@Override
 	public void set2Default() {
-		setImage(R.drawable.big_load);
+		setImage(R.drawable.loading);
 	}
 
 	@Override

@@ -19,11 +19,12 @@ public final class XQueueUtil {
 
 	private static boolean AUTO_LOAD_DIRECTLY = false;
 
+	private static List<Integer> maskQueue = new LinkedList<Integer>();
 	private static List<Integer> kQueue = new LinkedList<Integer>();
 	private static Map<Integer, Runnable> rQueue = new LinkedHashMap<Integer, Runnable>();
 
 	public static synchronized final void run() {
-		// AUTO_LOAD_DIRECTLY = true;
+		AUTO_LOAD_DIRECTLY = true;
 		while (kQueue.size() > 0) {
 			XQueueUtil.handler.post(rQueue.remove(kQueue.remove(0)));
 		}
@@ -34,6 +35,13 @@ public final class XQueueUtil {
 	 */
 	public static synchronized final void resetAutoLoad() {
 		AUTO_LOAD_DIRECTLY = false;
+	}
+
+	public static synchronized final void addMaskTask(Integer taskIndex) {
+		maskQueue.add(taskIndex);
+		if (maskQueue.size() > XCamera.XCameraConst.GLOBAL_X_GRIDVIEW_VISIABLE_COUNT) {
+			maskQueue.remove(0);
+		}
 	}
 
 	public static synchronized final void addTasks(Integer taskIndex, Runnable r) {
@@ -52,13 +60,17 @@ public final class XQueueUtil {
 			}
 		}
 		/* add new task */
-		if (kQueue.add(taskIndex)) {
+		if (maskQueue.contains(taskIndex)) {
 			rQueue.put(taskIndex, r);
 		}
 
 		if (AUTO_LOAD_DIRECTLY) {
 			run();
 		}
+	}
+
+	public static final boolean checkInMask(Integer index) {
+		return maskQueue.contains(index);
 	}
 
 	private static void removeRunningTasks(Runnable r) {
