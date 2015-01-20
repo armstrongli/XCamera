@@ -64,7 +64,7 @@ public class XAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Logger.log("Loading: " + position);
+		Logger.debug("Loading: " + position);
 		XQueueUtil.addMaskTask(position);
 		return createViewFromResource(position, convertView, parent, this.mData.get(position).getResource());
 	}
