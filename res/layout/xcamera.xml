@@ -15,9 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="fill_vertical"
-        android:horizontalSpacing="1dp"
+        android:horizontalSpacing="2dp"
         android:numColumns="3"
-        android:verticalSpacing="1dp" >
+        android:verticalSpacing="2dp" >
     </GridView>
 
 </LinearLayout>

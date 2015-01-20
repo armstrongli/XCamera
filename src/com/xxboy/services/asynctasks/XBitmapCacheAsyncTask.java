@@ -9,6 +9,7 @@ import com.xxboy.log.Logger;
 import com.xxboy.services.runnable.ImageLoader;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
+import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -37,6 +38,7 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 			}
 
 			if (this.varBitmap != null) {
+				this.varBitmap = cutPicture(this.varBitmap);
 				XQueueUtil.addTasks(this.position, new ImageLoader(imageView, varBitmap));
 				XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
 			} else {
@@ -47,6 +49,30 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		}
 
 		return null;
+	}
+
+	/**
+	 * cut picture to the photo item proportion
+	 * 
+	 * @param original
+	 * @return
+	 */
+	private Bitmap cutPicture(final Bitmap original) {
+		if (original.getWidth() / original.getHeight() > XCamera.XCameraConst.PHOTO_ITEM_WIDTH / XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
+			if (original.getHeight() < XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
+				int width = XCamera.XCameraConst.PHOTO_ITEM_WIDTH * (original.getHeight() / XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
+				return Bitmap.createBitmap(original, 0, 0, width, original.getHeight());
+			} else {
+				return Bitmap.createBitmap(original, 0, 0, XCamera.XCameraConst.PHOTO_ITEM_WIDTH, XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
+			}
+		} else {
+			if (original.getWidth() < XCamera.XCameraConst.PHOTO_ITEM_WIDTH) {
+				int height = XCamera.XCameraConst.PHOTO_ITEM_HEIGHT * (original.getWidth() / XCamera.XCameraConst.PHOTO_ITEM_WIDTH);
+				return Bitmap.createBitmap(original, 0, 0, original.getWidth(), height);
+			} else {
+				return Bitmap.createBitmap(original, 0, 0, XCamera.XCameraConst.PHOTO_ITEM_WIDTH, XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
+			}
+		}
 	}
 
 	private BitmapFactory.Options getOptionsInCalculate() {

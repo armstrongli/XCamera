@@ -91,17 +91,12 @@ public class XAdapter extends BaseAdapter {
 		}
 
 		if (dataSet.getResource() == R.layout.xcamera_camera) {
-			Logger.log("Setting camera");
 			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
 			ImageView Image = (ImageView) view.findViewById(R.id.id_camera_image);
 			setViewImage(Image, R.drawable.ic_menu_camera);
-			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT;
 			cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context));
 		} else if (dataSet.getResource() == R.layout.xcamera_item) {
-			final LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
 			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);
-
-			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT;
 			setViewImage(position, Image, dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString());
 		}
 
