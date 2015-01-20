@@ -90,13 +90,18 @@ public class XAdapter extends BaseAdapter {
 			return;
 		}
 
+		int microMdf = 6;
+
 		if (dataSet.getResource() == R.layout.xcamera_camera) {
 			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
+			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			ImageView Image = (ImageView) view.findViewById(R.id.id_camera_image);
 			setViewImage(Image, R.drawable.ic_menu_camera);
 			cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context));
 		} else if (dataSet.getResource() == R.layout.xcamera_item) {
+			final LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
 			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);
+			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			setViewImage(position, Image, dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString());
 		}
 
