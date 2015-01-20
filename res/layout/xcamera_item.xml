@@ -3,7 +3,6 @@
     android:id="@+id/ImageContainer"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#aaaaaa"
     android:gravity="center_vertical|center_horizontal" >
 
     <ImageView

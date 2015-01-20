@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -15,12 +16,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
 import com.xxboy.adapters.XAdapter;
 import com.xxboy.adapters.XAdapterBase;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.services.asynctasks.XBackground;
 import com.xxboy.services.asynctasks.XCameraAsyncTask;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
 import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
@@ -101,6 +104,12 @@ public class XCamera extends Activity {
 		// prepare cameras
 		new XCameraAsyncTask().execute();
 		new XPreCacheLoaderAsyncTask().execute();
+
+		try {
+			new XBackground((LinearLayout) findViewById(R.id.main), BitmapFactory.decodeResource(getResources(), R.drawable.background)).execute();
+		} catch (Exception e) {
+			Logger.log(e.getMessage(), e);
+		}
 	}
 
 	@Override
