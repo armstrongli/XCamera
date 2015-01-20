@@ -83,15 +83,6 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		float width_divide_height = opt.outHeight / opt.outWidth;
 		int cal_width = 0, cal_height = 0;
 		if (width_divide_height > XCameraConst.WIDTH_DIVIDE_HEIGHT) {
-			if (opt.outWidth > XCameraConst.PHOTO_ITEM_WIDTH) {
-				cal_width = XCameraConst.PHOTO_ITEM_WIDTH;
-				cal_height = cal_width * (opt.outHeight / opt.outWidth);
-			} else {
-				cal_height = opt.outHeight;
-				cal_width = opt.outWidth;
-			}
-			opt.inSampleSize = opt.outWidth / cal_width;
-		} else {
 			if (opt.outHeight > XCameraConst.PHOTO_ITEM_HEIGHT) {
 				cal_height = XCameraConst.PHOTO_ITEM_HEIGHT;
 				cal_width = cal_height * (opt.outWidth / opt.outHeight);
@@ -100,6 +91,15 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 				cal_width = opt.outWidth;
 			}
 			opt.inSampleSize = opt.outHeight / cal_height;
+		} else {
+			if (opt.outWidth > XCameraConst.PHOTO_ITEM_WIDTH) {
+				cal_width = XCameraConst.PHOTO_ITEM_WIDTH;
+				cal_height = cal_width * (opt.outHeight / opt.outWidth);
+			} else {
+				cal_height = opt.outHeight;
+				cal_width = opt.outWidth;
+			}
+			opt.inSampleSize = opt.outWidth / cal_width;
 		}
 		opt.outHeight = cal_height;
 		opt.outWidth = cal_width;
