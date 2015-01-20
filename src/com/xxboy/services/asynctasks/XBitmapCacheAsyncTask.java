@@ -60,15 +60,15 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 	private Bitmap cutPicture(final Bitmap original) {
 		if (original.getWidth() / original.getHeight() > XCamera.XCameraConst.PHOTO_ITEM_WIDTH / XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
 			if (original.getHeight() < XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
-				int width = XCamera.XCameraConst.PHOTO_ITEM_WIDTH * (original.getHeight() / XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
-				return Bitmap.createBitmap(original, 0, 0, width, original.getHeight());
+				double width = XCamera.XCameraConst.PHOTO_ITEM_WIDTH * original.getHeight() / XCamera.XCameraConst.PHOTO_ITEM_HEIGHT;
+				return Bitmap.createBitmap(original, 0, 0, Double.valueOf(width).intValue(), original.getHeight());
 			} else {
 				return Bitmap.createBitmap(original, 0, 0, XCamera.XCameraConst.PHOTO_ITEM_WIDTH, XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
 			}
 		} else {
 			if (original.getWidth() < XCamera.XCameraConst.PHOTO_ITEM_WIDTH) {
-				int height = XCamera.XCameraConst.PHOTO_ITEM_HEIGHT * (original.getWidth() / XCamera.XCameraConst.PHOTO_ITEM_WIDTH);
-				return Bitmap.createBitmap(original, 0, 0, original.getWidth(), height);
+				double height = XCamera.XCameraConst.PHOTO_ITEM_HEIGHT * original.getWidth() / XCamera.XCameraConst.PHOTO_ITEM_WIDTH;
+				return Bitmap.createBitmap(original, 0, 0, original.getWidth(), Double.valueOf(height).intValue());
 			} else {
 				return Bitmap.createBitmap(original, 0, 0, XCamera.XCameraConst.PHOTO_ITEM_WIDTH, XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
 			}
