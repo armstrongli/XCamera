@@ -145,4 +145,15 @@ public final class XFunction {
 			}
 		}
 	}
+
+	private static final String[] okFileExtensions = new String[] { "jpg", "png", "gif", "jpeg" };
+
+	public static final Boolean isImage(String fileFullPath) {
+		for (String item : okFileExtensions) {
+			if (fileFullPath.toLowerCase().endsWith(item)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.xxboy.common.XFunction;
 import com.xxboy.listeners.CallCameraListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
@@ -124,8 +125,12 @@ public class XAdapter extends BaseAdapter {
 		if (bitmapFromMemCache != null) {
 			imageView.setImageBitmap(bitmapFromMemCache);
 		} else {
-			imageView.setImageResource(R.drawable.loading);
-			new XBitmapCacheAsyncTask(position, imagePath, imageView).execute();
+			if (XFunction.isImage(imagePath)) {
+				imageView.setImageResource(R.drawable.loading);
+				new XBitmapCacheAsyncTask(position, imagePath, imageView).execute();
+			} else {
+				imageView.setImageResource(R.drawable.ic_media_embed_play);
+			}
 		}
 	}
 }

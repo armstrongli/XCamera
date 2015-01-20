@@ -40,8 +40,8 @@ public final class XCameraAsyncTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		for (int i = 0; i < cameraAmount; i++) {
 			try {
-				Camera cameraItem = Camera.open(i);
-				cameras.add(cameraItem);
+				// Camera cameraItem = Camera.open(i);
+				// cameras.add(cameraItem);
 			} catch (Exception e) {
 				Logger.log("Error when getting cameras from system resources: " + e.getMessage(), e);
 			}
