@@ -21,23 +21,7 @@ public class XBackground extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		int width = this.bitmap.getWidth();
-		int height = this.bitmap.getHeight();
-
-		float scaledWidth = 0, scaledHeight = 0, scaled = 0;
-
-		if (width < XCamera.XCameraConst.SCREEN_WIDTH) {
-			scaledWidth = XCamera.XCameraConst.SCREEN_WIDTH / width;
-		}
-		if (height < XCamera.XCameraConst.SCREEN_HEIGHT) {
-			scaledHeight = XCamera.XCameraConst.SCREEN_HEIGHT / height;
-		}
-		scaled = scaledWidth <= scaledHeight ? scaledHeight : scaledWidth;
-		if (scaled > 1) {
-			this.bitmap = Bitmap.createScaledBitmap(this.bitmap, XCamera.XCameraConst.SCREEN_WIDTH, XCamera.XCameraConst.SCREEN_HEIGHT, true);
-		} else {
-			this.bitmap = Bitmap.createBitmap(this.bitmap, 0, 0, XCamera.XCameraConst.SCREEN_WIDTH, XCamera.XCameraConst.SCREEN_HEIGHT);
-		}
+		this.bitmap = Bitmap.createScaledBitmap(this.bitmap, XCamera.XCameraConst.SCREEN_WIDTH, XCamera.XCameraConst.SCREEN_HEIGHT, true);
 		this.main.getHandler().post(new Runnable() {
 			@Override
 			public void run() {
