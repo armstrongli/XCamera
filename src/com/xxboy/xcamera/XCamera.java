@@ -24,7 +24,7 @@ import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XBackground;
-import com.xxboy.services.asynctasks.XCameraAsyncTask;
+//import com.xxboy.services.asynctasks.XCameraAsyncTask;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
 import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
@@ -101,15 +101,14 @@ public class XCamera extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		// prepare cameras
-		new XCameraAsyncTask().execute();
-		new XPreCacheLoaderAsyncTask().execute();
-
 		try {
 			new XBackground((LinearLayout) findViewById(R.id.main), BitmapFactory.decodeResource(getResources(), R.drawable.background)).execute();
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
 		}
+		// prepare cameras
+		// new XCameraAsyncTask().execute();
+		new XPreCacheLoaderAsyncTask().execute();
 	}
 
 	@Override
@@ -120,7 +119,7 @@ public class XCamera extends Activity {
 
 	@Override
 	protected void onPause() {
-		XCameraAsyncTask.releaseCameras();
+		// XCameraAsyncTask.releaseCameras();
 		XCacheUtil.closeDiskCache();
 		super.onPause();
 	}
@@ -144,7 +143,7 @@ public class XCamera extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		XCameraAsyncTask.releaseCameras();
+		// XCameraAsyncTask.releaseCameras();
 		super.onDestroy();
 	}
 
