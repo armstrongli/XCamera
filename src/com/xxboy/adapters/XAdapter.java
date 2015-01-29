@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.xxboy.common.XFunction;
 import com.xxboy.listeners.CallCameraListener;
+import com.xxboy.listeners.XImageViewListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XBitmapCacheAsyncTask;
@@ -26,11 +27,11 @@ public class XAdapter extends BaseAdapter {
 
 	private List<XAdapterBase> mData;
 	private LayoutInflater mInflater;
-	private XCamera context;
+	private XCamera xCamera;
 
 	public XAdapter(XCamera context, List<XAdapterBase> mData) {
 		super();
-		this.context = context;
+		this.xCamera = context;
 		this.mData = mData;
 
 		Logger.log("There're " + mData.size() + " pictures in total");
@@ -98,12 +99,14 @@ public class XAdapter extends BaseAdapter {
 			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			ImageView Image = (ImageView) view.findViewById(R.id.id_camera_image);
 			setViewImage(Image, R.drawable.ic_menu_camera);
-			cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.context));
+			cameraContainerLinearLayout.setOnClickListener(new CallCameraListener(this.xCamera));
 		} else if (dataSet.getResource() == R.layout.xcamera_item) {
 			final LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
 			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);
+			final String path = dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString();
 			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
-			setViewImage(position, Image, dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString());
+			setViewImage(position, Image, path);
+			ImageContainer.setOnClickListener(new XImageViewListener(xCamera, path));
 		}
 
 	}

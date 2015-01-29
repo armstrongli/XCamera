@@ -36,6 +36,8 @@ public class XCamera extends Activity {
 	private static XCamera xCamera = null;
 
 	public static final class XCameraConst {
+		public static final String XCAMERA_IMAGE_VIEW = "com.xxboy.activities.XViewActivity";
+
 		public static int VERSION = -1;
 
 		public static final String VIEW_NAME_IMAGE_ITEM = "ItemImage";
