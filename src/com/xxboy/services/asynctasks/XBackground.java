@@ -22,12 +22,14 @@ public class XBackground extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... params) {
 		this.bitmap = Bitmap.createScaledBitmap(this.bitmap, XCamera.XCameraConst.SCREEN_WIDTH, XCamera.XCameraConst.SCREEN_HEIGHT, true);
-		this.main.getHandler().post(new Runnable() {
-			@Override
-			public void run() {
-				main.setBackgroundDrawable(new BitmapDrawable(BlurProcess.build().blur(bitmap, 80)));
-			}
-		});
+		if (this.main != null) {
+			this.main.getHandler().post(new Runnable() {
+				@Override
+				public void run() {
+					main.setBackgroundDrawable(new BitmapDrawable(BlurProcess.build().blur(bitmap, 80)));
+				}
+			});
+		}
 		return null;
 	}
 
