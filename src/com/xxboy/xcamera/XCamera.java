@@ -89,7 +89,7 @@ public class XCamera extends Activity {
 		xGridView.setOnScrollListener(new XScrollListener());
 
 		XCameraConst.GLOBAL_X_CAMERA_PATH = getString(R.string.picture_folder_path);
-		XCameraConst.GLOBAL_X_CACHE_PATH = this.getCacheDir().getAbsolutePath();
+		XCameraConst.GLOBAL_X_CACHE_PATH = this.getExternalCacheDir().getAbsolutePath();
 		XCameraConst.GLOBAL_X_DEFAULT_CAMERA_PATH = getString(R.string.default_picture_folder_path);
 
 		new XInitialAsyncTask().execute();
