@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.xxboy.listeners.XImageViewListener;
+import com.xxboy.adapters.XAdapter.XImageViewListener;
 import com.xxboy.photo.R;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
