@@ -107,7 +107,9 @@ public class XAdapter extends BaseAdapter {
 		} else if (dataSet.getResource() == R.layout.xcamera_item) {
 			final LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
 			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);
+			final TextView txtPath = (TextView) view.findViewById(R.id.ItemResource);
 			final String path = dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString();
+			txtPath.setText(path);
 			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			setViewImage(position, Image, path);
 		}
@@ -168,7 +170,7 @@ public class XAdapter extends BaseAdapter {
 			Intent intent = new Intent();
 			intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
 			// return to XCamera after take photos
-			this.xCamera.startActivityForResult(intent, 1);
+			this.xCamera.startActivity(intent);
 		}
 	}
 }
