@@ -11,13 +11,20 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.xxboy.activities.XViewActivity;
 import com.xxboy.adapters.XAdapter;
 import com.xxboy.adapters.XAdapterBase;
 import com.xxboy.listeners.XScrollListener;
@@ -89,6 +96,13 @@ public class XCamera extends Activity {
 		// get components in the main view.
 		xGridView = (GridView) findViewById(R.id.photo_grid);
 		xGridView.setOnScrollListener(new XScrollListener());
+		xGridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				onClickImage(view);
+			}
+		});
 
 		XCameraConst.GLOBAL_X_CAMERA_PATH = getString(R.string.picture_folder_path);
 		XCameraConst.GLOBAL_X_CACHE_PATH = this.getExternalCacheDir().getAbsolutePath();
@@ -98,6 +112,23 @@ public class XCamera extends Activity {
 		XCamera.xCamera = this;
 
 		XQueueUtil.setHandler(new Handler());
+	}
+
+	private void onClickImage(View v) {
+		TextView txtPath = (TextView) v.findViewById(R.id.ItemResource);
+		ImageView imageView4Camera = (ImageView) v.findViewById(R.id.id_camera_image);
+		if (txtPath != null) {
+			// means it's the image view item
+			Intent intent = new Intent(this, XViewActivity.class);
+			intent.putExtra(XViewActivity.INTENT_VAR_PATH, txtPath.getText().toString());
+			this.startActivity(intent);
+		} else if (imageView4Camera != null) {
+			// means it's the camera view
+			Intent intent = new Intent();
+			intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+			// return to XCamera after take photos
+			this.startActivity(intent);
+		}
 	}
 
 	@Override

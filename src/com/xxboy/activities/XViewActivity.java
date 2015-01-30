@@ -6,18 +6,19 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.xxboy.adapters.XAdapter.XImageViewListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XViewActivity extends Activity {
 
+	public static final String INTENT_VAR_PATH = "INTENT_VAR_PATH";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera_imageview);
-		String path = getIntent().getStringExtra(XImageViewListener.VAR_PATH);
+		String path = getIntent().getStringExtra(XViewActivity.INTENT_VAR_PATH);
 		Logger.log("View Image: " + path);
 		ImageView imageview = (ImageView) findViewById(R.id.xcamera_imageview);
 		Bitmap photo = BitmapFactory.decodeFile(path, getOptionsInCalculate(path));
