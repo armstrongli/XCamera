@@ -79,9 +79,10 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... param) {
 		// moving files
+		int hasCount = XCamera.getxView().getCount();
 		Integer moveCount = Mover.moveAllPhotos();
 		// if there's no change, it won't reload picture.
-		if (moveCount == null || moveCount <= 0) {
+		if ((moveCount == null || moveCount <= 0) && hasCount > 0) {
 			return null;
 		}
 
