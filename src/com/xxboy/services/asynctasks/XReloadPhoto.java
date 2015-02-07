@@ -79,7 +79,11 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... param) {
 		// moving files
-		Mover.moveAllPhotos();
+		Integer moveCount = Mover.moveAllPhotos();
+		// if there's no change, it won't reload picture.
+		if (moveCount == null || moveCount <= 0) {
+			return null;
+		}
 
 		List<XAdapterBase> imageResources = getDaysPhotoResourceX();
 		List<XAdapterBase> cameraResources = getCameraPreviewsX();
