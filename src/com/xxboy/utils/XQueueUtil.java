@@ -2,7 +2,6 @@ package com.xxboy.utils;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import android.os.Handler;
@@ -19,8 +18,8 @@ public final class XQueueUtil {
 
 	private static boolean AUTO_LOAD_DIRECTLY = false;
 
-	private static List<Integer> maskQueue = new LinkedList<Integer>();
-	private static List<Integer> kQueue = new LinkedList<Integer>();
+	private static LinkedList<Integer> maskQueue = new LinkedList<Integer>();
+	private static LinkedList<Integer> kQueue = new LinkedList<Integer>();
 	private static Map<Integer, Runnable> rQueue = new LinkedHashMap<Integer, Runnable>();
 
 	static {

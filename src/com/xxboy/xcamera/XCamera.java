@@ -1,7 +1,6 @@
 package com.xxboy.xcamera;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -210,11 +209,11 @@ public class XCamera extends Activity {
 		XCamera.xGridView = xView;
 	}
 
-	private static XAdapter getXAdapter(List<XAdapterBase> data) {
+	private static XAdapter getXAdapter(LinkedList<XAdapterBase> data) {
 		return XCamera.xAdp.setData(data != null ? data : new LinkedList<XAdapterBase>());
 	}
 
-	public static void reloadGridview(final List<XAdapterBase> data) {
+	public static void reloadGridview(final LinkedList<XAdapterBase> data) {
 		try {
 			XCamera.xCamera.runOnUiThread(new Runnable() {
 

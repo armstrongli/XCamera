@@ -86,9 +86,9 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 			return null;
 		}
 
-		List<XAdapterBase> imageResources = getDaysPhotoResourceX();
-		List<XAdapterBase> cameraResources = getCameraPreviewsX();
-		List<XAdapterBase> allResources = new LinkedList<XAdapterBase>();
+		LinkedList<XAdapterBase> imageResources = getDaysPhotoResourceX();
+		LinkedList<XAdapterBase> cameraResources = getCameraPreviewsX();
+		LinkedList<XAdapterBase> allResources = new LinkedList<XAdapterBase>();
 		allResources.addAll(cameraResources);
 		Collections.reverse(imageResources);
 		allResources.addAll(imageResources);
@@ -104,8 +104,8 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * 
 	 * @return
 	 */
-	private List<XAdapterBase> getCameraPreviewsX() {
-		List<XAdapterBase> cameraResources = new LinkedList<XAdapterBase>();
+	private LinkedList<XAdapterBase> getCameraPreviewsX() {
+		LinkedList<XAdapterBase> cameraResources = new LinkedList<XAdapterBase>();
 		if (Camera.getNumberOfCameras() > 0) {
 			Map<String, Object> res = new HashMap<String, Object>();
 			cameraResources.add(new XAdapterCamera(res));
@@ -119,7 +119,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * 
 	 * @return
 	 */
-	private List<XAdapterBase> getDaysPhotoResourceX() {
+	private LinkedList<XAdapterBase> getDaysPhotoResourceX() {
 		String xcameraPath = XCameraConst.GLOBAL_X_CAMERA_PATH;
 		File xCameraFolder = new File(xcameraPath);
 		if (!xCameraFolder.exists()) {
@@ -127,7 +127,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 			return new LinkedList<XAdapterBase>();
 		}
 
-		List<XAdapterBase> result = new LinkedList<XAdapterBase>();
+		LinkedList<XAdapterBase> result = new LinkedList<XAdapterBase>();
 		File[] xyyyymmFolders = xCameraFolder.listFiles();
 		if (xyyyymmFolders == null || xyyyymmFolders.length == 0) {
 			return result;
@@ -155,8 +155,8 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * @param xcameraDateFolder
 	 * @return
 	 */
-	private List<XAdapterBase> get1DayPhotoResourceX(File xcameraDateFolder) {
-		List<XAdapterBase> photoResource = new LinkedList<XAdapterBase>();
+	private LinkedList<XAdapterBase> get1DayPhotoResourceX(File xcameraDateFolder) {
+		LinkedList<XAdapterBase> photoResource = new LinkedList<XAdapterBase>();
 		if (!xcameraDateFolder.exists()) {
 			return photoResource;
 		}

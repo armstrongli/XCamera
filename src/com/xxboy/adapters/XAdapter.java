@@ -1,6 +1,6 @@
 package com.xxboy.adapters;
 
-import java.util.List;
+import java.util.LinkedList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,17 +23,17 @@ import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XAdapter extends BaseAdapter {
 
-	private List<XAdapterBase> mData;
+	private LinkedList<XAdapterBase> mData;
 	private LayoutInflater mInflater;
 
-	public XAdapter(XCamera xCamera, List<XAdapterBase> mData) {
+	public XAdapter(XCamera xCamera, LinkedList<XAdapterBase> mData) {
 		super();
 		this.mData = mData;
 		Logger.log("There're " + mData.size() + " pictures in total");
 		this.mInflater = (LayoutInflater) xCamera.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	public XAdapter setData(List<XAdapterBase> data) {
+	public XAdapter setData(LinkedList<XAdapterBase> data) {
 		this.mData = data;
 		return this;
 	}
@@ -62,7 +62,6 @@ public class XAdapter extends BaseAdapter {
 		Logger.debug("Loading: " + position);
 		XQueueUtil.addMaskTask(position);
 		View resultView = createViewFromResource(position, convertView, parent, this.mData.get(position).getResource());
-		// resultView.setOnClickListener(this.clickListener);
 		return resultView;
 	}
 

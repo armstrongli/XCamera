@@ -2,10 +2,10 @@ package com.xxboy.services.asynctasks;
 
 import java.io.File;
 
+import android.os.AsyncTask;
+
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera.XCameraConst;
-
-import android.os.AsyncTask;
 
 public class XPreCacheLoaderAsyncTask extends AsyncTask<Void, Void, Void> {
 

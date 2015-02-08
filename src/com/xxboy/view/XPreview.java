@@ -3,8 +3,6 @@ package com.xxboy.view;
 import java.io.IOException;
 import java.util.List;
 
-import com.xxboy.log.Logger;
-
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
@@ -13,6 +11,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.xxboy.log.Logger;
 
 /**
  * 

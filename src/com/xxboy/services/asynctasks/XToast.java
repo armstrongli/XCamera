@@ -1,10 +1,10 @@
 package com.xxboy.services.asynctasks;
 
-import com.xxboy.log.Logger;
-import com.xxboy.xcamera.XCamera;
-
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import com.xxboy.log.Logger;
+import com.xxboy.xcamera.XCamera;
 
 public class XToast extends AsyncTask<Void, Void, Void> {
 	private XCamera xCamera;

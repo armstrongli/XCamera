@@ -1,9 +1,9 @@
 package com.xxboy.services.runnable;
 
-import com.xxboy.log.Logger;
-
 import android.graphics.Bitmap;
 import android.widget.ImageView;
+
+import com.xxboy.log.Logger;
 
 public class ImageLoader implements Runnable {
 
