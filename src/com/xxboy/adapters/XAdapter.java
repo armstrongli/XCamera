@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.xxboy.adapters.xdata.XAdapterBase;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
@@ -86,9 +87,7 @@ public class XAdapter extends BaseAdapter {
 		if (dataSet == null) {
 			return;
 		}
-
 		int microMdf = 6;
-
 		if (dataSet.getResource() == R.layout.xcamera_camera) {
 			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
 			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
@@ -101,6 +100,7 @@ public class XAdapter extends BaseAdapter {
 			final String path = dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString();
 			txtPath.setText(path);
 			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
+			ImageContainer.setBackgroundColor(dataSet.getBackgroundColor());
 			setViewImage(position, Image, path);
 		}
 
@@ -124,7 +124,7 @@ public class XAdapter extends BaseAdapter {
 			imageView.setImageBitmap(bitmapFromMemCache);
 		} else {
 			if (XFunction.isImage(imagePath)) {
-				imageView.setImageResource(R.drawable.loading);
+				// imageView.setImageResource(R.drawable.loading);
 				new XBitmapCacheAsyncTask(position, imagePath, imageView).execute();
 			} else {
 				imageView.setImageResource(R.drawable.ic_media_embed_play);

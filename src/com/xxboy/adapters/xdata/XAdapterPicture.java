@@ -1,4 +1,4 @@
-package com.xxboy.adapters;
+package com.xxboy.adapters.xdata;
 
 import java.util.Map;
 
@@ -8,10 +8,12 @@ import com.xxboy.xcamera.XCamera.XCameraConst;
 public class XAdapterPicture extends XAdapterBase {
 
 	private Map<String, Object> data;
+	private int aRGB;
 
-	public XAdapterPicture(Map<String, Object> data) {
+	public XAdapterPicture(Map<String, Object> data, int aRGB) {
 		super();
 		this.data = data;
+		this.aRGB = aRGB;
 	}
 
 	private static final int[] mTo = { R.id.ItemImage };
@@ -49,5 +51,10 @@ public class XAdapterPicture extends XAdapterBase {
 	@Override
 	public void set2Resource() {
 		setImage(this.data.get(XCameraConst.VIEW_NAME_IMAGE_RESC));
+	}
+
+	@Override
+	public int getBackgroundColor() {
+		return this.aRGB;
 	}
 }

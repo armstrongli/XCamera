@@ -10,11 +10,12 @@ import java.util.Map;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 
-import com.xxboy.adapters.XAdapterBase;
-import com.xxboy.adapters.XAdapterCamera;
-import com.xxboy.adapters.XAdapterPicture;
+import com.xxboy.adapters.xdata.XAdapterBase;
+import com.xxboy.adapters.xdata.XAdapterCamera;
+import com.xxboy.adapters.xdata.XAdapterPicture;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
+import com.xxboy.utils.XColorUtil;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
@@ -156,6 +157,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 	 * @return
 	 */
 	private LinkedList<XAdapterBase> get1DayPhotoResourceX(File xcameraDateFolder) {
+		int color = XColorUtil.getBackgroundColor(xcameraDateFolder.getName());
 		LinkedList<XAdapterBase> photoResource = new LinkedList<XAdapterBase>();
 		if (!xcameraDateFolder.exists()) {
 			return photoResource;
@@ -175,7 +177,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 				// item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, R.drawable.big_load);
 				item.put(XCameraConst.VIEW_NAME_IMAGE_ITEM, photoItem.getAbsolutePath());
 				item.put(XCameraConst.VIEW_NAME_IMAGE_RESC, photoItem.getAbsolutePath());
-				photoResource.add(new XAdapterPicture(item));
+				photoResource.add(new XAdapterPicture(item, color));
 			}
 
 		return photoResource;

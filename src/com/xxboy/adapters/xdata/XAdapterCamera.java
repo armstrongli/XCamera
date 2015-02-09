@@ -1,8 +1,9 @@
-package com.xxboy.adapters;
+package com.xxboy.adapters.xdata;
 
 import java.util.Map;
 
 import com.xxboy.photo.R;
+import com.xxboy.utils.XColorUtil;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XAdapterCamera extends XAdapterBase {
@@ -44,6 +45,11 @@ public class XAdapterCamera extends XAdapterBase {
 	@Override
 	public void set2Default() {
 		throw new RuntimeException("Camera adapter doesn't support this function");
+	}
+
+	@Override
+	public int getBackgroundColor() {
+		return XColorUtil.getBackgroundColor("");
 	}
 
 }
