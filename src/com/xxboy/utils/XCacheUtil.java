@@ -80,6 +80,19 @@ public class XCacheUtil {
 		}
 	}
 
+	// -- APIs for image view
+	private static final String FULL_IMAGEVIEW_PREFIX = "FULL_IMAGEVIEW:";
+
+	public static final Bitmap getImaveView(String id) {
+		String fullImageViewId = FULL_IMAGEVIEW_PREFIX + id;
+		return getFromDiskCache(fullImageViewId);
+	}
+
+	public static final void pushImageView(String id, Bitmap bitmap) {
+		String fullImageViewId = FULL_IMAGEVIEW_PREFIX + id;
+		pushToDiskCache(fullImageViewId, bitmap);
+	}
+
 	/**
 	 * getting bitmap from hard memory cache.
 	 * 

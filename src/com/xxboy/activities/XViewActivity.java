@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XViewActivity extends Activity {
@@ -21,7 +22,14 @@ public class XViewActivity extends Activity {
 		String path = getIntent().getStringExtra(XViewActivity.INTENT_VAR_PATH);
 		Logger.log("View Image: " + path);
 		ImageView imageview = (ImageView) findViewById(R.id.xcamera_imageview);
-		Bitmap photo = BitmapFactory.decodeFile(path, getOptionsInCalculate(path));
+		Bitmap photo = XCacheUtil.getImaveView(path);
+		if (photo == null) {
+			photo = BitmapFactory.decodeFile(path, getOptionsInCalculate(path));
+			if (photo != null) {
+				XCacheUtil.pushImageView(path, photo);
+			}
+		}
+
 		imageview.setImageBitmap(photo);
 	}
 
