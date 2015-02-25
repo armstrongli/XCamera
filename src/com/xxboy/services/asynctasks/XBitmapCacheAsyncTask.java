@@ -58,6 +58,9 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 	 * @return
 	 */
 	private Bitmap cutPicture(final Bitmap original) {
+		if (original.getWidth() == 0 || original.getHeight() == 0) {
+			return original;
+		}
 		if (original.getWidth() / original.getHeight() > XCamera.XCameraConst.PHOTO_ITEM_WIDTH / XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
 			if (original.getHeight() < XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
 				double width = XCamera.XCameraConst.PHOTO_ITEM_WIDTH * original.getHeight() / XCamera.XCameraConst.PHOTO_ITEM_HEIGHT;
