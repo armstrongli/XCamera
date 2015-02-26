@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:src="@drawable/xcamera"
             android:contentDescription="@string/app_name" />
     </LinearLayout>
     <!-- 2nd page -->
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:src="@drawable/ic_media_embed_play"
             android:contentDescription="@string/app_name"
             android:gravity="center" />
     </LinearLayout>
@@ -45,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:src="@drawable/background"
             android:contentDescription="@string/app_name"
             android:gravity="center" />
     </LinearLayout>
@@ -60,6 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:src="@drawable/background_pure"
             android:contentDescription="@string/app_name"
             android:gravity="center" />
     </LinearLayout>

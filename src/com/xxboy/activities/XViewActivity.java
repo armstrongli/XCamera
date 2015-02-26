@@ -4,30 +4,36 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.MotionEvent;
 import android.widget.ImageView;
+import android.widget.ViewFlipper;
 
+import com.xxboy.listeners.XViewTouchListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
-public class XViewActivity extends Activity implements OnGestureListener {
+public class XViewActivity extends Activity {
 
 	public static final String INTENT_VAR_PATH = "INTENT_VAR_PATH";
+
+	private ViewFlipper viewFlipper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.xcamera_imageview);
+
+		this.viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+		this.viewFlipper.setOnTouchListener(new XViewTouchListener());
+
 		String path = getIntent().getStringExtra(XViewActivity.INTENT_VAR_PATH);
 		Logger.log("View Image: " + path);
 
 		setImage(R.id.xcamera_imageview, path);
-		setImage(R.id.xcamera_imageview1, path);
-		setImage(R.id.xcamera_imageview2, path);
-		setImage(R.id.xcamera_imageview3, path);
+//		setImage(R.id.xcamera_imageview1, path);
+//		setImage(R.id.xcamera_imageview2, path);
+//		setImage(R.id.xcamera_imageview3, path);
 	}
 
 	private void setImage(int imageviewResId, String imagePath) {
@@ -82,41 +88,5 @@ public class XViewActivity extends Activity implements OnGestureListener {
 
 		opt.inJustDecodeBounds = false;
 		return opt;
-	}
-
-	@Override
-	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
