@@ -1,6 +1,7 @@
 package com.xxboy.services.asynctasks;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,6 +21,8 @@ import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
+
+	private ArrayList<String> resources = new ArrayList<String>();
 
 	protected static final class Mover {
 		public static Integer moveAllPhotos() {
@@ -97,6 +100,12 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		 * reload gridview images
 		 */
 		XCamera.reloadGridview(allResources);
+
+		// set resources info
+		for (XAdapterBase item : imageResources) {
+			this.resources.add((String) item.get(XCameraConst.VIEW_NAME_IMAGE_RESC));
+		}
+		XCamera.setAllResourcePath(resources);
 		return null;
 	}
 

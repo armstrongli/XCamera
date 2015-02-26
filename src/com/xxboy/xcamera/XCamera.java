@@ -1,5 +1,6 @@
 package com.xxboy.xcamera;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import android.app.Activity;
@@ -39,6 +40,7 @@ import com.xxboy.utils.XQueueUtil;
 
 public class XCamera extends Activity {
 	private static XAdapter xAdp = null;
+	private static ArrayList<String> resources = null;
 	private static XCamera xCamera = null;
 
 	public static final class XCameraConst {
@@ -120,6 +122,7 @@ public class XCamera extends Activity {
 			// means it's the image view item
 			Intent intent = new Intent(this, XViewActivity.class);
 			intent.putExtra(XViewActivity.INTENT_VAR_PATH, txtPath.getText().toString());
+			intent.putStringArrayListExtra(XViewActivity.INTENT_VAR_PATHES, XCamera.resources);
 			this.startActivity(intent);
 		} else if (imageView4Camera != null) {
 			// means it's the camera view
@@ -151,7 +154,6 @@ public class XCamera extends Activity {
 
 	@Override
 	protected void onPause() {
-		// XCameraAsyncTask.releaseCameras();
 		XCacheUtil.closeDiskCache();
 		super.onPause();
 	}
@@ -211,6 +213,10 @@ public class XCamera extends Activity {
 
 	private static XAdapter getXAdapter(LinkedList<XAdapterBase> data) {
 		return XCamera.xAdp.setData(data != null ? data : new LinkedList<XAdapterBase>());
+	}
+
+	public static void setAllResourcePath(ArrayList<String> resources) {
+		XCamera.resources = resources;
 	}
 
 	public static void reloadGridview(final LinkedList<XAdapterBase> data) {
