@@ -23,8 +23,10 @@ public class XViewTouchListener implements OnTouchListener {
 	private int currentIndex = 0;// current index of images
 	private ArrayList<String> pathes = null;
 
+	private boolean canFlip = false;
+
 	private boolean isFirst() {
-		return this.currentIndex == 0;
+		return this.currentIndex <= 0;
 	}
 
 	private boolean isLast() {
@@ -50,6 +52,9 @@ public class XViewTouchListener implements OnTouchListener {
 				if (!this.isFirst()) {
 					this.currentIndex--;
 					this.counter++;
+					canFlip = true;
+				} else {
+					canFlip = false;
 				}
 			} else if (touchDownX - touchUpX > 100) {
 				viewFlipper.setInAnimation(AnimationUtils.loadAnimation(v.getContext(), R.anim.slide_right_in));
@@ -57,12 +62,17 @@ public class XViewTouchListener implements OnTouchListener {
 				if (!this.isLast()) {
 					this.currentIndex++;
 					this.counter++;
+					canFlip = true;
+				} else {
+					canFlip = false;
 				}
 			}
 
-			Logger.log("Loading image:" + currentIndex + "/" + this.pathes.get(currentIndex));
-			ImageView imageView = this.counter % 2 == 0 ? (ImageView) this.viewFlipper.findViewById(R.id.xcamera_imageview) : (ImageView) this.viewFlipper.findViewById(R.id.xcamera_imageview1);
-			new XLoadImageViewFlipperAsyncTask(this.pathes.get(this.currentIndex), this.viewFlipper, imageView).execute();
+			if (canFlip) {
+				Logger.log("Loading image:" + currentIndex + "/" + this.pathes.get(currentIndex));
+				ImageView imageView = this.counter % 2 == 0 ? (ImageView) this.viewFlipper.findViewById(R.id.xcamera_imageview) : (ImageView) this.viewFlipper.findViewById(R.id.xcamera_imageview1);
+				new XLoadImageViewFlipperAsyncTask(this.pathes.get(this.currentIndex), this.viewFlipper, imageView).execute();
+			}
 
 			return true;
 		}
