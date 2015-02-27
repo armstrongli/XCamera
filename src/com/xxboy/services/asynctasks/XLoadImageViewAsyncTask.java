@@ -34,7 +34,7 @@ public class XLoadImageViewAsyncTask extends AsyncTask<Void, Void, Void> {
 	}
 
 	private Bitmap getImage(String imagePath) {
-		return BitmapFactory.decodeFile(this.path, XBitmapUtil.getOptionsInCalculate(imagePath));
+		return BitmapFactory.decodeFile(this.path, XBitmapUtil.getImageViewOption(imagePath));
 	}
 
 }

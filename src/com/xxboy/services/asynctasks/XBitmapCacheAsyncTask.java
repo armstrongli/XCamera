@@ -34,7 +34,7 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 		try {
 			this.varBitmap = XCacheUtil.getFromCache(this.resourcePath);// get from soft reference cache or disk cache, the 2nd fast.
 			if (this.varBitmap == null) {
-				this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, XBitmapUtil.getOptionsInCalculate(this.resourcePath));// the slowest one, from file to decode.
+				this.varBitmap = BitmapFactory.decodeFile(this.resourcePath, XBitmapUtil.getImageItemOption(this.resourcePath));// the slowest one, from file to decode.
 			}
 
 			if (this.varBitmap != null) {

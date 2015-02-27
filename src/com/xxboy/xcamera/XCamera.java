@@ -63,16 +63,18 @@ public class XCamera extends Activity {
 		/** photo item height */
 		public static int PHOTO_ITEM_HEIGHT = -1;
 
-		public static float WIDTH_DIVIDE_HEIGHT = 0;
+		public static float ITEM_WIDTH_DIVIDE_HEIGHT = 0;
+		public static float VIEW_WIDTH_DIVIDE_HEIGHT = 0;
 
 		public static void setWidthHeight(int width, int height) {
 			SCREEN_WIDTH = width;
 			SCREEN_HEIGHT = height;
+			VIEW_WIDTH_DIVIDE_HEIGHT = ((float) width) / ((float) height);
 
 			PHOTO_ITEM_WIDTH = width / 3;
 			PHOTO_ITEM_HEIGHT = PHOTO_ITEM_WIDTH;
 
-			WIDTH_DIVIDE_HEIGHT = PHOTO_ITEM_WIDTH / PHOTO_ITEM_HEIGHT;
+			ITEM_WIDTH_DIVIDE_HEIGHT = PHOTO_ITEM_WIDTH / PHOTO_ITEM_HEIGHT;
 		}
 
 		public static String GLOBAL_X_CACHE_PATH = null;
