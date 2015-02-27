@@ -42,7 +42,7 @@ public class XLoadImageViewAsyncTask extends AsyncTask<Void, Void, Void> {
 
 		opt.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(resourcePath, opt);
-		float width_divide_height = opt.outHeight / opt.outWidth;
+		float width_divide_height = opt.outWidth / opt.outHeight;
 		double cal_width = 0, cal_height = 0;
 		if (width_divide_height > XCameraConst.WIDTH_DIVIDE_HEIGHT) {
 			if (opt.outWidth > XCameraConst.SCREEN_WIDTH) {
