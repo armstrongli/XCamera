@@ -53,6 +53,10 @@ public final class XQueueUtil {
 		}
 	}
 
+	public static final void executeTask(Runnable r) {
+		XQueueUtil.handler.post(r);
+	}
+
 	public static synchronized final void addTasks(Integer taskIndex, Runnable r) {
 		/* reduce the task queue to small size */
 		int toBeRemovedCount = kQueue.size() - XCamera.XCameraConst.GLOBAL_X_GRIDVIEW_VISIABLE_COUNT;

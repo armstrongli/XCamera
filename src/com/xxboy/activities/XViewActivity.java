@@ -33,12 +33,19 @@ public class XViewActivity extends Activity {
 		Logger.log("View Image: " + path);
 		this.viewFlipper.setOnTouchListener(new XViewTouchListener(currentindex, this.pathes));
 
-		setImage(R.id.xcamera_imageview, path);
+		boolean result = setImage(R.id.xcamera_imageview, path);
+		if (!result) {
+			setImage(R.id.xcamera_imageview1, path);
+		}
 	}
 
-	private void setImage(int imageviewResId, String imagePath) {
+	private boolean setImage(int imageviewResId, String imagePath) {
 		ImageView imageview = (ImageView) findViewById(imageviewResId);
+		if (imageview == null) {
+			return false;
+		}
 		new XLoadImageViewAsyncTask(imagePath, imageview).execute();
+		return true;
 	}
 
 }

@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.xxboy.services.runnable.ImageLoader;
 import com.xxboy.utils.XCacheUtil;
+import com.xxboy.utils.XQueueUtil;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XLoadImageViewAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -22,11 +23,11 @@ public class XLoadImageViewAsyncTask extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... params) {
 		Bitmap bitmap = XCacheUtil.getImaveView(this.path);
-		if (bitmap != null) {
-			this.imageView.getHandler().post(new ImageLoader(this.imageView, bitmap));
+		if (bitmap != null && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
+			XQueueUtil.executeTask(new ImageLoader(imageView, bitmap));
 		} else {
 			bitmap = getImage(this.path);
-			this.imageView.getHandler().post(new ImageLoader(this.imageView, bitmap));
+			XQueueUtil.executeTask(new ImageLoader(imageView, bitmap));
 			XCacheUtil.pushImageView(this.path, bitmap);
 		}
 		return null;
