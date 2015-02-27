@@ -89,7 +89,7 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 
 		opt.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(this.resourcePath, opt);
-		float width_divide_height = opt.outHeight / opt.outWidth;
+		float width_divide_height = opt.outWidth / opt.outHeight;
 		int cal_width = 0, cal_height = 0;
 		if (width_divide_height > XCameraConst.WIDTH_DIVIDE_HEIGHT) {
 			if (opt.outHeight > XCameraConst.PHOTO_ITEM_HEIGHT) {
