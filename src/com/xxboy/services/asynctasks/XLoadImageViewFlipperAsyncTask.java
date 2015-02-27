@@ -1,9 +1,9 @@
 package com.xxboy.services.asynctasks;
 
-import com.xxboy.log.Logger;
-
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
+
+import com.xxboy.log.Logger;
 
 public class XLoadImageViewFlipperAsyncTask extends XLoadImageViewAsyncTask {
 	private ViewFlipper viewFlipper;

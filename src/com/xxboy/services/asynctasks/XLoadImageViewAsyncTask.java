@@ -9,7 +9,6 @@ import com.xxboy.services.runnable.ImageLoader;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XLoadImageViewAsyncTask extends AsyncTask<Void, Void, Void> {
 

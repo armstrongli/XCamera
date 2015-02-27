@@ -11,7 +11,6 @@ import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
 import com.xxboy.xcamera.XCamera;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 	private int position;
