@@ -6,7 +6,7 @@
     android:layout_weight="0"
     android:alpha="0.4"
     android:background="#ffffff"
-    android:gravity="center" >
+    android:gravity="center_vertical|center_horizontal|center" >
 
     <ImageView
         android:id="@+id/id_camera_image"

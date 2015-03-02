@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 
 import com.xxboy.adapters.xdata.XAdapterBase;
 import com.xxboy.adapters.xdata.XAdapterCamera;
+import com.xxboy.adapters.xdata.XAdapterDate;
 import com.xxboy.adapters.xdata.XAdapterPicture;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
@@ -173,7 +174,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		}
 
 		File[] photos = xcameraDateFolder.listFiles();
-		if (photos != null && photos.length > 0)
+		if (photos != null && photos.length > 0) {
 			for (File photoItem : photos) {
 				if (photoItem.isDirectory()) {
 					Logger.log("Come up with one Directory: " + photoItem.getAbsolutePath());
@@ -189,6 +190,21 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 				photoResource.add(new XAdapterPicture(item, color));
 			}
 
+			// -- add date show
+			HashMap<String, Object> dateItem = new HashMap<String, Object>();
+			if (xcameraDateFolder.getName().length() >= 4) {
+				dateItem.put(XAdapterDate.ID_ITEM_DATE_YEAR, xcameraDateFolder.getName().substring(0, 4));
+			}
+			if (xcameraDateFolder.getName().length() >= 7) {
+				dateItem.put(XAdapterDate.ID_ITEM_DATE_MONTH, XFunction.getMonthTranslation(xcameraDateFolder.getName().substring(5, 7)));
+			}
+			if (xcameraDateFolder.getName().length() >= 10) {
+				dateItem.put(XAdapterDate.ID_ITEM_DATE_DAY, xcameraDateFolder.getName().substring(8, 10));
+			}
+			photoResource.add(new XAdapterDate(dateItem, color));
+		}
+
 		return photoResource;
 	}
+
 }

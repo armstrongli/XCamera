@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xxboy.adapters.xdata.XAdapterBase;
+import com.xxboy.adapters.xdata.XAdapterDate;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
@@ -74,11 +75,62 @@ public class XAdapter extends BaseAdapter {
 			v = convertView;
 		}
 
-		final XAdapterBase dataSet = mData.get(position);
-		if ((dataSet.getResource() == R.layout.xcamera_item && v.findViewById(R.id.ImageContainer) == null) || (dataSet.getResource() == R.layout.xcamera_camera && v.findViewById(R.id.id_camera_preview) == null)) {
-			v = mInflater.inflate(resource, parent, false);
+		final XAdapterBase xData = mData.get(position);
+		if (xData == null) {
+			return v;
 		}
-		bindView(position, v, dataSet);
+
+		int microMdf = 6;
+		switch (xData.getResource()) {
+		case R.layout.xcamera_camera: {
+			LinearLayout cameraContainerLinearLayout = (LinearLayout) v.findViewById(R.id.id_camera_preview);
+			if (cameraContainerLinearLayout == null) {
+				v = mInflater.inflate(resource, parent, false);
+				cameraContainerLinearLayout = (LinearLayout) v.findViewById(R.id.id_camera_preview);
+			}
+			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
+			ImageView Image = (ImageView) v.findViewById(R.id.id_camera_image);
+			setViewImage(Image, R.drawable.ic_menu_camera);
+			break;
+		}
+		case R.layout.xcamera_item: {
+			LinearLayout ImageContainer = (LinearLayout) v.findViewById(R.id.ImageContainer);
+			if (ImageContainer == null) {
+				v = mInflater.inflate(resource, parent, false);
+				ImageContainer = (LinearLayout) v.findViewById(R.id.ImageContainer);
+			}
+			final ImageView Image = (ImageView) v.findViewById(R.id.ItemImage);
+			final TextView txtPath = (TextView) v.findViewById(R.id.ItemResource);
+			final String path = xData.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString();
+			txtPath.setText(path);
+			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
+			ImageContainer.setBackgroundColor(xData.getBackgroundColor());
+			setViewImage(position, Image, path);
+			break;
+		}
+		case R.layout.xitem_date: {
+			XAdapterDate xDate = (XAdapterDate) xData;
+			LinearLayout xDateContainer = (LinearLayout) v.findViewById(R.id.id_item_date);
+			if (xDateContainer == null) {
+				v = mInflater.inflate(resource, parent, false);
+				xDateContainer = (LinearLayout) v.findViewById(R.id.id_item_date);
+			}
+			final TextView xMonth = (TextView) v.findViewById(R.id.id_item_date_month);
+			final TextView xDay = (TextView) v.findViewById(R.id.id_item_date_day);
+			final TextView xYear = (TextView) v.findViewById(R.id.id_item_date_year);
+			xMonth.setText(xDate.getMonth());
+			xDay.setText(xDate.getDay());
+			xYear.setText(xDate.getYear());
+			break;
+		}
+		default:
+			;
+		}
+
+		// if ((xData.getResource() == R.layout.xcamera_item && v.findViewById(R.id.ImageContainer) == null) || (xData.getResource() == R.layout.xcamera_camera && v.findViewById(R.id.id_camera_preview) == null)) {
+		// v = mInflater.inflate(resource, parent, false);
+		// }
+		// bindView(position, v, xData);
 
 		return v;
 	}
@@ -88,13 +140,16 @@ public class XAdapter extends BaseAdapter {
 			return;
 		}
 		int microMdf = 6;
-		if (dataSet.getResource() == R.layout.xcamera_camera) {
+		switch (dataSet.getResource()) {
+		case R.layout.xcamera_camera: {
 			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
 			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			ImageView Image = (ImageView) view.findViewById(R.id.id_camera_image);
 			setViewImage(Image, R.drawable.ic_menu_camera);
-		} else if (dataSet.getResource() == R.layout.xcamera_item) {
-			final LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
+			break;
+		}
+		case R.layout.xcamera_item: {
+			LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
 			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);
 			final TextView txtPath = (TextView) view.findViewById(R.id.ItemResource);
 			final String path = dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString();
@@ -102,6 +157,13 @@ public class XAdapter extends BaseAdapter {
 			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			ImageContainer.setBackgroundColor(dataSet.getBackgroundColor());
 			setViewImage(position, Image, path);
+			break;
+		}
+		case R.layout.xitem_date: {
+			break;
+		}
+		default:
+			;
 		}
 
 	}

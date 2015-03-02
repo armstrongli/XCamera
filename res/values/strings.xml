@@ -30,4 +30,9 @@
     <string name="INITIAL_SUCCESS">1</string>
     <string name="INITIAL_FAIL">0</string>
 
+    <!-- default value of date element -->
+    <string name="item_month">month</string>
+    <string name="item_date">date</string>
+    <string name="item_year">year</string>
+
 </resources>

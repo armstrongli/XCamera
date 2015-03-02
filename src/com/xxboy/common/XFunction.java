@@ -127,6 +127,36 @@ public final class XFunction {
 		}
 	}
 
+	public static final String getMonthTranslation(String monthNum) {
+		if ("01".equals(monthNum)) {
+			return "Jan";
+		} else if ("02".equals(monthNum)) {
+			return "Feb";
+		} else if ("03".equals(monthNum)) {
+			return "Mar";
+		} else if ("04".equals(monthNum)) {
+			return "Apr";
+		} else if ("05".equals(monthNum)) {
+			return "May";
+		} else if ("06".equals(monthNum)) {
+			return "Jun";
+		} else if ("07".equals(monthNum)) {
+			return "Jul";
+		} else if ("08".equals(monthNum)) {
+			return "Aug";
+		} else if ("09".equals(monthNum)) {
+			return "Sep";
+		} else if ("10".equals(monthNum)) {
+			return "Oct";
+		} else if ("11".equals(monthNum)) {
+			return "Nov";
+		} else if ("12".equals(monthNum)) {
+			return "Dec";
+		} else {
+			return monthNum;
+		}
+	}
+
 	/**
 	 * remove folder(including sub-files)
 	 * 
