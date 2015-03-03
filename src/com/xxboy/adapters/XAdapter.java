@@ -115,6 +115,7 @@ public class XAdapter extends BaseAdapter {
 				v = mInflater.inflate(resource, parent, false);
 				xDateContainer = (LinearLayout) v.findViewById(R.id.id_item_date);
 			}
+			xDateContainer.setBackgroundColor(xDate.getBackgroundColor());
 			xDateContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			final TextView xMonth = (TextView) v.findViewById(R.id.id_item_date_month);
 			final TextView xDay = (TextView) v.findViewById(R.id.id_item_date_day);
