@@ -115,6 +115,7 @@ public class XAdapter extends BaseAdapter {
 				v = mInflater.inflate(resource, parent, false);
 				xDateContainer = (LinearLayout) v.findViewById(R.id.id_item_date);
 			}
+			xDateContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			final TextView xMonth = (TextView) v.findViewById(R.id.id_item_date_month);
 			final TextView xDay = (TextView) v.findViewById(R.id.id_item_date_day);
 			final TextView xYear = (TextView) v.findViewById(R.id.id_item_date_year);
@@ -127,45 +128,7 @@ public class XAdapter extends BaseAdapter {
 			;
 		}
 
-		// if ((xData.getResource() == R.layout.xcamera_item && v.findViewById(R.id.ImageContainer) == null) || (xData.getResource() == R.layout.xcamera_camera && v.findViewById(R.id.id_camera_preview) == null)) {
-		// v = mInflater.inflate(resource, parent, false);
-		// }
-		// bindView(position, v, xData);
-
 		return v;
-	}
-
-	private void bindView(int position, View view, XAdapterBase dataSet) {
-		if (dataSet == null) {
-			return;
-		}
-		int microMdf = 6;
-		switch (dataSet.getResource()) {
-		case R.layout.xcamera_camera: {
-			LinearLayout cameraContainerLinearLayout = (LinearLayout) view.findViewById(R.id.id_camera_preview);
-			cameraContainerLinearLayout.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
-			ImageView Image = (ImageView) view.findViewById(R.id.id_camera_image);
-			setViewImage(Image, R.drawable.ic_menu_camera);
-			break;
-		}
-		case R.layout.xcamera_item: {
-			LinearLayout ImageContainer = (LinearLayout) view.findViewById(R.id.ImageContainer);
-			final ImageView Image = (ImageView) view.findViewById(R.id.ItemImage);
-			final TextView txtPath = (TextView) view.findViewById(R.id.ItemResource);
-			final String path = dataSet.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString();
-			txtPath.setText(path);
-			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
-			ImageContainer.setBackgroundColor(dataSet.getBackgroundColor());
-			setViewImage(position, Image, path);
-			break;
-		}
-		case R.layout.xitem_date: {
-			break;
-		}
-		default:
-			;
-		}
-
 	}
 
 	public void setViewText(TextView v, String text) {
@@ -185,8 +148,8 @@ public class XAdapter extends BaseAdapter {
 		if (bitmapFromMemCache != null) {
 			imageView.setImageBitmap(bitmapFromMemCache);
 		} else {
+			imageView.setImageBitmap(null);
 			if (XFunction.isImage(imagePath)) {
-				// imageView.setImageResource(R.drawable.loading);
 				new XBitmapCacheAsyncTask(position, imagePath, imageView).execute();
 			} else {
 				imageView.setImageResource(R.drawable.ic_media_embed_play);
