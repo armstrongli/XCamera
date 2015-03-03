@@ -38,7 +38,7 @@ public class XAdapterDate extends XAdapterBase {
 	}
 
 	public String getMonth() {
-		return (String) this.get(ID_ITEM_DATE_MONTH);
+		return (String) this.get(ID_ITEM_DATE_MONTH) + ", ";
 	}
 
 	public String getDay() {

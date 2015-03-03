@@ -18,12 +18,12 @@
     </style>
 
     <style name="xitem_month">
-        <item name="android:textColor">#4169E1</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#994C00</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="xitem_date">
-        <item name="android:textColor">#4169E1</item>
+        <item name="android:textColor">#00994C</item>
         <item name="android:textSize">15sp</item>
     </style>
 
