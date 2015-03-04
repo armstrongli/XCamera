@@ -107,6 +107,15 @@ public class XCamera extends Activity {
 			}
 		});
 
+		findViewById(R.id.id_float_camera).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+				startActivity(intent);
+			}
+		});
+
 		XCameraConst.GLOBAL_X_CAMERA_PATH = getString(R.string.picture_folder_path);
 		XCameraConst.GLOBAL_X_CACHE_PATH = this.getExternalCacheDir().getAbsolutePath();
 		XCameraConst.GLOBAL_X_DEFAULT_CAMERA_PATH = getString(R.string.default_picture_folder_path);

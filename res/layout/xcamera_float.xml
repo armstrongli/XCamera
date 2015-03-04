@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_float_camera"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:layout_gravity="bottom|right"
+    android:layout_marginBottom="10dp"
+    android:layout_marginRight="10dp"
+    android:alpha="0.8"
+    android:background="@drawable/xshape_float_border" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="1"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_menu_camera" />
+
+</FrameLayout>
