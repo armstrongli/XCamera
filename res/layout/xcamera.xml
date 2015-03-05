@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context="com.xxboy.xcamera.XCamera" >
 
+    <!--
     <GridView
         android:id="@+id/photo_grid"
         android:layout_width="match_parent"
@@ -17,6 +18,11 @@
         android:numColumns="3"
         android:verticalSpacing="0dp" >
     </GridView>
+    -->
+
+    <include layout="@layout/xcamera_items" />
+
+    <include layout="@layout/xcamera_bar" />
 
     <include layout="@layout/xcamera_float" />
 
