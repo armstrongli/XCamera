@@ -6,13 +6,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import android.hardware.Camera;
 import android.os.AsyncTask;
 
 import com.xxboy.adapters.xdata.XAdapterBase;
-import com.xxboy.adapters.xdata.XAdapterCamera;
 import com.xxboy.adapters.xdata.XAdapterDate;
 import com.xxboy.adapters.xdata.XAdapterPicture;
 import com.xxboy.common.XFunction;
@@ -92,9 +89,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		}
 
 		LinkedList<XAdapterBase> imageResources = getDaysPhotoResourceX();
-//		LinkedList<XAdapterBase> cameraResources = getCameraPreviewsX();
 		LinkedList<XAdapterBase> allResources = new LinkedList<XAdapterBase>();
-//		allResources.addAll(cameraResources);
 		Collections.reverse(imageResources);
 		allResources.addAll(imageResources);
 		/**
@@ -108,21 +103,6 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		}
 		XCamera.setAllResourcePath(resources);
 		return null;
-	}
-
-	/**
-	 * get all camera resources
-	 * 
-	 * @return
-	 */
-	private LinkedList<XAdapterBase> getCameraPreviewsX() {
-		LinkedList<XAdapterBase> cameraResources = new LinkedList<XAdapterBase>();
-		if (Camera.getNumberOfCameras() > 0) {
-			Map<String, Object> res = new HashMap<String, Object>();
-			cameraResources.add(new XAdapterCamera(res));
-		}
-
-		return cameraResources;
 	}
 
 	/**

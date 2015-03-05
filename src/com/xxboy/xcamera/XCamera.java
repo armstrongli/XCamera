@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -21,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xxboy.activities.XViewActivity;
@@ -30,8 +28,6 @@ import com.xxboy.adapters.xdata.XAdapterBase;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-//import com.xxboy.services.asynctasks.XBackground;
-//import com.xxboy.services.asynctasks.XCameraAsyncTask;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
 import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
@@ -147,13 +143,6 @@ public class XCamera extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-//		try {
-//			new XBackground((LinearLayout) findViewById(R.id.main), BitmapFactory.decodeResource(getResources(), R.drawable.background)).execute();
-//		} catch (Exception e) {
-//			Logger.log(e.getMessage(), e);
-//		}
-		// prepare cameras
-		// new XCameraAsyncTask().execute();
 		new XPreCacheLoaderAsyncTask().execute();
 	}
 
