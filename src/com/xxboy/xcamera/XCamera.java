@@ -30,7 +30,7 @@ import com.xxboy.adapters.xdata.XAdapterBase;
 import com.xxboy.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.asynctasks.XBackground;
+//import com.xxboy.services.asynctasks.XBackground;
 //import com.xxboy.services.asynctasks.XCameraAsyncTask;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
 import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
@@ -147,11 +147,11 @@ public class XCamera extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		try {
-			new XBackground((LinearLayout) findViewById(R.id.main), BitmapFactory.decodeResource(getResources(), R.drawable.background)).execute();
-		} catch (Exception e) {
-			Logger.log(e.getMessage(), e);
-		}
+//		try {
+//			new XBackground((LinearLayout) findViewById(R.id.main), BitmapFactory.decodeResource(getResources(), R.drawable.background)).execute();
+//		} catch (Exception e) {
+//			Logger.log(e.getMessage(), e);
+//		}
 		// prepare cameras
 		// new XCameraAsyncTask().execute();
 		new XPreCacheLoaderAsyncTask().execute();

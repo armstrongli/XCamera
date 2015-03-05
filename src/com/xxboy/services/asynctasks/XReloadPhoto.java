@@ -92,9 +92,9 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		}
 
 		LinkedList<XAdapterBase> imageResources = getDaysPhotoResourceX();
-		LinkedList<XAdapterBase> cameraResources = getCameraPreviewsX();
+//		LinkedList<XAdapterBase> cameraResources = getCameraPreviewsX();
 		LinkedList<XAdapterBase> allResources = new LinkedList<XAdapterBase>();
-		allResources.addAll(cameraResources);
+//		allResources.addAll(cameraResources);
 		Collections.reverse(imageResources);
 		allResources.addAll(imageResources);
 		/**

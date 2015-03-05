@@ -6,11 +6,6 @@
     android:layout_gravity="top|left"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:height="50dp" />
-
     <GridView
         android:id="@+id/photo_grid"
         android:layout_width="match_parent"
