@@ -82,7 +82,7 @@ public class XAdapter extends BaseAdapter {
 
 		int microMdf = 6;
 		switch (xData.getResource()) {
-		case R.layout.xcamera_camera: {
+		case R.layout.xitem_camera: {
 			LinearLayout cameraContainerLinearLayout = (LinearLayout) v.findViewById(R.id.id_camera_preview);
 			if (cameraContainerLinearLayout == null) {
 				v = mInflater.inflate(resource, parent, false);
@@ -93,7 +93,7 @@ public class XAdapter extends BaseAdapter {
 			setViewImage(Image, R.drawable.ic_menu_camera);
 			break;
 		}
-		case R.layout.xcamera_item: {
+		case R.layout.xitem_image: {
 			LinearLayout ImageContainer = (LinearLayout) v.findViewById(R.id.ImageContainer);
 			if (ImageContainer == null) {
 				v = mInflater.inflate(resource, parent, false);

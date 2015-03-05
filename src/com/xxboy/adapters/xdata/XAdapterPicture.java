@@ -21,7 +21,7 @@ public class XAdapterPicture extends XAdapterBase {
 
 	@Override
 	public int getResource() {
-		return R.layout.xcamera_item;
+		return R.layout.xitem_image;
 	}
 
 	@Override

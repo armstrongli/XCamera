@@ -19,7 +19,7 @@ public class XAdapterCamera extends XAdapterBase {
 
 	@Override
 	public int getResource() {
-		return R.layout.xcamera_camera;
+		return R.layout.xitem_camera;
 	}
 
 	@Override
