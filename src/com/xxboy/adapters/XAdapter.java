@@ -19,7 +19,6 @@ import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.runnable.ImageExecutor;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.utils.XQueueUtil;
 import com.xxboy.xcamera.XCamera;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
@@ -62,7 +61,6 @@ public class XAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Logger.debug("Loading: " + position);
-		XQueueUtil.addMaskTask(position);
 		View resultView = createViewFromResource(position, convertView, parent, this.mData.get(position).getResource());
 		return resultView;
 	}

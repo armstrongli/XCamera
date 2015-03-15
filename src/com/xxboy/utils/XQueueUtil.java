@@ -8,6 +8,20 @@ import com.xxboy.log.Logger;
 import com.xxboy.services.runnable.ImageLoader;
 
 public final class XQueueUtil {
+	private static int startVisableIndex = 0;
+	private static int lastVisableIndex = 0;
+
+	/**
+	 * sync the visable indexes for setting limitation of image runnable tasks
+	 * 
+	 * @param startVisableIndex
+	 * @param lastVisableIndex
+	 */
+	public static final void syncVisableIndexes(int startVisableIndex, int lastVisableIndex) {
+		XQueueUtil.startVisableIndex = startVisableIndex;
+		XQueueUtil.lastVisableIndex = lastVisableIndex;
+	}
+
 	/**
 	 * Runnable Pool<br/>
 	 * This is one pool to handle the runnables which will be executed<br/>
