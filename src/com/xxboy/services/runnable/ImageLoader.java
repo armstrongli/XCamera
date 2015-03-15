@@ -30,12 +30,16 @@ public class ImageLoader implements Runnable {
 			return;
 		} else {
 			this.imageView.setImageBitmap(this.varBitmap);
-			XQueueUtil.execRemoveFromRunnablePoolAfterSetImages(this.imagePath, this);
+			XQueueUtil.execRemoveFromRunnablePoolAfterSetImages(this);
 		}
 	}
 
 	public String getImagePath() {
 		return imagePath;
+	}
+
+	public int getPosition() {
+		return position;
 	}
 
 }

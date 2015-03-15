@@ -230,8 +230,6 @@ public class XCamera extends Activity {
 			});
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
-		} finally {
-			XQueueUtil.run();
 		}
 	}
 }
