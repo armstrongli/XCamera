@@ -17,7 +17,6 @@ import com.xxboy.adapters.xdata.XAdapterDate;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.asynctasks.XBitmapCacheAsyncTask;
 import com.xxboy.services.runnable.ImageExecutor;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
@@ -153,7 +152,6 @@ public class XAdapter extends BaseAdapter {
 			imageView.setImageBitmap(null);
 			if (XFunction.isImage(imagePath)) {
 				new ImageExecutor(position, imagePath, imageView).start();
-				// new XBitmapCacheAsyncTask(position, imagePath, imageView).execute();
 			} else {
 				imageView.setImageResource(R.drawable.ic_media_embed_play);
 			}
