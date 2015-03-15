@@ -24,10 +24,10 @@ public class XLoadImageViewAsyncTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		Bitmap bitmap = XCacheUtil.getImaveView(this.path);
 		if (bitmap != null && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
-			XQueueUtil.executeTask(new ImageLoader(imageView, bitmap));
+			XQueueUtil.executeTask(new ImageLoader(this.path, imageView, bitmap));
 		} else {
 			bitmap = getImage(this.path);
-			XQueueUtil.executeTask(new ImageLoader(imageView, bitmap));
+			XQueueUtil.executeTask(new ImageLoader(this.path, imageView, bitmap));
 			XCacheUtil.pushImageView(this.path, bitmap);
 		}
 		return null;

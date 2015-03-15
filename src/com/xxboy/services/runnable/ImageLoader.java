@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.xxboy.log.Logger;
+import com.xxboy.utils.XQueueUtil;
 
 public class ImageLoader implements Runnable {
 
@@ -11,7 +12,9 @@ public class ImageLoader implements Runnable {
 
 	private Bitmap varBitmap;
 
-	public ImageLoader(ImageView imageView, Bitmap varBitmap) {
+	private String imagePath;
+
+	public ImageLoader(String imagePath, ImageView imageView, Bitmap varBitmap) {
 		super();
 		this.imageView = imageView;
 		this.varBitmap = varBitmap;
@@ -24,6 +27,7 @@ public class ImageLoader implements Runnable {
 			return;
 		} else {
 			this.imageView.setImageBitmap(this.varBitmap);
+			XQueueUtil.execRemoveFromRunnablePoolAfterSetImages(this.imagePath, this);
 		}
 	}
 

@@ -92,6 +92,16 @@ public final class XQueueUtil {
 		}.start();
 	}
 
+	/**
+	 * exec for executing in main thread runnable instance
+	 * 
+	 * @param imagePath
+	 * @param r
+	 */
+	public static void execRemoveFromRunnablePoolAfterSetImages(final String imagePath, final Runnable r) {
+		executeRemoveFromRunnablePoolWhenMainThreadTaskFinishes(imagePath, r);
+	}
+
 	private static Handler handler;
 
 	public static final void setHandler(Handler handler) {

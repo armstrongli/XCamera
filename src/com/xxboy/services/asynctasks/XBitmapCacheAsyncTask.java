@@ -39,7 +39,7 @@ public class XBitmapCacheAsyncTask extends AsyncTask<Void, Void, Void> {
 
 			if (this.varBitmap != null) {
 				this.varBitmap = cutPicture(this.varBitmap);
-				XQueueUtil.addTasks(this.position, new ImageLoader(imageView, varBitmap));
+				XQueueUtil.addTasks(this.position, new ImageLoader(this.resourcePath, imageView, varBitmap));
 				XCacheUtil.pushToCache(this.resourcePath, this.varBitmap);
 			} else {
 				Logger.log("File can't be decoded: " + this.resourcePath);
