@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
+import com.xxboy.xcamera.XCamera;
 
 public class ImageExecutor extends Thread {
 
@@ -25,10 +26,43 @@ public class ImageExecutor extends Thread {
 	@Override
 	public void run() {
 		try {
-			this.bitmap = loadBitmapFromFile(this.imagePath);
+			this.bitmap = cutPicture(loadBitmapFromFile(this.imagePath));
 			XQueueUtil.execAddImage(this.imagePath, new ImageLoader(this.imagePath, this.imageView, bitmap));
 		} finally {
 			XCacheUtil.pushToCache(this.imagePath, this.bitmap);
+		}
+	}
+
+	/**
+	 * cut picture to the photo item proportion
+	 * 
+	 * @param original
+	 * @return
+	 */
+	private static Bitmap cutPicture(final Bitmap original) {
+		if (original.getWidth() == 0 || original.getHeight() == 0) {
+			return original;
+		}
+		if (original.getWidth() / original.getHeight() > XCamera.XCameraConst.PHOTO_ITEM_WIDTH / XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
+			if (original.getWidth() <= XCamera.XCameraConst.PHOTO_ITEM_WIDTH) {
+				return original;
+			} else {
+				if (original.getHeight() < XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
+					return Bitmap.createBitmap(original, 0, 0, XCamera.XCameraConst.PHOTO_ITEM_HEIGHT, original.getHeight());
+				} else {
+					return Bitmap.createBitmap(original, 0, 0, XCamera.XCameraConst.PHOTO_ITEM_WIDTH, XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
+				}
+			}
+		} else {
+			if (original.getHeight() <= XCamera.XCameraConst.PHOTO_ITEM_HEIGHT) {
+				return original;
+			} else {
+				if (original.getWidth() < XCamera.XCameraConst.PHOTO_ITEM_WIDTH) {
+					return Bitmap.createBitmap(original, 0, 0, original.getWidth(), XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
+				} else {
+					return Bitmap.createBitmap(original, 0, 0, XCamera.XCameraConst.PHOTO_ITEM_WIDTH, XCamera.XCameraConst.PHOTO_ITEM_HEIGHT);
+				}
+			}
 		}
 	}
 
