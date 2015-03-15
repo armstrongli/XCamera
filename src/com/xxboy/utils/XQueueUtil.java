@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import android.os.Handler;
 
 import com.xxboy.log.Logger;
+import com.xxboy.services.runnable.ImageLoader;
 import com.xxboy.xcamera.XCamera;
 
 public final class XQueueUtil {
@@ -100,6 +101,28 @@ public final class XQueueUtil {
 	 */
 	public static void execRemoveFromRunnablePoolAfterSetImages(final String imagePath, final Runnable r) {
 		executeRemoveFromRunnablePoolWhenMainThreadTaskFinishes(imagePath, r);
+	}
+
+	/**
+	 * runnable pool management.<br/>
+	 * 1. check whether existing in runnable pool<br/>
+	 * 2. if existing in pool, try to remove from OS main thread<br/>
+	 * 3. try to remove from runnable pool<br/>
+	 * 4. add new runnable to pool<br/>
+	 * 5. execute it in OS main thread<br/>
+	 * 5.1. remove runnable from pool after runnable thread finishes in OS main thread
+	 * 
+	 * @param imagePath
+	 * @param imageLoader
+	 */
+	public static void execAddImage(final String imagePath, final ImageLoader imageLoader) {
+		boolean isExists = checkExistingRunnable(imagePath, imageLoader);
+		if (isExists) {
+			removeFromOSMainThead(imagePath, imageLoader);
+		}
+		removeRunnableFromRunnablePool(imagePath, imageLoader);
+		addRunnableToRunnablePool(imagePath, imageLoader);
+		executeInOSMainThread(imagePath, imageLoader);
 	}
 
 	private static Handler handler;
