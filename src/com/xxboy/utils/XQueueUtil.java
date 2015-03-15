@@ -3,6 +3,7 @@ package com.xxboy.utils;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import android.os.Handler;
 
@@ -10,6 +11,87 @@ import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera;
 
 public final class XQueueUtil {
+	/**
+	 * Runnable Pool<br/>
+	 * This is one pool to handle the runnables which will be executed<br/>
+	 * in the system image view pool and set images.
+	 */
+	private static final ConcurrentHashMap<String, Runnable> runnablePool = new ConcurrentHashMap<String, Runnable>();
+
+	/**
+	 * check whether the runnable existing in the runnable pool.
+	 * 
+	 * @param imagePath
+	 * @param r
+	 * @return
+	 */
+	private static boolean checkExistingRunnable(final String imagePath, final Runnable r) {
+		String key = imagePath + r;
+		return runnablePool.containsKey(key);
+	}
+
+	/**
+	 * remove one Runnable from Runnable Pool.
+	 * 
+	 * @param imagePath
+	 * @param r
+	 * @return
+	 */
+	private static Runnable removeRunnableFromRunnablePool(final String imagePath, final Runnable r) {
+		String key = imagePath + r;
+		return runnablePool.remove(key);
+	}
+
+	/**
+	 * put one Runnable to Runnable Pool for executing.<br/>
+	 * This will be one executable runnable to prepare images for putting into OS main view thread.
+	 * 
+	 * @param imagePath
+	 * @param r
+	 * @return
+	 */
+	private static Runnable addRunnableToRunnablePool(final String imagePath, final Runnable r) {
+		return runnablePool.put(imagePath + r, r);
+	}
+
+	/**
+	 * remove one Runnable from OS main thread.<br/>
+	 * This operation is used for cut the one which won't be used anymore or <br/>
+	 * another thread will be used to show another image.
+	 * 
+	 * @param imagePath
+	 * @param r
+	 */
+	private static void removeFromOSMainThead(final String imagePath, final Runnable r) {
+		removeRunningTasks(r);
+	}
+
+	/**
+	 * run one task in OS main thread.
+	 * 
+	 * @param imagePath
+	 * @param r
+	 */
+	private static void executeInOSMainThread(final String imagePath, final Runnable r) {
+		executeTask(r);
+	}
+
+	/**
+	 * execute task: remove from runnable pool after the main thread finish. This one is called by the runnable itself.<br/>
+	 * 
+	 * @param imagePath
+	 * @param r
+	 */
+	private static void executeRemoveFromRunnablePoolWhenMainThreadTaskFinishes(final String imagePath, final Runnable r) {
+		new Thread() {
+			@Override
+			public void run() {
+				super.run();
+				XQueueUtil.removeRunnableFromRunnablePool(imagePath, r);
+			}
+		}.start();
+	}
+
 	private static Handler handler;
 
 	public static final void setHandler(Handler handler) {
@@ -39,7 +121,7 @@ public final class XQueueUtil {
 	/**
 	 * reset not auto load
 	 */
-	public static synchronized final void resetAutoLoad() {
+	private static synchronized final void resetAutoLoad() {
 		AUTO_LOAD_DIRECTLY = false;
 	}
 

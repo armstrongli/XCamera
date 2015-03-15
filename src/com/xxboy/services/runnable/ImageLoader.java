@@ -22,8 +22,9 @@ public class ImageLoader implements Runnable {
 		if (Thread.interrupted()) {
 			Logger.log("Thread interrupted");
 			return;
+		} else {
+			this.imageView.setImageBitmap(this.varBitmap);
 		}
-		this.imageView.setImageBitmap(this.varBitmap);
 	}
 
 }
