@@ -8,14 +8,17 @@ import com.xxboy.utils.XQueueUtil;
 
 public class ImageLoader implements Runnable {
 
+	private int position;
+
 	private ImageView imageView;
 
 	private Bitmap varBitmap;
 
 	private String imagePath;
 
-	public ImageLoader(String imagePath, ImageView imageView, Bitmap varBitmap) {
+	public ImageLoader(int position, String imagePath, ImageView imageView, Bitmap varBitmap) {
 		super();
+		this.position = position;
 		this.imageView = imageView;
 		this.varBitmap = varBitmap;
 	}
@@ -29,6 +32,10 @@ public class ImageLoader implements Runnable {
 			this.imageView.setImageBitmap(this.varBitmap);
 			XQueueUtil.execRemoveFromRunnablePoolAfterSetImages(this.imagePath, this);
 		}
+	}
+
+	public String getImagePath() {
+		return imagePath;
 	}
 
 }

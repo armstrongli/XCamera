@@ -27,7 +27,7 @@ public class ImageExecutor extends Thread {
 	public void run() {
 		try {
 			this.bitmap = cutPicture(loadBitmapFromFile(this.imagePath));
-			XQueueUtil.execAddImage(this.imagePath, new ImageLoader(this.imagePath, this.imageView, bitmap));
+			XQueueUtil.execAddImage(new ImageLoader(this.position, this.imagePath, this.imageView, bitmap));
 		} finally {
 			XCacheUtil.pushToCache(this.imagePath, this.bitmap);
 		}

@@ -112,10 +112,10 @@ public final class XQueueUtil {
 	 * 5. execute it in OS main thread<br/>
 	 * 5.1. remove runnable from pool after runnable thread finishes in OS main thread
 	 * 
-	 * @param imagePath
 	 * @param imageLoader
 	 */
-	public static void execAddImage(final String imagePath, final ImageLoader imageLoader) {
+	public static void execAddImage(final ImageLoader imageLoader) {
+		String imagePath = imageLoader.getImagePath();
 		boolean isExists = checkExistingRunnable(imagePath, imageLoader);
 		if (isExists) {
 			removeFromOSMainThead(imagePath, imageLoader);
