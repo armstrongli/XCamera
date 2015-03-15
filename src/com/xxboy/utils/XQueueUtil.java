@@ -127,7 +127,7 @@ public final class XQueueUtil {
 	public static void execAddImage(final ImageLoader imageLoader) {
 		String imagePath = imageLoader.getImagePath();
 		boolean isExists = checkExistingRunnable(imagePath, imageLoader);
-		if (isExists) {
+		if (isExists || imageLoader.getPosition() < startVisableIndex || imageLoader.getPosition() > lastVisableIndex) {
 			removeFromOSMainThead(imagePath, imageLoader);
 		}
 		removeRunnableFromRunnablePool(imagePath, imageLoader);
