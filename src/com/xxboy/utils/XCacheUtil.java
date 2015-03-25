@@ -17,23 +17,6 @@ import com.xxboy.log.Logger;
 import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XCacheUtil {
-	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 1/4 of runtime max memory
-	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE.intValue()) {
-		@Override
-		protected int sizeOf(String key, Bitmap value) {
-			return value.getByteCount();
-		}
-
-		@Override
-		protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
-			if (oldValue != null && !oldValue.isRecycled()) {
-				Logger.debug("Moving cache from memory cache to soft referene cache: " + key + ", old value: " + oldValue);
-				XCacheUtil.pushToSoftCache(key, oldValue);
-			}
-			super.entryRemoved(evicted, key, oldValue, newValue);
-		}
-
-	};
 
 	public static final Bitmap getFromCache(String id) {
 		Bitmap bitmapFromMem = getFromMemCache(id);
@@ -74,7 +57,7 @@ public class XCacheUtil {
 	public static void pushToMemCache(String id, Bitmap bitmap) {
 		Logger.debug("Pushing to memory cache: " + id);
 		try {
-			mMemoryCache.put(hashKeyForDisk(id), bitmap);
+			pushToSoftCache(id, bitmap);
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
 		}
@@ -102,12 +85,13 @@ public class XCacheUtil {
 	 */
 	public static Bitmap getFromMemCache(String id) {
 		try {
-			Logger.debug("Getting From memcache(" + mMemoryCache.size() + "): " + id);
 			// check whether it's in memory cache
-			Bitmap bitmap = mMemoryCache.get(hashKeyForDisk(id));
+			Bitmap bitmap = getFromSoftCache(id);
 			if (bitmap != null && !bitmap.isRecycled()) {
 				Logger.debug("hit in cache: memory cache");
 				return bitmap;
+			} else {
+				Logger.debug("Not hit in cache: memory cache");
 			}
 			return null;
 		} catch (Exception e) {
@@ -116,7 +100,7 @@ public class XCacheUtil {
 		return null;
 	}
 
-	private static final Long M_DISK_CACHE_SIZE = 20l * 1024l * 1024l;// 20M
+	private static final Long M_DISK_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;
 	private static LruCache<String, SoftReference<Bitmap>> xSoftCache = new LruCache<String, SoftReference<Bitmap>>(M_DISK_CACHE_SIZE.intValue()) {
 
 		@Override
