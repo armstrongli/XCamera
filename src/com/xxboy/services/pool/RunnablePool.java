@@ -13,6 +13,8 @@ public final class RunnablePool {
 	}
 
 	public static boolean checkCanBeRan(int toBeRanIndex) {
-		return toBeRanIndex >= startIndex && toBeRanIndex <= endIndex;
+		synchronized (indexLock) {
+			return toBeRanIndex >= startIndex && toBeRanIndex <= endIndex;
+		}
 	}
 }
