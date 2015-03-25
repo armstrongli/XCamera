@@ -66,6 +66,7 @@ public class ExecutorPool {
 			runningPath2Position.remove(imagePath);
 			ImageExecutor executor = runningImageExecutorPool.remove(imagePath);
 			if (executor != null) {
+				executor.stop();// stop the running image executor
 				waitingImageExecutorPool.put(imagePath, executor);
 			}
 		}
