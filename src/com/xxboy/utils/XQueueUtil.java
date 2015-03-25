@@ -27,7 +27,7 @@ public final class XQueueUtil {
 	 * This is one pool to handle the runnables which will be executed<br/>
 	 * in the system image view pool and set images.
 	 */
-	private static final ConcurrentHashMap<String, Runnable> runnablePool = new ConcurrentHashMap<String, Runnable>();
+	private static final ConcurrentHashMap<String, ImageLoader> runnablePool = new ConcurrentHashMap<String, ImageLoader>();
 
 	/**
 	 * check whether the runnable existing in the runnable pool.
@@ -36,8 +36,8 @@ public final class XQueueUtil {
 	 * @param r
 	 * @return
 	 */
-	private static boolean checkExistingRunnable(final String imagePath, final Runnable r) {
-		String key = imagePath + r;
+	private static boolean checkExistingRunnable(final String imagePath, final ImageLoader r) {
+		String key = imagePath + r.getImagePath();
 		return runnablePool.containsKey(key);
 	}
 
@@ -48,8 +48,8 @@ public final class XQueueUtil {
 	 * @param r
 	 * @return
 	 */
-	private static Runnable removeRunnableFromRunnablePool(final String imagePath, final Runnable r) {
-		String key = imagePath + r;
+	private static Runnable removeRunnableFromRunnablePool(final String imagePath, final ImageLoader r) {
+		String key = imagePath + r.getImagePath();
 		return runnablePool.remove(key);
 	}
 
@@ -61,8 +61,8 @@ public final class XQueueUtil {
 	 * @param r
 	 * @return
 	 */
-	private static Runnable addRunnableToRunnablePool(final String imagePath, final Runnable r) {
-		return runnablePool.put(imagePath + r, r);
+	private static Runnable addRunnableToRunnablePool(final String imagePath, final ImageLoader r) {
+		return runnablePool.put(imagePath + r.getImagePath(), r);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public final class XQueueUtil {
 	 * @param imagePath
 	 * @param r
 	 */
-	private static void executeRemoveFromRunnablePoolWhenMainThreadTaskFinishes(final String imagePath, final Runnable r) {
+	private static void executeRemoveFromRunnablePoolWhenMainThreadTaskFinishes(final String imagePath, final ImageLoader r) {
 		new Thread() {
 			@Override
 			public void run() {
