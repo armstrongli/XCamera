@@ -8,12 +8,18 @@ public class ExecutorPool {
 
 	private static Object lock = new Object();
 
+	private static ConcurrentHashMap<String, Integer> path2Position = new ConcurrentHashMap<String, Integer>();
+
 	private static ConcurrentHashMap<String, ImageExecutor> waitingImageExecutorPool = new ConcurrentHashMap<String, ImageExecutor>();
 
 	private static ConcurrentHashMap<String, ImageExecutor> runningImageExecutorPool = new ConcurrentHashMap<String, ImageExecutor>();
 
 	public static final void executeExecutor(ImageExecutor executor) {
 		String path = executor.getImagePath();
+		int position = executor.getPosition();
+		if (!path2Position.containsKey(path)) {
+			path2Position.put(path, position);
+		}
 		synchronized (lock) {
 			if (runningImageExecutorPool.contains(path)) {
 				ImageExecutor tmpExecutor = runningImageExecutorPool.get(path);
@@ -71,6 +77,7 @@ public class ExecutorPool {
 			for (ImageExecutor item : waitingImageExecutorPool.values()) {
 				item.stop();
 			}
+			path2Position.clear();
 			runningImageExecutorPool.clear();
 			waitingImageExecutorPool.clear();
 		}
