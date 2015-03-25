@@ -11,4 +11,8 @@ public final class RunnablePool {
 			endIndex = newEndIndex;
 		}
 	}
+
+	public static boolean checkCanBeRan(int toBeRanIndex) {
+		return toBeRanIndex >= startIndex && toBeRanIndex <= endIndex;
+	}
 }

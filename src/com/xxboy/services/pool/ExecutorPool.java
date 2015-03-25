@@ -15,11 +15,23 @@ public class ExecutorPool {
 	public static final void executeExecutor(ImageExecutor executor) {
 		String path = executor.getImagePath();
 		synchronized (lock) {
-			if (waitingImageExecutorPool.containsKey(path)) {
+			if (runningImageExecutorPool.contains(path)) {
+				ImageExecutor tmpExecutor = runningImageExecutorPool.get(path);
+				tmpExecutor.stop();
+				tmpExecutor.setImageView(executor.getImageView());
+				tmpExecutor.setPosition(executor.getPosition());
+			} else if (waitingImageExecutorPool.containsKey(path)) {
 				ImageExecutor tmpExecutor = waitingImageExecutorPool.get(path);
 				tmpExecutor.setImageView(executor.getImageView());
 				tmpExecutor.setPosition(executor.getPosition());
 				moveToRunningExecutorPool(path);
+			} else {
+				runningImageExecutorPool.put(path, executor);
+			}
+			if (RunnablePool.checkCanBeRan(executor.getPosition())) {
+				runningImageExecutorPool.get(path).start();
+			} else {
+				moveToWaitingExecutor(path);
 			}
 		}
 	}
@@ -48,4 +60,19 @@ public class ExecutorPool {
 		}
 	}
 
+	/**
+	 * clear all image executor pool, thread.
+	 */
+	public static final void resetExecutorPool() {
+		synchronized (lock) {
+			for (ImageExecutor item : runningImageExecutorPool.values()) {
+				item.stop();
+			}
+			for (ImageExecutor item : waitingImageExecutorPool.values()) {
+				item.stop();
+			}
+			runningImageExecutorPool.clear();
+			waitingImageExecutorPool.clear();
+		}
+	}
 }
