@@ -145,7 +145,7 @@ public class XAdapter extends BaseAdapter {
 
 	private void loadImage(int position, String imagePath, ImageView imageView) {
 		Bitmap bitmapFromMemCache = XCacheUtil.getFromMemCache(imagePath);
-		if (bitmapFromMemCache != null) {
+		if (bitmapFromMemCache != null && !bitmapFromMemCache.isRecycled()) {
 			imageView.setImageBitmap(bitmapFromMemCache);
 		} else {
 			imageView.setImageBitmap(null);
