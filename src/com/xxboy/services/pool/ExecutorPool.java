@@ -27,6 +27,19 @@ public class ExecutorPool {
 	 */
 	private static ConcurrentHashMap<String, ImageExecutor> runningImageExecutorPool = new ConcurrentHashMap<String, ImageExecutor>();
 
+	/**
+	 * execute one executor thread. <br/>
+	 * 1. check whether the current pool(running & waiting) has the image.<br/>
+	 * 1.1. if have, stop the existing one and reset the image view and index parameters.<br/>
+	 * 1.2. if not, add to running thread.<br/>
+	 * 2. check the current running pool to make sure whether there're executors which don't need run any longer for show.<br/>
+	 * 2.1. if have, stop the current running pool, and move to waiting pool.<br/>
+	 * 2.2. if not, ignore.<br/>
+	 * 3. add the current executor to running pool<br/>
+	 * 4. start the current executor.
+	 * 
+	 * @param executor
+	 */
 	public static final void executeExecutor(ImageExecutor executor) {
 		String path = executor.getImagePath();
 		int position = executor.getPosition();
