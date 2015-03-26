@@ -7,12 +7,24 @@ import com.xxboy.services.runnable.ImageExecutor;
 
 public class ExecutorPool {
 
+	/** pool lock */
 	private static Object lock = new Object();
 
+	/** image path to image view index. this can be one quick path to get image position and check whether need to stop some running thread and make the thread focus on the showing image view */
 	private static ConcurrentHashMap<String, Integer> runningPath2Position = new ConcurrentHashMap<String, Integer>();
 
+	/**
+	 * waiting pool.<br/>
+	 * This is one pool for pooling the unruning waiting images.<br/>
+	 * It can speed for showing images.
+	 */
 	private static ConcurrentHashMap<String, ImageExecutor> waitingImageExecutorPool = new ConcurrentHashMap<String, ImageExecutor>();
 
+	/**
+	 * running pool<br/>
+	 * Pool for storing the running executors.<br/>
+	 * When the task is finished, the executor will be removed.
+	 */
 	private static ConcurrentHashMap<String, ImageExecutor> runningImageExecutorPool = new ConcurrentHashMap<String, ImageExecutor>();
 
 	public static final void executeExecutor(ImageExecutor executor) {
