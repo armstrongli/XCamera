@@ -18,6 +18,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name" />
     </LinearLayout>
+
     <!-- 2nd page -->
 
     <LinearLayout
