@@ -21,6 +21,7 @@ public class ImageLoader implements Runnable {
 		this.position = position;
 		this.imageView = imageView;
 		this.varBitmap = varBitmap;
+		this.imagePath = imagePath;
 	}
 
 	@Override

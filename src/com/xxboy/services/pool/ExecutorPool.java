@@ -49,7 +49,7 @@ public class ExecutorPool {
 			}
 			if (runningImageExecutorPool.contains(path)) {
 				ImageExecutor tmpExecutor = runningImageExecutorPool.get(path);
-				tmpExecutor.stop();
+				tmpExecutor.interrupt();
 				tmpExecutor.setImageView(executor.getImageView());
 				tmpExecutor.setPosition(position);
 			} else if (waitingImageExecutorPool.containsKey(path)) {
@@ -61,7 +61,10 @@ public class ExecutorPool {
 				runningImageExecutorPool.put(path, executor);
 			}
 			if (RunnablePool.checkCanBeRan(position)) {
-				runningImageExecutorPool.get(path).start();
+				ImageExecutor potentialExecutor = runningImageExecutorPool.get(path);
+				if (!potentialExecutor.isAlive() && Thread.State.TERMINATED == potentialExecutor.getState()) {
+					potentialExecutor.start();
+				}
 			} else {
 				moveToWaitingExecutor(path);
 			}
@@ -78,7 +81,8 @@ public class ExecutorPool {
 			}
 			if (needMoveToWaitingPool) {
 				for (String item : runningImageExecutorPool.keySet()) {
-					if (!RunnablePool.checkCanBeRan(runningPath2Position.get(item))) {
+					Integer potentialPosition = runningPath2Position.get(item);
+					if (potentialPosition != null && !RunnablePool.checkCanBeRan(potentialPosition)) {
 						moveToWaitingExecutor(path);
 					}
 				}
@@ -96,7 +100,7 @@ public class ExecutorPool {
 			runningPath2Position.remove(imagePath);
 			ImageExecutor executor = runningImageExecutorPool.remove(imagePath);
 			if (executor != null) {
-				executor.stop();// stop the running image executor
+				executor.interrupt();// stop the running image executor
 				waitingImageExecutorPool.put(imagePath, executor);
 			}
 		}
@@ -135,10 +139,10 @@ public class ExecutorPool {
 	public static final void resetExecutorPool() {
 		synchronized (lock) {
 			for (ImageExecutor item : runningImageExecutorPool.values()) {
-				item.stop();
+				item.interrupt();
 			}
 			for (ImageExecutor item : waitingImageExecutorPool.values()) {
-				item.stop();
+				item.interrupt();
 			}
 			runningPath2Position.clear();
 			runningImageExecutorPool.clear();
