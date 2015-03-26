@@ -17,6 +17,7 @@ import com.xxboy.adapters.xdata.XAdapterDate;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.services.pool.ExecutorPool;
 import com.xxboy.services.runnable.ImageExecutor;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera;
@@ -149,7 +150,8 @@ public class XAdapter extends BaseAdapter {
 		} else {
 			imageView.setImageBitmap(null);
 			if (XFunction.isImage(imagePath)) {
-				new ImageExecutor(position, imagePath, imageView).start();
+				ExecutorPool.executeExecutor(new ImageExecutor(position, imagePath, imageView));
+				// new ImageExecutor(position, imagePath, imageView).start();
 			} else {
 				imageView.setImageResource(R.drawable.ic_media_embed_play);
 			}
