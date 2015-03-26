@@ -86,6 +86,11 @@ public class ExecutorPool {
 		}
 	}
 
+	/**
+	 * stop the running one and move it to waiting pool.
+	 * 
+	 * @param imagePath
+	 */
 	private static final void moveToWaitingExecutor(String imagePath) {
 		synchronized (lock) {
 			runningPath2Position.remove(imagePath);
@@ -97,6 +102,11 @@ public class ExecutorPool {
 		}
 	}
 
+	/**
+	 * move waiting executor to running executors' pool from waiting executors' pool.
+	 * 
+	 * @param imagePath
+	 */
 	private static final void moveToRunningExecutorPool(String imagePath) {
 		synchronized (lock) {
 			ImageExecutor executor = waitingImageExecutorPool.get(imagePath);
@@ -106,6 +116,12 @@ public class ExecutorPool {
 		}
 	}
 
+	/**
+	 * remove one executor.<br/>
+	 * this happens only when the executor is finished successfully.
+	 * 
+	 * @param imagePath
+	 */
 	public static final void removeExecutor(String imagePath) {
 		synchronized (lock) {
 			runningPath2Position.remove(imagePath);
