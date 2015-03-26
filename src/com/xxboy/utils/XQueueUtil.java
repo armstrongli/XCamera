@@ -148,7 +148,7 @@ public final class XQueueUtil {
 		XQueueUtil.handler.post(r);
 	}
 
-	private static void removeRunningTasks(Runnable r) {
+	public static void removeRunningTasks(Runnable r) {
 		if (r == null) {
 			return;
 		}

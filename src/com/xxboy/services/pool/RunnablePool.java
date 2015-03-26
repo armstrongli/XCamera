@@ -1,5 +1,11 @@
 package com.xxboy.services.pool;
 
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.xxboy.services.runnable.ImageLoader;
+import com.xxboy.utils.XQueueUtil;
+
 public final class RunnablePool {
 	private static int startIndex = 0;
 	private static int endIndex = 0;
@@ -28,5 +34,57 @@ public final class RunnablePool {
 		synchronized (indexLock) {
 			return toBeRanIndex >= startIndex && toBeRanIndex <= endIndex;
 		}
+	}
+
+	// ------------------------------------------------------------------------------------------
+
+	public static Object imageLoaderLock = new Object();
+
+	/**
+	 * 
+	 */
+	private static ConcurrentHashMap<String, Integer> imageLoader2Position = new ConcurrentHashMap<String, Integer>();
+	/**
+	 * image loader pool<br/>
+	 */
+	private static ConcurrentHashMap<String, ImageLoader> runningImageLoaderPool = new ConcurrentHashMap<String, ImageLoader>();
+
+	/**
+	 * execute image loader
+	 * 
+	 * @param imageLoader
+	 */
+	public static void runImageLoader(ImageLoader imageLoader) {
+		if (checkCanBeRan(imageLoader.getPosition())) {
+
+			synchronized (imageLoaderLock) {
+				// get base data ready
+				imageLoader2Position.put(imageLoader.getImagePath(), imageLoader.getPosition());
+				runningImageLoaderPool.put(imageLoader.getImagePath(), imageLoader);
+
+				// check history pool and clean the history invalid image loaders.
+				boolean needClean = false;
+				Collection<Integer> imageLoaderPositions = imageLoader2Position.values();
+				for (int item : imageLoaderPositions) {
+					needClean |= !checkCanBeRan(item);
+					if (needClean) {
+						break;
+					}
+				}
+
+				// clear the running ones from UI main thread.
+				for (String path : runningImageLoaderPool.keySet()) {
+					if (!checkCanBeRan(runningImageLoaderPool.get(path).getPosition())) {
+						removeRunningImageLoader(runningImageLoaderPool.remove(path));
+					}
+				}
+			}
+
+			XQueueUtil.executeTaskDirectly(imageLoader);
+		}
+	}
+
+	public static void removeRunningImageLoader(ImageLoader imageLoader) {
+		XQueueUtil.removeRunningTasks(imageLoader);
 	}
 }
