@@ -10,7 +10,7 @@ import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera;
 
-public class ImageExecutor extends Thread {
+public class ImageExecutor implements Runnable {
 
 	private int position;
 	private String imagePath;
