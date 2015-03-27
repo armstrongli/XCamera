@@ -1,9 +1,10 @@
 package com.xxboy.services.runnable;
 
-import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.xxboy.log.Logger;
+import com.xxboy.services.pool.RunnablePool;
+import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
 
 public class ImageLoader implements Runnable {
@@ -12,15 +13,12 @@ public class ImageLoader implements Runnable {
 
 	private ImageView imageView;
 
-	private Bitmap varBitmap;
-
 	private String imagePath;
 
-	public ImageLoader(int position, String imagePath, ImageView imageView, Bitmap varBitmap) {
+	public ImageLoader(int position, String imagePath, ImageView imageView) {
 		super();
 		this.position = position;
 		this.imageView = imageView;
-		this.varBitmap = varBitmap;
 		this.imagePath = imagePath;
 	}
 
@@ -29,10 +27,12 @@ public class ImageLoader implements Runnable {
 		if (Thread.interrupted()) {
 			Logger.log("Thread interrupted");
 			return;
-		} else {
-			this.imageView.setImageBitmap(this.varBitmap);
-			XQueueUtil.execRemoveFromRunnablePoolAfterSetImages(this);
 		}
+
+		this.imageView.setImageBitmap(XCacheUtil.getFromMemCache(this.imagePath));
+
+		RunnablePool.removeRunningImageLoader(this);
+		XQueueUtil.execRemoveFromRunnablePoolAfterSetImages(this);
 	}
 
 	public String getImagePath() {

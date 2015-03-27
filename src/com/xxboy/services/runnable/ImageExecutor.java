@@ -8,14 +8,12 @@ import com.xxboy.log.Logger;
 import com.xxboy.services.pool.RunnablePool;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.utils.XQueueUtil;
 import com.xxboy.xcamera.XCamera;
 
 public class ImageExecutor extends Thread {
 
 	private int position;
 	private String imagePath;
-	private Bitmap bitmap;
 	private ImageView imageView;
 
 	public ImageExecutor(int position, String imagePath, ImageView imageView) {
@@ -30,17 +28,17 @@ public class ImageExecutor extends Thread {
 		if (Thread.interrupted()) {
 			return;
 		}
-		this.bitmap = cutPicture(loadBitmapFromFile(this.imagePath));
+		Bitmap bitmap = cutPicture(loadBitmapFromFile(this.imagePath));
 		if (Thread.interrupted()) {
 			return;
 		}
-		XCacheUtil.pushToCache(this.imagePath, this.bitmap);
+		XCacheUtil.pushToCache(this.imagePath, bitmap);
 		if (Thread.interrupted()) {
 			return;
 		}
 		Logger.log("Pushing " + this.imagePath);
-		RunnablePool.runImageLoader(new ImageLoader(this.position, this.imagePath, this.imageView, bitmap));
-		// XQueueUtil.execAddImage(new ImageLoader(this.position, this.imagePath, this.imageView, bitmap));
+		RunnablePool.runImageLoader(new ImageLoader(this.position, this.imagePath, this.imageView));
+		// XQueueUtil.execAddImage(new ImageLoader(this.position, this.imagePath, this.imageView));
 
 	}
 
