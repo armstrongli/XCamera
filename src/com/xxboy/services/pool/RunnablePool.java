@@ -34,7 +34,7 @@ public final class RunnablePool {
 	public static boolean checkCanBeRan(int toBeRanIndex) {
 		synchronized (indexLock) {
 			Logger.log("Pool executing 10 : " + toBeRanIndex + " >>> " + startIndex + "-" + endIndex);
-			return toBeRanIndex >= startIndex && toBeRanIndex <= endIndex;
+			return (startIndex == endIndex) || (toBeRanIndex >= startIndex && toBeRanIndex <= endIndex);
 		}
 	}
 
