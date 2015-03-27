@@ -10,15 +10,11 @@ public class ExecutorPool {
 	/** pool lock */
 	private static Object lock = new Object();
 
-	/** image path to image view index. this can be one quick path to get image position and check whether need to stop some running thread and make the thread focus on the showing image view */
-	private static ConcurrentHashMap<String, Integer> runningPath2Position = new ConcurrentHashMap<String, Integer>();
-
 	/**
-	 * waiting pool.<br/>
-	 * This is one pool for pooling the unruning waiting images.<br/>
-	 * It can speed for showing images.
+	 * image path to image view index. this can be one quick path to get image position and check whether need to stop some running thread and make the thread focus on the showing
+	 * image view
 	 */
-	private static ConcurrentHashMap<String, ImageExecutor> waitingImageExecutorPool = new ConcurrentHashMap<String, ImageExecutor>();
+	private static ConcurrentHashMap<String, Integer> runningPath2Position = new ConcurrentHashMap<String, Integer>();
 
 	/**
 	 * running pool<br/>
@@ -26,6 +22,11 @@ public class ExecutorPool {
 	 * When the task is finished, the executor will be removed.
 	 */
 	private static ConcurrentHashMap<String, ImageExecutor> runningImageExecutorPool = new ConcurrentHashMap<String, ImageExecutor>();
+
+	/**
+	 * Image Path = Running Thread
+	 */
+	private static ConcurrentHashMap<String, Thread> runningThreadPool = new ConcurrentHashMap<String, Thread>();
 
 	/**
 	 * execute one executor thread. <br/>
@@ -44,78 +45,57 @@ public class ExecutorPool {
 		String path = executor.getImagePath();
 		int position = executor.getPosition();
 		synchronized (lock) {
-			if (!runningPath2Position.containsKey(path)) {
-				runningPath2Position.put(path, position);
-			}
-			if (runningImageExecutorPool.contains(path)) {
-				ImageExecutor tmpExecutor = runningImageExecutorPool.get(path);
-				tmpExecutor.interrupt();
-				tmpExecutor.setImageView(executor.getImageView());
-				tmpExecutor.setPosition(position);
-			} else if (waitingImageExecutorPool.containsKey(path)) {
-				ImageExecutor tmpExecutor = waitingImageExecutorPool.get(path);
-				tmpExecutor.setImageView(executor.getImageView());
-				tmpExecutor.setPosition(position);
-				moveToRunningExecutorPool(path);
-			} else {
-				runningImageExecutorPool.put(path, executor);
-			}
-			if (RunnablePool.checkCanBeRan(position)) {
-				ImageExecutor potentialExecutor = runningImageExecutorPool.get(path);
-				if (!potentialExecutor.isAlive() && Thread.State.TERMINATED == potentialExecutor.getState()) {
-					potentialExecutor.start();
+			// check whether need to run
+			Thread runningThread = runningThreadPool.get(path);
+			if (!RunnablePool.checkCanBeRan(position)) {
+				runningImageExecutorPool.remove(path);
+				runningPath2Position.remove(path);
+				if (runningThread != null) {
+					runningThread.interrupt();
 				}
-			} else {
-				moveToWaitingExecutor(path);
+				return;
 			}
 
-			// -- check whether the position has been over dual. if it is, move to waiting pool
+			// check whether path - position containers the one to be ran
+			runningPath2Position.put(path, position);
+
+			ImageExecutor tmpRunningExecutor = runningImageExecutorPool.get(path);
+			if (executor.equals(tmpRunningExecutor) && runningThreadPool.containsKey(path)) {
+				return;
+			} else {
+				runningImageExecutorPool.remove(path);
+				if (runningThread != null) {
+					runningThread.interrupt();
+				}
+			}
+
+			// check can be run, and run if can
+			Thread targetRunThread = new Thread(tmpRunningExecutor);
+			runningThreadPool.put(path, targetRunThread);
+			targetRunThread.start();
+
+			// -- check whether the position has been over dual. if it is, move
+			// to waiting pool
 			Collection<Integer> runningPathes = runningPath2Position.values();
-			boolean needMoveToWaitingPool = false;
+			boolean needToClearRunningThread = false;
 			for (Integer item : runningPathes) {
+				if (item == null) {
+					continue;
+				}
 				boolean canBeRan = RunnablePool.checkCanBeRan(item);
 				if (!canBeRan) {
-					needMoveToWaitingPool = true;
+					needToClearRunningThread = true;
 					break;
 				}
 			}
-			if (needMoveToWaitingPool) {
+			if (needToClearRunningThread) {
 				for (String item : runningImageExecutorPool.keySet()) {
 					Integer potentialPosition = runningPath2Position.get(item);
 					if (potentialPosition != null && !RunnablePool.checkCanBeRan(potentialPosition)) {
-						moveToWaitingExecutor(path);
+						runningImageExecutorPool.remove(item);
+						runningThreadPool.remove(item).interrupt();
 					}
 				}
-			}
-		}
-	}
-
-	/**
-	 * stop the running one and move it to waiting pool.
-	 * 
-	 * @param imagePath
-	 */
-	private static final void moveToWaitingExecutor(String imagePath) {
-		synchronized (lock) {
-			runningPath2Position.remove(imagePath);
-			ImageExecutor executor = runningImageExecutorPool.remove(imagePath);
-			if (executor != null) {
-				executor.interrupt();// stop the running image executor
-				waitingImageExecutorPool.put(imagePath, executor);
-			}
-		}
-	}
-
-	/**
-	 * move waiting executor to running executors' pool from waiting executors' pool.
-	 * 
-	 * @param imagePath
-	 */
-	private static final void moveToRunningExecutorPool(String imagePath) {
-		synchronized (lock) {
-			ImageExecutor executor = waitingImageExecutorPool.get(imagePath);
-			if (executor != null) {
-				runningImageExecutorPool.put(imagePath, executor);
 			}
 		}
 	}
@@ -130,6 +110,10 @@ public class ExecutorPool {
 		synchronized (lock) {
 			runningPath2Position.remove(imagePath);
 			runningImageExecutorPool.remove(imagePath);
+			Thread t = runningThreadPool.remove(imagePath);
+			if (t != null) {
+				t.interrupt();
+			}
 		}
 	}
 
@@ -138,15 +122,12 @@ public class ExecutorPool {
 	 */
 	public static final void resetExecutorPool() {
 		synchronized (lock) {
-			for (ImageExecutor item : runningImageExecutorPool.values()) {
+			for (Thread item : runningThreadPool.values()) {
 				item.interrupt();
 			}
-			for (ImageExecutor item : waitingImageExecutorPool.values()) {
-				item.interrupt();
-			}
+			runningThreadPool.clear();
 			runningPath2Position.clear();
 			runningImageExecutorPool.clear();
-			waitingImageExecutorPool.clear();
 		}
 	}
 }
