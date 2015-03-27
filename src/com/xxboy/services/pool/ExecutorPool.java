@@ -67,12 +67,13 @@ public class ExecutorPool {
 					return;
 				} else {
 					removeExecutor(path);
+					runningImageExecutorPool.put(path, executor);
 				}
 			}
 
 			Logger.log("Pool-executing-7 : " + path);
 			// check can be run, and run if can
-			Thread targetRunThread = new Thread(tmpRunningExecutor);
+			Thread targetRunThread = new Thread(executor);
 			runningThreadPool.put(path, targetRunThread);
 			targetRunThread.start();
 
