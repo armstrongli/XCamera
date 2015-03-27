@@ -8,7 +8,7 @@ import com.xxboy.utils.XQueueUtil;
 
 public final class RunnablePool {
 	private static int startIndex = 0;
-	private static int endIndex = 0;
+	private static int endIndex = Integer.MAX_VALUE;
 	private static Object indexLock = new Object();
 
 	/**
