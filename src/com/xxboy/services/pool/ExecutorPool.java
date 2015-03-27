@@ -3,6 +3,7 @@ package com.xxboy.services.pool;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.xxboy.log.Logger;
 import com.xxboy.services.runnable.ImageExecutor;
 
 public class ExecutorPool {
@@ -45,6 +46,7 @@ public class ExecutorPool {
 		String path = executor.getImagePath();
 		int position = executor.getPosition();
 		synchronized (lock) {
+			Logger.log("Pool executing 1 : " + path);
 			// check whether need to run
 			Thread runningThread = runningThreadPool.get(path);
 			if (!RunnablePool.checkCanBeRan(position)) {
@@ -53,22 +55,28 @@ public class ExecutorPool {
 				if (runningThread != null) {
 					runningThread.interrupt();
 				}
+				Logger.log("Pool executing 2 : " + path);
 				return;
 			}
 
+			Logger.log("Pool executing 3 : " + path);
 			// check whether path - position containers the one to be ran
 			runningPath2Position.put(path, position);
 
+			Logger.log("Pool executing 4 : " + path);
 			ImageExecutor tmpRunningExecutor = runningImageExecutorPool.get(path);
 			if (executor.equals(tmpRunningExecutor) && runningThreadPool.containsKey(path)) {
+				Logger.log("Pool executing 5 : " + path);
 				return;
 			} else {
+				Logger.log("Pool executing 6 : " + path);
 				runningImageExecutorPool.remove(path);
 				if (runningThread != null) {
 					runningThread.interrupt();
 				}
 			}
 
+			Logger.log("Pool executing 7 : " + path);
 			// check can be run, and run if can
 			Thread targetRunThread = new Thread(tmpRunningExecutor);
 			runningThreadPool.put(path, targetRunThread);
@@ -76,6 +84,7 @@ public class ExecutorPool {
 
 			// -- check whether the position has been over dual. if it is, move
 			// to waiting pool
+			Logger.log("Pool executing 8 : " + path);
 			Collection<Integer> runningPathes = runningPath2Position.values();
 			boolean needToClearRunningThread = false;
 			for (Integer item : runningPathes) {
@@ -88,6 +97,7 @@ public class ExecutorPool {
 					break;
 				}
 			}
+			Logger.log("Pool executing 9 : " + path);
 			if (needToClearRunningThread) {
 				for (String item : runningImageExecutorPool.keySet()) {
 					Integer potentialPosition = runningPath2Position.get(item);

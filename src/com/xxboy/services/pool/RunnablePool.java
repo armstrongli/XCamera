@@ -3,6 +3,7 @@ package com.xxboy.services.pool;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.xxboy.log.Logger;
 import com.xxboy.services.runnable.ImageLoader;
 import com.xxboy.utils.XQueueUtil;
 
@@ -32,6 +33,7 @@ public final class RunnablePool {
 	 */
 	public static boolean checkCanBeRan(int toBeRanIndex) {
 		synchronized (indexLock) {
+			Logger.log("Pool executing 10 : " + toBeRanIndex + " >>> " + startIndex + "-" + endIndex);
 			return toBeRanIndex >= startIndex && toBeRanIndex <= endIndex;
 		}
 	}
