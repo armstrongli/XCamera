@@ -18,6 +18,7 @@ import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.pool.ExecutorPool;
+import com.xxboy.services.pool.RunnablePool;
 import com.xxboy.services.runnable.ImageExecutor;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.xcamera.XCamera;
@@ -62,6 +63,7 @@ public class XAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Logger.debug("Loading: " + position);
+		RunnablePool.syncFutureIndex(position);
 		View resultView = createViewFromResource(position, convertView, parent, this.mData.get(position).getResource());
 		return resultView;
 	}

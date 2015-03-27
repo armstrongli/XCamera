@@ -10,7 +10,12 @@ import com.xxboy.utils.XQueueUtil;
 public final class RunnablePool {
 	private static int startIndex = 0;
 	private static int endIndex = Integer.MAX_VALUE;
+	private static int futureIndex = 0;
 	private static Object indexLock = new Object();
+
+	public static void syncFutureIndex(int futureIndex) {
+		RunnablePool.futureIndex = futureIndex;
+	}
 
 	/**
 	 * sync view item start position and end position.
@@ -33,9 +38,9 @@ public final class RunnablePool {
 	 * @return
 	 */
 	public static boolean checkCanBeRan(int toBeRanIndex) {
-		Logger.log("Pool-executing-10 : " + toBeRanIndex + " >>> " + startIndex + "-" + endIndex);
+		Logger.log("Pool-executing-10 : " + toBeRanIndex + " >>> " + startIndex + "-" + endIndex + "--" + futureIndex);
 		synchronized (indexLock) {
-			return (startIndex >= endIndex) || (toBeRanIndex >= startIndex && toBeRanIndex <= endIndex);
+			return (startIndex >= endIndex) || (toBeRanIndex >= startIndex && toBeRanIndex <= endIndex) || (futureIndex < startIndex && futureIndex <= toBeRanIndex) || (futureIndex > endIndex && futureIndex > toBeRanIndex);
 		}
 	}
 
@@ -85,6 +90,7 @@ public final class RunnablePool {
 
 			XQueueUtil.executeTaskDirectly(imageLoader);
 		}
+		XQueueUtil.executeTaskDirectly(imageLoader);
 	}
 
 	public static void removeRunningImageLoader(ImageLoader imageLoader) {
