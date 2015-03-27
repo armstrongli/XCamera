@@ -48,13 +48,8 @@ public class ExecutorPool {
 		synchronized (lock) {
 			Logger.log("Pool executing 1 : " + path);
 			// check whether need to run
-			Thread runningThread = runningThreadPool.get(path);
 			if (!RunnablePool.checkCanBeRan(position)) {
-				runningImageExecutorPool.remove(path);
-				runningPath2Position.remove(path);
-				if (runningThread != null) {
-					runningThread.interrupt();
-				}
+				removeExecutor(path);
 				Logger.log("Pool executing 2 : " + path);
 				return;
 			}
@@ -70,10 +65,7 @@ public class ExecutorPool {
 				return;
 			} else {
 				Logger.log("Pool executing 6 : " + path);
-				runningImageExecutorPool.remove(path);
-				if (runningThread != null) {
-					runningThread.interrupt();
-				}
+				removeExecutor(path);
 			}
 
 			Logger.log("Pool executing 7 : " + path);
@@ -102,8 +94,7 @@ public class ExecutorPool {
 				for (String item : runningImageExecutorPool.keySet()) {
 					Integer potentialPosition = runningPath2Position.get(item);
 					if (potentialPosition != null && !RunnablePool.checkCanBeRan(potentialPosition)) {
-						runningImageExecutorPool.remove(item);
-						runningThreadPool.remove(item).interrupt();
+						removeExecutor(item);
 					}
 				}
 			}
