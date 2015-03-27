@@ -19,7 +19,7 @@ public final class RunnablePool {
 	 * @param newEndIndex
 	 */
 	public static void syncRunnableIndexes(int newStartIndex, int newEndIndex) {
-		Logger.log("Pool executing 11 : sync >>> " + startIndex + "-" + endIndex);
+		Logger.log("Pool-executing-10 : sync >>> " + startIndex + "-" + endIndex);
 		synchronized (indexLock) {
 			startIndex = newStartIndex;
 			endIndex = newEndIndex;
@@ -33,9 +33,9 @@ public final class RunnablePool {
 	 * @return
 	 */
 	public static boolean checkCanBeRan(int toBeRanIndex) {
+		Logger.log("Pool-executing-10 : " + toBeRanIndex + " >>> " + startIndex + "-" + endIndex);
 		synchronized (indexLock) {
-			Logger.log("Pool executing 10 : " + toBeRanIndex + " >>> " + startIndex + "-" + endIndex);
-			return (startIndex == endIndex) || (toBeRanIndex >= startIndex && toBeRanIndex <= endIndex);
+			return (startIndex >= endIndex) || (toBeRanIndex >= startIndex && toBeRanIndex <= endIndex);
 		}
 	}
 
