@@ -113,7 +113,8 @@ public class ImageExecutor implements Runnable {
 	public boolean equals(Object o) {
 		if (o instanceof ImageExecutor) {
 			return this.imagePath.equals(((ImageExecutor) o).getImagePath()) && this.position == ((ImageExecutor) o).getPosition() && this.imageView.equals(((ImageExecutor) o).getImageView());
+		} else {
+			return false;
 		}
-		return super.equals(o);
 	}
 }
