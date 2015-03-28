@@ -3,9 +3,9 @@ package com.xxboy.services.runnable;
 import android.widget.ImageView;
 
 import com.xxboy.log.Logger;
+import com.xxboy.services.pool.ExecutorPool;
 import com.xxboy.services.pool.RunnablePool;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.utils.XQueueUtil;
 
 public class ImageLoader implements Runnable {
 
@@ -32,8 +32,10 @@ public class ImageLoader implements Runnable {
 
 		this.imageView.setImageBitmap(XCacheUtil.getFromMemCache(this.imagePath));
 
+		// remove runnable from runnable pool
 		RunnablePool.removeRunningImageLoader(this);
-		XQueueUtil.execRemoveFromRunnablePoolAfterSetImages(this);
+		// remove the one finished
+		ExecutorPool.removeExecutor(this.imagePath);
 	}
 
 	public String getImagePath() {
