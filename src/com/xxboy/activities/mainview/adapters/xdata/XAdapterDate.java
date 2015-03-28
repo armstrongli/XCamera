@@ -1,4 +1,4 @@
-package com.xxboy.adapters.xdata;
+package com.xxboy.activities.mainview.adapters.xdata;
 
 import java.util.Map;
 

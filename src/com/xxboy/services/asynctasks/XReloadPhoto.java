@@ -9,9 +9,9 @@ import java.util.List;
 
 import android.os.AsyncTask;
 
-import com.xxboy.adapters.xdata.XAdapterBase;
-import com.xxboy.adapters.xdata.XAdapterDate;
-import com.xxboy.adapters.xdata.XAdapterPicture;
+import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
+import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
+import com.xxboy.activities.mainview.adapters.xdata.XAdapterPicture;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.services.pool.ExecutorPool;

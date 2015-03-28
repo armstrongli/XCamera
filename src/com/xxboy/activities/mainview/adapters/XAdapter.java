@@ -1,4 +1,4 @@
-package com.xxboy.adapters;
+package com.xxboy.activities.mainview.adapters;
 
 import java.util.LinkedList;
 
@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xxboy.adapters.xdata.XAdapterBase;
-import com.xxboy.adapters.xdata.XAdapterDate;
+import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
+import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
