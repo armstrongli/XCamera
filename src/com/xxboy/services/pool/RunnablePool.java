@@ -43,7 +43,7 @@ public final class RunnablePool {
 	public static boolean checkCanBeRan(int toBeRanIndex) {
 		Logger.log("Pool-executing-10 : check " + toBeRanIndex + " >>> " + startIndex + "-" + endIndex + "--" + futureIndex);
 		synchronized (indexLock) {
-			return (startIndex >= endIndex) || (toBeRanIndex >= startIndex && toBeRanIndex <= endIndex) || (futureIndex < startIndex && futureIndex <= toBeRanIndex) || (futureIndex > endIndex && futureIndex > toBeRanIndex);
+			return (startIndex >= endIndex) || (toBeRanIndex >= startIndex && toBeRanIndex <= endIndex) || (futureIndex <= startIndex && futureIndex <= toBeRanIndex) || (futureIndex >= endIndex && futureIndex >= toBeRanIndex);
 		}
 	}
 
@@ -84,9 +84,11 @@ public final class RunnablePool {
 				}
 
 				// clear the running ones from UI main thread.
-				for (String path : runningImageLoaderPool.keySet()) {
-					if (!checkCanBeRan(runningImageLoaderPool.get(path).getPosition())) {
-						removeRunningImageLoader(runningImageLoaderPool.remove(path));
+				if (needClean) {
+					for (String path : runningImageLoaderPool.keySet()) {
+						if (!checkCanBeRan(runningImageLoaderPool.get(path).getPosition())) {
+							removeRunningImageLoader(runningImageLoaderPool.remove(path));
+						}
 					}
 				}
 			}
