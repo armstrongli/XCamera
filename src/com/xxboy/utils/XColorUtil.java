@@ -5,34 +5,36 @@ import android.graphics.Color;
 public class XColorUtil {
 	private static final int[] COLOR_SET = {//
 	//
-			Color.argb(50, 206, 209, 0),//
-			Color.argb(50, 164, 96, 244),//
-			Color.argb(50, 238, 104, 188),//
-			Color.argb(50, 128, 128, 240),//
-			Color.argb(50, 105, 180, 255),//
-			Color.argb(50, 48, 255, 155),//
-			Color.argb(50, 185, 15, 255),//
-			Color.argb(50, 204, 50, 153) //
+	// Color.argb(50, 206, 209, 0),//
+	// Color.argb(50, 164, 96, 244),//
+	// Color.argb(50, 238, 104, 188),//
+	// Color.argb(50, 128, 128, 240),//
+	// Color.argb(50, 105, 180, 255),//
+	// Color.argb(50, 48, 255, 155),//
+			Color.argb(50, 200, 200, 200),//
+			Color.argb(50, 250, 250, 250) //
 	};
 
+	private static Object colorLock = new Object();
 	private static int round = 0;
+	private static String DATE = "";
 
 	private static int getBackgroundColor() {
 		return COLOR_SET[((round++) % COLOR_SET.length)];
 	}
 
 	private static int getPriviousColor() {
-		return COLOR_SET[round];
+		return COLOR_SET[round % COLOR_SET.length];
 	}
 
-	private static String DATE = "";
-
 	public static int getBackgroundColor(String date) {
-		if (DATE.equals(date)) {
-			return getPriviousColor();
-		} else {
-			DATE = date;
-			return getBackgroundColor();
+		synchronized (colorLock) {
+			if (DATE.equals(date)) {
+				return getPriviousColor();
+			} else {
+				DATE = date;
+				return getBackgroundColor();
+			}
 		}
 	}
 }
