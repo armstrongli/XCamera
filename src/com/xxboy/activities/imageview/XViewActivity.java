@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
 import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
-import com.xxboy.listeners.XViewTouchListener;
+import com.xxboy.activities.imageview.listeners.XViewTouchListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 

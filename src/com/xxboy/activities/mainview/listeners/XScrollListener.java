@@ -1,4 +1,4 @@
-package com.xxboy.listeners;
+package com.xxboy.activities.mainview.listeners;
 
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;

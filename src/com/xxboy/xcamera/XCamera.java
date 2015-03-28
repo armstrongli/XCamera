@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.xxboy.activities.imageview.XViewActivity;
 import com.xxboy.activities.mainview.adapters.XAdapter;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
-import com.xxboy.listeners.XScrollListener;
+import com.xxboy.activities.mainview.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;

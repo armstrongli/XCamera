@@ -1,4 +1,4 @@
-package com.xxboy.listeners;
+package com.xxboy.activities.imageview.listeners;
 
 import java.util.ArrayList;
 
