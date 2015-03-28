@@ -24,8 +24,11 @@ public final class RunnablePool {
 	 * @param newEndIndex
 	 */
 	public static void syncRunnableIndexes(int newStartIndex, int newEndIndex) {
-		Logger.log("Pool-executing-10 : sync >>> " + startIndex + "-" + endIndex);
 		synchronized (indexLock) {
+			if (startIndex == newStartIndex && endIndex == newEndIndex) {
+				return;
+			}
+			Logger.log("Pool-executing-10 : sync >>> " + startIndex + "-" + endIndex);
 			startIndex = newStartIndex;
 			endIndex = newEndIndex;
 		}
