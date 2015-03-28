@@ -90,7 +90,6 @@ public final class RunnablePool {
 
 			XQueueUtil.executeTaskDirectly(imageLoader);
 		}
-		XQueueUtil.executeTaskDirectly(imageLoader);
 	}
 
 	public static void removeRunningImageLoader(ImageLoader imageLoader) {
