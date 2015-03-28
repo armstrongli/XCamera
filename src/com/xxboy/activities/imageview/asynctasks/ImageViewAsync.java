@@ -1,11 +1,11 @@
-package com.xxboy.activities.asynctasks;
+package com.xxboy.activities.imageview.asynctasks;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.xxboy.activities.runnables.ImageViewLoader;
+import com.xxboy.activities.imageview.runnables.ImageViewLoader;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;

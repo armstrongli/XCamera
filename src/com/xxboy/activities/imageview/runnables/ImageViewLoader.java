@@ -1,4 +1,4 @@
-package com.xxboy.activities.runnables;
+package com.xxboy.activities.imageview.runnables;
 
 import android.widget.ImageView;
 
