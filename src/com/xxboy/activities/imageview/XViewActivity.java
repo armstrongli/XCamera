@@ -1,4 +1,4 @@
-package com.xxboy.activities;
+package com.xxboy.activities.imageview;
 
 import java.util.ArrayList;
 

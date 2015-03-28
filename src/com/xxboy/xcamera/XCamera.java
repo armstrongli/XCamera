@@ -21,7 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xxboy.activities.XViewActivity;
+import com.xxboy.activities.imageview.XViewActivity;
 import com.xxboy.adapters.XAdapter;
 import com.xxboy.adapters.xdata.XAdapterBase;
 import com.xxboy.listeners.XScrollListener;
