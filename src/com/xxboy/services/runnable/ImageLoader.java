@@ -24,8 +24,9 @@ public class ImageLoader implements Runnable {
 
 	@Override
 	public void run() {
+		Logger.log("Setting images: " + this.position + "=" + this.imagePath);
 		if (Thread.interrupted()) {
-			Logger.log("Thread interrupted");
+			Logger.log("Setting images: Thread interrupted " + this.position + "=" + this.position);
 			return;
 		}
 
