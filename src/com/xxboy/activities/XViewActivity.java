@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
+import com.xxboy.activities.asynctasks.ImageViewAsync;
 import com.xxboy.listeners.XViewTouchListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.asynctasks.XLoadImageViewAsyncTask;
 
 public class XViewActivity extends Activity {
 
@@ -44,7 +44,7 @@ public class XViewActivity extends Activity {
 		if (imageview == null) {
 			return false;
 		}
-		new XLoadImageViewAsyncTask(imagePath, imageview).execute();
+		new ImageViewAsync(imagePath, imageview).execute();
 		return true;
 	}
 

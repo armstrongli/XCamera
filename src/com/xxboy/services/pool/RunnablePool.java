@@ -97,7 +97,7 @@ public final class RunnablePool {
 		}
 	}
 
-	public static void removeRunningImageLoader(ImageLoader imageLoader) {
+	public static void removeRunningImageLoader(Runnable imageLoader) {
 		XQueueUtil.removeRunningTasks(imageLoader);
 	}
 }
