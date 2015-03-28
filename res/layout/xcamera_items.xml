@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="top|left"
-    android:background="@drawable/xshape_image_item"
     android:orientation="vertical" >
 
     <com.xxboy.view.XView
@@ -12,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="fill_vertical"
-        android:horizontalSpacing="0dp"
+        android:horizontalSpacing="1dp"
         android:numColumns="3"
-        android:verticalSpacing="0dp" >
+        android:verticalSpacing="1dp" >
     </com.xxboy.view.XView>
 
 <!--     <GridView
