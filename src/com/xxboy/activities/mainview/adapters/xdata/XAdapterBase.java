@@ -11,7 +11,5 @@ public abstract class XAdapterBase {
 
 	public abstract void set2Resource();
 
-	public abstract void set2Default();
-
 	public abstract int getBackgroundColor();
 }

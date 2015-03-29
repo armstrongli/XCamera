@@ -43,11 +43,6 @@ public class XAdapterCamera extends XAdapterBase {
 	}
 
 	@Override
-	public void set2Default() {
-		throw new RuntimeException("Camera adapter doesn't support this function");
-	}
-
-	@Override
 	public int getBackgroundColor() {
 		return XColorUtil.getBackgroundColor("");
 	}

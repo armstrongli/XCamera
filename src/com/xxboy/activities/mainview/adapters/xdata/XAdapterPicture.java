@@ -44,11 +44,6 @@ public class XAdapterPicture extends XAdapterBase {
 	}
 
 	@Override
-	public void set2Default() {
-		setImage(R.drawable.loading);
-	}
-
-	@Override
 	public void set2Resource() {
 		setImage(this.data.get(XCameraConst.VIEW_NAME_IMAGE_RESC));
 	}
