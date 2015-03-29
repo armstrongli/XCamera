@@ -4,8 +4,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import android.os.Handler;
 
+import com.xxboy.activities.mainview.runnables.ImageLoader;
 import com.xxboy.log.Logger;
-import com.xxboy.services.runnable.ImageLoader;
 
 public final class XQueueUtil {
 	private static int startVisableIndex = 0;

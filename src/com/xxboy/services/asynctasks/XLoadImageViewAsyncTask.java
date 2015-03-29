@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.xxboy.services.runnable.ImageLoader;
+import com.xxboy.activities.mainview.runnables.ImageLoader;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;

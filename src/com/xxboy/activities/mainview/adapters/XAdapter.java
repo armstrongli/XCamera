@@ -16,12 +16,12 @@ import com.xxboy.activities.mainview.XCamera;
 import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
+import com.xxboy.activities.mainview.runnables.ImageExecutor;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.pool.ExecutorPool;
 import com.xxboy.services.pool.RunnablePool;
-import com.xxboy.services.runnable.ImageExecutor;
 import com.xxboy.utils.XCacheUtil;
 
 public class XAdapter extends BaseAdapter {

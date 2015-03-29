@@ -3,8 +3,8 @@ package com.xxboy.services.pool;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.xxboy.activities.mainview.runnables.ImageExecutor;
 import com.xxboy.log.Logger;
-import com.xxboy.services.runnable.ImageExecutor;
 
 public class ExecutorPool {
 
