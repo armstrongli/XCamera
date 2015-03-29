@@ -23,7 +23,7 @@ public class XViewActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.xcamera_imageview);
+		setContentView(R.layout.ximage_view);
 
 		this.viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
