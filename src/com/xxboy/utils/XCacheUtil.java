@@ -12,9 +12,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.LruCache;
 
+import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.common.DiskLruCache;
 import com.xxboy.log.Logger;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XCacheUtil {
 	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 1/4 of runtime max memory

@@ -9,6 +9,8 @@ import java.util.List;
 
 import android.os.AsyncTask;
 
+import com.xxboy.activities.mainview.XCamera;
+import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterPicture;
@@ -16,8 +18,6 @@ import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.services.pool.ExecutorPool;
 import com.xxboy.utils.XColorUtil;
-import com.xxboy.xcamera.XCamera;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 

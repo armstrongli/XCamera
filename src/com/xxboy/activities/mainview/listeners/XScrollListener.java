@@ -3,10 +3,10 @@ package com.xxboy.activities.mainview.listeners;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
+import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.log.Logger;
 import com.xxboy.services.pool.RunnablePool;
 import com.xxboy.utils.XQueueUtil;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XScrollListener implements OnScrollListener {
 

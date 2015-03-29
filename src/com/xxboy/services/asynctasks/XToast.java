@@ -3,8 +3,8 @@ package com.xxboy.services.asynctasks;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.xxboy.activities.mainview.XCamera;
 import com.xxboy.log.Logger;
-import com.xxboy.xcamera.XCamera;
 
 public class XToast extends AsyncTask<Void, Void, Void> {
 	private XCamera xCamera;

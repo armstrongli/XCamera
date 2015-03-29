@@ -4,11 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
+import com.xxboy.activities.mainview.XCamera;
 import com.xxboy.log.Logger;
 import com.xxboy.services.pool.RunnablePool;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.xcamera.XCamera;
 
 public class ImageExecutor implements Runnable {
 

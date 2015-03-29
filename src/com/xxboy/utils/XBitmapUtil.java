@@ -2,7 +2,7 @@ package com.xxboy.utils;
 
 import android.graphics.BitmapFactory;
 
-import com.xxboy.xcamera.XCamera.XCameraConst;
+import com.xxboy.activities.mainview.XCamera.XCameraConst;
 
 public class XBitmapUtil {
 

@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import android.os.AsyncTask;
 
+import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XInitialAsyncTask extends AsyncTask<Void, Void, Integer> {
 

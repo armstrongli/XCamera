@@ -11,8 +11,8 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 
+import com.xxboy.activities.mainview.XCamera;
 import com.xxboy.log.Logger;
-import com.xxboy.xcamera.XCamera;
 
 public final class XFunction {
 	/**

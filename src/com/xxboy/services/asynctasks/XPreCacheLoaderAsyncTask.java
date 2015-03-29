@@ -4,8 +4,8 @@ import java.io.File;
 
 import android.os.AsyncTask;
 
+import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XPreCacheLoaderAsyncTask extends AsyncTask<Void, Void, Void> {
 

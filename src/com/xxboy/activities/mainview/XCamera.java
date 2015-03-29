@@ -1,4 +1,4 @@
-package com.xxboy.xcamera;
+package com.xxboy.activities.mainview;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

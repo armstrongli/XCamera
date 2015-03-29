@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.xxboy.activities.mainview.XCamera;
+import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
 import com.xxboy.common.XFunction;
@@ -21,8 +23,6 @@ import com.xxboy.services.pool.ExecutorPool;
 import com.xxboy.services.pool.RunnablePool;
 import com.xxboy.services.runnable.ImageExecutor;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.xcamera.XCamera;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XAdapter extends BaseAdapter {
 

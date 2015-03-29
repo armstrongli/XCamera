@@ -2,9 +2,9 @@ package com.xxboy.activities.mainview.adapters.xdata;
 
 import java.util.Map;
 
+import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.photo.R;
 import com.xxboy.utils.XColorUtil;
-import com.xxboy.xcamera.XCamera.XCameraConst;
 
 public class XAdapterCamera extends XAdapterBase {
 	private Map<String, ?> data;
