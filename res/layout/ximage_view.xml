@@ -6,33 +6,32 @@
 
     <!-- 1st page -->
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center" >
 
-        <ImageView
-            android:id="@+id/xcamera_imageview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/app_name" />
-    </LinearLayout>
+        <!-- image view -->
+
+        <include layout="@layout/ximage_item" />
+        <!-- bar -->
+
+        <include layout="@layout/xcamera_bar" />
+    </FrameLayout>
 
     <!-- 2nd page -->
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center" >
 
-        <ImageView
-            android:id="@+id/xcamera_imageview1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/app_name"
-            android:gravity="center" />
-    </LinearLayout>
+        <!-- image view -->
+
+        <include layout="@layout/ximage_item" />
+        <!-- bar -->
+
+        <include layout="@layout/xcamera_bar" />
+    </FrameLayout>
 
 </ViewFlipper>

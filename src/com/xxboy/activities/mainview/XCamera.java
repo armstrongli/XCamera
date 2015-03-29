@@ -32,7 +32,7 @@ import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
-import com.xxboy.view.XView;
+import com.xxboy.view.XGridView;
 
 public class XCamera extends Activity {
 	private static XAdapter xAdp = null;
@@ -80,7 +80,7 @@ public class XCamera extends Activity {
 		public static int GLOBAL_X_GRIDVIEW_VISIABLE_COUNT = 20;
 	}
 
-	private static XView xGridView;
+	private static XGridView xGridView;
 
 	public static final Integer COMPLETED = 0;
 
@@ -93,7 +93,7 @@ public class XCamera extends Activity {
 		xAdp = new XAdapter(this, new LinkedList<XAdapterBase>());
 
 		// get components in the main view.
-		xGridView = (XView) findViewById(R.id.photo_grid);
+		xGridView = (XGridView) findViewById(R.id.photo_grid);
 		xGridView.setOnScrollListener(new XScrollListener());
 		xGridView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -203,11 +203,11 @@ public class XCamera extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public static XView getxView() {
+	public static XGridView getxView() {
 		return XCamera.xGridView;
 	}
 
-	public static void setxView(XView xView) {
+	public static void setxView(XGridView xView) {
 		XCamera.xGridView = xView;
 	}
 

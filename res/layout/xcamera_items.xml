@@ -6,6 +6,7 @@
     android:layout_gravity="top|left"
     android:orientation="vertical" >
 
+    <!--
     <com.xxboy.view.XView
         android:id="@+id/photo_grid"
         android:layout_width="match_parent"
@@ -15,8 +16,9 @@
         android:numColumns="3"
         android:verticalSpacing="1dp" >
     </com.xxboy.view.XView>
+    -->
 
-<!--     <GridView
+    <GridView
         android:id="@+id/photo_grid"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
@@ -25,5 +27,5 @@
         android:numColumns="3"
         android:verticalSpacing="0dp" >
     </GridView>
- -->
+
 </LinearLayout>
