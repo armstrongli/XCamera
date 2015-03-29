@@ -4,6 +4,7 @@ import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
 import com.xxboy.log.Logger;
+import com.xxboy.utils.XQueueUtil;
 
 public class XLoadImageViewFlipperAsyncTask extends XLoadImageViewAsyncTask {
 	private ViewFlipper viewFlipper;
@@ -20,13 +21,20 @@ public class XLoadImageViewFlipperAsyncTask extends XLoadImageViewAsyncTask {
 	@Override
 	protected Void doInBackground(Void... params) {
 		super.doInBackground(params);
-		viewFlipper.getHandler().post(new Runnable() {
+		XQueueUtil.executeTaskDirectly(new Runnable() {
 			@Override
 			public void run() {
 				Logger.log("Load to Next Flipper");
 				viewFlipper.showNext();
 			}
 		});
+		// viewFlipper.getHandler().post(new Runnable() {
+		// @Override
+		// public void run() {
+		// Logger.log("Load to Next Flipper");
+		// viewFlipper.showNext();
+		// }
+		// });
 		return null;
 	}
 }

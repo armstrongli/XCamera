@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.xxboy.activities.mainview.runnables.ImageLoader;
+import com.xxboy.activities.imageview.runnables.ImageViewLoader;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
@@ -24,10 +24,10 @@ public class XLoadImageViewAsyncTask extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		Bitmap bitmap = XCacheUtil.getImaveView(this.path);
 		if (bitmap != null && !bitmap.isRecycled() && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
-			XQueueUtil.executeTaskDirectly(new ImageLoader(0, this.path, imageView));
+			XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 		} else {
 			bitmap = getImage(this.path);
-			XQueueUtil.executeTaskDirectly(new ImageLoader(0, this.path, imageView));
+			XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 			XCacheUtil.pushImageView(this.path, bitmap);
 		}
 		return null;
