@@ -9,9 +9,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
+import com.xxboy.activities.imageview.asynctasks.XLoadImageViewFlipperAsyncTask;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.asynctasks.XLoadImageViewFlipperAsyncTask;
 
 public class XViewTouchListener implements OnTouchListener {
 

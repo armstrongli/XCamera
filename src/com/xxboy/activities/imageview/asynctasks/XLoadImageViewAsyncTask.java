@@ -1,4 +1,4 @@
-package com.xxboy.services.asynctasks;
+package com.xxboy.activities.imageview.asynctasks;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
