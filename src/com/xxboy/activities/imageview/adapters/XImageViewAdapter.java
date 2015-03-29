@@ -1,7 +1,7 @@
 package com.xxboy.activities.imageview.adapters;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
@@ -39,8 +39,14 @@ public class XImageViewAdapter extends BaseAdapter {
 		this.mInflater = (LayoutInflater) xCamera.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	public List<XAdapterBase> initData(final List<XAdapterBase> mData) {
-		List<XAdapterBase> result = new LinkedList<XAdapterBase>();
+	/**
+	 * get base data from primary data, and remove the ones which aren't photos
+	 * 
+	 * @param mData
+	 * @return
+	 */
+	private List<XAdapterBase> initData(final List<XAdapterBase> mData) {
+		List<XAdapterBase> result = new ArrayList<XAdapterBase>(mData.size());
 		if (mData != null && mData.size() > 0) {
 			result.addAll(mData);
 			Iterator<XAdapterBase> it = result.iterator();
@@ -52,11 +58,6 @@ public class XImageViewAdapter extends BaseAdapter {
 			}
 		}
 		return result;
-	}
-
-	public XImageViewAdapter setData(LinkedList<XAdapterBase> data) {
-		this.mData = data;
-		return this;
 	}
 
 	@Override

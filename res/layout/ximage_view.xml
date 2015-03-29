@@ -1,37 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/viewFlipper"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
 
-    <!-- 1st page -->
-
-    <FrameLayout
+    <Gallery
+        android:id="@+id/id_gallery_image_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center" >
+        android:gravity="center" />
 
-        <!-- image view -->
-
-        <include layout="@layout/ximage_item" />
-        <!-- bar -->
-
-        <include layout="@layout/xcamera_bar" />
-    </FrameLayout>
-
-    <!-- 2nd page -->
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center" >
-
-        <!-- image view -->
-
-        <include layout="@layout/ximage_item" />
-        <!-- bar -->
-
-        <include layout="@layout/xcamera_bar" />
-    </FrameLayout>
-
-</ViewFlipper>
+</LinearLayout>
