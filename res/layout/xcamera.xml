@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context="com.xxboy.activities.mainview.XCamera" >
 
-    <include layout="@layout/xcamera_items" />
+    <include layout="@layout/xitem_items" />
 
     <include layout="@layout/xcamera_bar" />
 
