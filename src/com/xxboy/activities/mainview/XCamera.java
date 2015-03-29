@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +33,6 @@ import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
-import com.xxboy.view.XGridView;
 
 public class XCamera extends Activity {
 	private static XAdapter xAdp = null;
@@ -80,7 +80,7 @@ public class XCamera extends Activity {
 		public static int GLOBAL_X_GRIDVIEW_VISIABLE_COUNT = 20;
 	}
 
-	private static XGridView xGridView;
+	private static GridView xGridView;
 
 	public static final Integer COMPLETED = 0;
 
@@ -93,7 +93,7 @@ public class XCamera extends Activity {
 		xAdp = new XAdapter(this, new LinkedList<XAdapterBase>());
 
 		// get components in the main view.
-		xGridView = (XGridView) findViewById(R.id.photo_grid);
+		xGridView = (GridView) findViewById(R.id.photo_grid);
 		xGridView.setOnScrollListener(new XScrollListener());
 		xGridView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -203,12 +203,12 @@ public class XCamera extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public static XGridView getxView() {
+	public static GridView getxView() {
 		return XCamera.xGridView;
 	}
 
-	public static void setxView(XGridView xView) {
-		XCamera.xGridView = xView;
+	public static void setxView(GridView xGridView) {
+		XCamera.xGridView = xGridView;
 	}
 
 	private static XAdapter getXAdapter(LinkedList<XAdapterBase> data) {
