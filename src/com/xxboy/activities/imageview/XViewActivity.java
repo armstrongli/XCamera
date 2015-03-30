@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
 import com.xxboy.activities.imageview.views.XGallery;
+import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 
 public class XViewActivity extends Activity {
@@ -84,6 +85,7 @@ public class XViewActivity extends Activity {
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
+			Logger.log("Load Gallery Image: " + position + "-" + pathes.get(position));
 			ImageView imageView = new ImageView(mContext);
 
 			imageView.setImageBitmap(null);
