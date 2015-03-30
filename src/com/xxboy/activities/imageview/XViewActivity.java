@@ -16,6 +16,7 @@ import android.widget.Gallery.LayoutParams;
 import android.widget.ImageView;
 
 import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
+import com.xxboy.activities.imageview.views.XGallery;
 import com.xxboy.photo.R;
 
 public class XViewActivity extends Activity {
@@ -23,7 +24,7 @@ public class XViewActivity extends Activity {
 	public static final String INTENT_VAR_PATH = "INTENT_VAR_PATH";
 	public static final String INTENT_VAR_PATHES = "INTENT_VAR_PATHES";
 
-	private Gallery xGallery;
+	private XGallery xGallery;
 	private LinkedList<String> pathes = null;
 
 	@Override
@@ -31,7 +32,7 @@ public class XViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ximage_view);
 
-		this.xGallery = (Gallery) findViewById(R.id.id_gallery_image_view);
+		this.xGallery = (XGallery) findViewById(R.id.id_gallery_image_view);
 
 		String path = getIntent().getStringExtra(XViewActivity.INTENT_VAR_PATH);
 		this.pathes = treatPath(getIntent().getStringArrayListExtra(INTENT_VAR_PATHES));

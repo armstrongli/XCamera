@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
 
-    <Gallery
+    <com.xxboy.activities.imageview.views.XGallery
         android:id="@+id/id_gallery_image_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
