@@ -70,8 +70,8 @@ public class XViewTouchListener implements OnTouchListener {
 
 			if (canFlip) {
 				Logger.log("Loading image:" + currentIndex + "/" + this.pathes.get(currentIndex));
-				ImageView imageView = this.counter % 2 == 0 ? (ImageView) this.viewFlipper.findViewById(R.id.xcamera_imageview) : (ImageView) this.viewFlipper.findViewById(R.id.xcamera_imageview1);
-				new XLoadImageViewFlipperAsyncTask(this.pathes.get(this.currentIndex), this.viewFlipper, imageView).execute();
+//				ImageView imageView = this.counter % 2 == 0 ? (ImageView) this.viewFlipper.findViewById(R.id.xcamera_imageview) : (ImageView) this.viewFlipper.findViewById(R.id.xcamera_imageview1);
+//				new XLoadImageViewFlipperAsyncTask(this.pathes.get(this.currentIndex), this.viewFlipper, imageView).execute();
 			}
 
 			return true;

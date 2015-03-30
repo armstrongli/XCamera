@@ -3,7 +3,13 @@ package com.xxboy.activities.imageview;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Gallery;
+import android.widget.Gallery.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ViewFlipper;
 
@@ -17,6 +23,7 @@ public class XViewActivity extends Activity {
 	public static final String INTENT_VAR_PATH = "INTENT_VAR_PATH";
 	public static final String INTENT_VAR_PATHES = "INTENT_VAR_PATHES";
 
+	private Gallery xGallery;
 	private ViewFlipper viewFlipper;
 	private ArrayList<String> pathes = null;
 
@@ -25,18 +32,12 @@ public class XViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ximage_view);
 
-		this.viewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+		this.xGallery = (Gallery) findViewById(R.id.id_gallery_image_view);
 
 		String path = getIntent().getStringExtra(XViewActivity.INTENT_VAR_PATH);
 		this.pathes = getIntent().getStringArrayListExtra(INTENT_VAR_PATHES);
-		int currentindex = this.pathes.indexOf(path);
-		Logger.log("View Image: " + path);
-		this.viewFlipper.setOnTouchListener(new XViewTouchListener(currentindex, this.pathes));
 
-		boolean result = setImage(R.id.xcamera_imageview, path);
-		if (!result) {
-			setImage(R.id.xcamera_imageview1, path);
-		}
+		this.xGallery.setAdapter(new ImageAdapter(this));
 	}
 
 	private boolean setImage(int imageviewResId, String imagePath) {
@@ -48,4 +49,42 @@ public class XViewActivity extends Activity {
 		return true;
 	}
 
+	public class ImageAdapter extends BaseAdapter {
+
+		private Context mContext;
+
+		public ImageAdapter(Context c) {
+			mContext = c;
+		}
+
+		@Override
+		public int getCount() {
+			return pathes.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			ImageView i = new ImageView(mContext);
+
+			i.setImageResource(R.drawable.ic_media_embed_play);
+			i.setAdjustViewBounds(true);
+			i.setLayoutParams(new Gallery.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			i.setBackgroundResource(android.R.drawable.picture_frame);
+
+			new ImageViewAsync(pathes.get(position), i).execute();
+
+			return i;
+		}
+
+	}
 }
