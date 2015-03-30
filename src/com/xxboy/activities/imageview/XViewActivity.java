@@ -83,16 +83,16 @@ public class XViewActivity extends Activity {
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			ImageView i = new ImageView(mContext);
+			ImageView imageView = new ImageView(mContext);
 
-			i.setImageBitmap(null);
-			i.setAdjustViewBounds(true);
-			i.setLayoutParams(new Gallery.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-			i.setBackgroundColor(Color.BLACK);
+			imageView.setImageBitmap(null);
+			imageView.setAdjustViewBounds(true);
+			imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+			imageView.setBackgroundColor(Color.BLACK);
 
-			new ImageViewAsync(pathes.get(position), i).execute();
+			new ImageViewAsync(pathes.get(position), imageView).execute();
 
-			return i;
+			return imageView;
 		}
 
 	}
