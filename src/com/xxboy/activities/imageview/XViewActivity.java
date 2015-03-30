@@ -1,9 +1,12 @@
 package com.xxboy.activities.imageview;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.Gallery.LayoutParams;
 import android.widget.ImageView;
-import android.widget.ViewFlipper;
 
 import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
-import com.xxboy.activities.imageview.listeners.XViewTouchListener;
-import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 
 public class XViewActivity extends Activity {
@@ -24,8 +24,7 @@ public class XViewActivity extends Activity {
 	public static final String INTENT_VAR_PATHES = "INTENT_VAR_PATHES";
 
 	private Gallery xGallery;
-	private ViewFlipper viewFlipper;
-	private ArrayList<String> pathes = null;
+	private LinkedList<String> pathes = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,18 +34,28 @@ public class XViewActivity extends Activity {
 		this.xGallery = (Gallery) findViewById(R.id.id_gallery_image_view);
 
 		String path = getIntent().getStringExtra(XViewActivity.INTENT_VAR_PATH);
-		this.pathes = getIntent().getStringArrayListExtra(INTENT_VAR_PATHES);
+		this.pathes = treatPath(getIntent().getStringArrayListExtra(INTENT_VAR_PATHES));
+
+		int defaultPicture = this.pathes.indexOf(path);
+		if (defaultPicture < 0) {
+			defaultPicture = 0;
+		}
 
 		this.xGallery.setAdapter(new ImageAdapter(this));
+		this.xGallery.setSelection(defaultPicture);
 	}
 
-	private boolean setImage(int imageviewResId, String imagePath) {
-		ImageView imageview = (ImageView) findViewById(imageviewResId);
-		if (imageview == null) {
-			return false;
+	private LinkedList<String> treatPath(ArrayList<String> pathes) {
+		LinkedList<String> result = new LinkedList<String>();
+		result.addAll(pathes);
+		Iterator<String> it = result.iterator();
+		while (it.hasNext()) {
+			String item = it.next();
+			if (item == null || item.trim().length() == 0) {
+				it.remove();
+			}
 		}
-		new ImageViewAsync(imagePath, imageview).execute();
-		return true;
+		return result;
 	}
 
 	public class ImageAdapter extends BaseAdapter {
@@ -76,10 +85,10 @@ public class XViewActivity extends Activity {
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			ImageView i = new ImageView(mContext);
 
-			i.setImageResource(R.drawable.ic_media_embed_play);
+			i.setImageBitmap(null);
 			i.setAdjustViewBounds(true);
 			i.setLayoutParams(new Gallery.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-			i.setBackgroundResource(android.R.drawable.picture_frame);
+			i.setBackgroundColor(Color.BLACK);
 
 			new ImageViewAsync(pathes.get(position), i).execute();
 
