@@ -18,9 +18,16 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 	private static final class ImageTaskArray {
 		private static Object arrayLock = new Object();
 		private static LinkedList<Integer> array = new LinkedList<Integer>();
+		private static final int ARRAY_SIZE = 3;
 
 		private static boolean checkExists(Integer checked) {
-			return array.indexOf(checked) >= 0;
+			synchronized (arrayLock) {
+				return array.indexOf(checked) >= 0;
+			}
+		}
+
+		private static boolean removeFromArray(Integer i) {
+			return array.remove(i);
 		}
 
 		private static boolean addToArray(Integer i) {
@@ -30,7 +37,9 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 			} else {
 				synchronized (arrayLock) {
 					array.addFirst(i);
-					array.removeLast();
+					if (ARRAY_SIZE < array.size()) {
+						array.removeLast();
+					}
 				}
 				return true;
 			}
@@ -75,6 +84,7 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 			}
 			XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 		}
+		ImageTaskArray.removeFromArray(Integer.valueOf(this.position));
 		return null;
 	}
 
