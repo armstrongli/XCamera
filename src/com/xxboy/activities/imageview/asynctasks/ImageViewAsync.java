@@ -41,8 +41,6 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 	private String path;
 	private ImageView imageView;
 
-	private static final Object waitLock = new Object();
-
 	public ImageViewAsync(int position, String path, ImageView imageView) {
 		this.position = position;
 		this.path = path;
@@ -58,21 +56,24 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 				XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 			} else {
 				bitmap = getImage(this.path);
-				waitLock.notifyAll();
 				XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 				XCacheUtil.pushImageView(this.path, bitmap);
 			}
 		} else {
-			Bitmap bitmap = XCacheUtil.getImaveView(this.path);
+			Bitmap bitmap = null;
 			while (bitmap == null) {
+				Logger.log("load gallery : " + this.path + this.imageView);
+				bitmap = XCacheUtil.getImaveView(this.path);
+				if (bitmap != null && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
+					break;
+				}
 				try {
-					waitLock.wait();
+					Thread.sleep(50);
 				} catch (InterruptedException e) {
 					Logger.log(e);
 				}
-				bitmap = XCacheUtil.getImaveView(this.path);
-				XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 			}
+			XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 		}
 		return null;
 	}
