@@ -77,9 +77,7 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 			return null;
 		}
 		Bitmap bitmap = XCacheUtil.getFromMemCache(path);
-		if (bitmap != null && !bitmap.isRecycled() && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
-
-		} else {
+		if (bitmap == null) {
 			if (this.isCancelled()) {
 				return null;
 			}
