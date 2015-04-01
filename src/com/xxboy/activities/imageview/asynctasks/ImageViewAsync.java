@@ -36,7 +36,7 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 					return true;
 				} else {
 					Logger.log("Canceling: " + path);
-					return task.cancel(true);
+					return task.cancel(false);
 				}
 			}
 		}
@@ -86,12 +86,10 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 				} else {
 					if (!this.isCancelled()) {
 						bitmap = getImage(this.path);
+						XCacheUtil.pushImageView(this.path, bitmap);
 					}
 					if (!this.isCancelled()) {
 						XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
-					}
-					if (!this.isCancelled()) {
-						XCacheUtil.pushImageView(this.path, bitmap);
 					}
 				}
 			}
