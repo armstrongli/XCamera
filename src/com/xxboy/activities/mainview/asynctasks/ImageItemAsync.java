@@ -37,7 +37,7 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 					return true;
 				} else {
 					Logger.log("Canceling: " + path);
-					return task.cancel(false);
+					return task.cancel(true);
 				}
 			}
 		}
@@ -89,7 +89,7 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 			if (this.isCancelled()) {
 				return null;
 			}
-			bitmap = getImage(this.path);
+			bitmap = getImageItem(this.path);
 			XCacheUtil.pushToCache(this.path, bitmap);
 			if (this.isCancelled()) {
 				return null;
@@ -100,7 +100,7 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 		return null;
 	}
 
-	private Bitmap getImage(String imagePath) {
+	private Bitmap getImageItem(String imagePath) {
 		return BitmapFactory.decodeFile(this.path, XBitmapUtil.getImageItemOption(imagePath));
 	}
 }
