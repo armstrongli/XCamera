@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.xxboy.log.Logger;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 
@@ -33,6 +34,7 @@ public class ImageItemAsync extends AsyncTask<String, Void, Bitmap> {
 				return null;
 			}
 			bitmap = getImageItem();
+			Logger.log("Sample size: " + bitmap.getWidth() + "-" + bitmap.getHeight());
 			return XCacheUtil.pushToCache(this.path, bitmap);
 		} else {
 			return bitmap;
