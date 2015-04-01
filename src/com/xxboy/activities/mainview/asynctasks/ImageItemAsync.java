@@ -1,5 +1,6 @@
 package com.xxboy.activities.mainview.asynctasks;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
@@ -13,7 +14,7 @@ import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 import com.xxboy.utils.XQueueUtil;
 
-public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
+public class ImageItemAsync extends AsyncTask<String, Void, Bitmap> {
 	private static final class ImageItemTaskPool {
 		@SuppressWarnings("rawtypes")
 		private static ConcurrentHashMap<String, AsyncTask> imageViewAsyncPool = new ConcurrentHashMap<String, AsyncTask>();
@@ -62,17 +63,17 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 	}
 
 	private String path;
-	private ImageView imageView;
+	private final WeakReference<ImageView> imageViewReference;
 
 	public ImageItemAsync(String path, ImageView imageView) {
 		this.path = path;
-		this.imageView = imageView;
+		this.imageViewReference = new WeakReference<ImageView>(imageView);
 	}
 
 	@Override
-	protected Void doInBackground(Void... params) {
-		Logger.log("Loading imageview: " + this.imageView);
-		ImageItemTaskPool.addToArray(this.imageView, this);
+	protected Bitmap doInBackground(String... params) {
+		// Logger.log("Loading imageview: " + this.imageView);
+		// ImageItemTaskPool.addToArray(this.imageView, this);
 		if (this.isCancelled()) {
 			return null;
 		}
@@ -82,14 +83,27 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 				return null;
 			}
 			bitmap = getImageItem();
-			XCacheUtil.pushToCache(this.path, bitmap);
+			return XCacheUtil.pushToCache(this.path, bitmap);
+		} else {
+			return bitmap;
 		}
-		if (this.isCancelled()) {
-			return null;
+		// if (this.isCancelled()) {
+		// return null;
+		// }
+		// XQueueUtil.executeTaskDirectly(new ImageLoader(0, this.path, this.imageView));
+		// ImageItemTaskPool.removeFromPool(this.imageView);
+		// return null;
+	}
+
+	@Override
+	protected void onPostExecute(Bitmap bitmap) {
+		if (imageViewReference != null && bitmap != null) {
+			final ImageView imageView = imageViewReference.get();
+			if (imageView != null) {
+				imageView.setImageBitmap(bitmap);
+			}
 		}
-		XQueueUtil.executeTaskDirectly(new ImageLoader(0, this.path, this.imageView));
-		ImageItemTaskPool.removeFromPool(this.imageView);
-		return null;
+
 	}
 
 	private Bitmap getImageItem() {

@@ -66,7 +66,7 @@ public class XCacheUtil {
 	 * @param id
 	 * @param bitmap
 	 */
-	public static final void pushToCache(String id, Bitmap bitmap) {
+	public static final Bitmap pushToCache(String id, Bitmap bitmap) {
 		Bitmap bitmapFromMem = getFromMemCache(id);
 		if (bitmapFromMem == null) {
 			pushToMemCache(id, bitmap);
@@ -75,6 +75,7 @@ public class XCacheUtil {
 		if (bitmapFromDisk == null) {
 			pushToDiskCache(id, bitmap);
 		}
+		return bitmap;
 	}
 
 	public static void pushToMemCache(String id, Bitmap bitmap) {
