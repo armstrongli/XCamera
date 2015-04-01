@@ -1,7 +1,6 @@
 package com.xxboy.activities.mainview.asynctasks;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,57 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.xxboy.log.Logger;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 
 public class ImageItemAsync extends AsyncTask<String, Void, Bitmap> {
-	private static final class ImageItemTaskPool {
-		@SuppressWarnings("rawtypes")
-		private static ConcurrentHashMap<String, AsyncTask> imageViewAsyncPool = new ConcurrentHashMap<String, AsyncTask>();
-
-		private static boolean checkExists(ImageView checked) {
-			return imageViewAsyncPool.containsKey(checked.toString());
-		}
-
-		/**
-		 * remove from image view pool and stop the thread.
-		 * 
-		 * @param path
-		 * @return if the task has been completed, return false. else return true.
-		 */
-		@SuppressWarnings("rawtypes")
-		private static boolean stopAndRemoveFromPool(ImageView path) {
-			AsyncTask task = imageViewAsyncPool.remove(path.toString());
-			if (task.isCancelled()) {
-				return true;
-			} else {
-				Logger.log("Canceling: " + path);
-				return task.cancel(true);
-			}
-		}
-
-		/**
-		 * just remove from pool.
-		 * 
-		 * @param path
-		 */
-		private static void removeFromPool(ImageView path) {
-			imageViewAsyncPool.remove(path.toString());
-		}
-
-		@SuppressWarnings("rawtypes")
-		private static boolean addToArray(ImageView path, AsyncTask task) {
-			Logger.log("Adding Image Item to Pool: " + path.toString());
-			boolean exists = checkExists(path);
-			if (exists) {
-				stopAndRemoveFromPool(path);
-			}
-			imageViewAsyncPool.put(path.toString(), task);
-
-			return true;
-		}
-	}
 
 	private String path;
 	private final WeakReference<ImageView> imageViewReference;
@@ -72,8 +24,6 @@ public class ImageItemAsync extends AsyncTask<String, Void, Bitmap> {
 
 	@Override
 	protected Bitmap doInBackground(String... params) {
-		// Logger.log("Loading imageview: " + this.imageView);
-		// ImageItemTaskPool.addToArray(this.imageView, this);
 		if (this.isCancelled()) {
 			return null;
 		}
@@ -87,12 +37,6 @@ public class ImageItemAsync extends AsyncTask<String, Void, Bitmap> {
 		} else {
 			return bitmap;
 		}
-		// if (this.isCancelled()) {
-		// return null;
-		// }
-		// XQueueUtil.executeTaskDirectly(new ImageLoader(0, this.path, this.imageView));
-		// ImageItemTaskPool.removeFromPool(this.imageView);
-		// return null;
 	}
 
 	@Override
@@ -107,10 +51,6 @@ public class ImageItemAsync extends AsyncTask<String, Void, Bitmap> {
 			if (this == bitmapWorkerTask && imageView != null) {
 				imageView.setImageBitmap(bitmap);
 			}
-
-			// if (imageView != null) {
-			// imageView.setImageBitmap(bitmap);
-			// }
 		}
 
 	}

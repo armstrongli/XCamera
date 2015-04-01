@@ -1,100 +1,45 @@
 package com.xxboy.activities.imageview.asynctasks;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.lang.ref.WeakReference;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.xxboy.activities.imageview.runnables.ImageViewLoader;
-import com.xxboy.log.Logger;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.utils.XQueueUtil;
 
-public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
-
-	private static final class ImageViewTaskArray {
-		private static Object poolLock = new Object();
-		private static ConcurrentHashMap<String, ImageViewAsync> imageViewAsyncPool = new ConcurrentHashMap<String, ImageViewAsync>();
-
-		private static boolean checkExists(String checked) {
-			return imageViewAsyncPool.containsKey(checked);
-		}
-
-		/**
-		 * remove from image view pool and stop the thread.
-		 * 
-		 * @param path
-		 * @return if the task has been completed, return false. else return true.
-		 */
-		private static boolean stopAndRemoveFromPool(String path) {
-			synchronized (poolLock) {
-				ImageViewAsync task = imageViewAsyncPool.remove(path);
-				if (task.isCancelled()) {
-					return true;
-				} else {
-					Logger.log("Canceling: " + path);
-					return task.cancel(false);
-				}
-			}
-		}
-
-		/**
-		 * just remove from pool.
-		 * 
-		 * @param path
-		 */
-		private static void removeFromPool(String path) {
-			imageViewAsyncPool.remove(path);
-		}
-
-		private static boolean addToArray(String path, ImageViewAsync task) {
-			synchronized (poolLock) {
-				boolean exists = checkExists(path);
-				if (exists) {
-					stopAndRemoveFromPool(path);
-				}
-				imageViewAsyncPool.put(path, task);
-			}
-
-			return true;
-		}
-	}
+public class ImageViewAsync extends AsyncTask<Void, Void, Bitmap> {
 
 	private String path;
-	private ImageView imageView;
+	private final WeakReference<ImageView> imageViewReference;
 
 	public ImageViewAsync(String path, ImageView imageView) {
 		this.path = path;
-		this.imageView = imageView;
+		this.imageViewReference = new WeakReference<ImageView>(imageView);
 	}
 
 	@Override
-	protected Void doInBackground(Void... params) {
-		try {
-			ImageViewTaskArray.addToArray(this.path, this);
-			Bitmap bitmap = XCacheUtil.getImaveView(this.path);
-			if (bitmap != null && !bitmap.isRecycled() && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
-				if (!this.isCancelled()) {
-					XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
-				}
-			} else {
-				bitmap = getImage(this.path);
-				XCacheUtil.pushImageView(this.path, bitmap);
-				if (this.isCancelled()) {
-					return null;
-				}
-				XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
-			}
-			if (!this.isCancelled()) {
-				ImageViewTaskArray.removeFromPool(this.path);
-			}
-		} catch (Exception e) {
-			Logger.log(e);
+	protected Bitmap doInBackground(Void... params) {
+		Bitmap bitmap = XCacheUtil.getImaveView(this.path);
+		if (bitmap != null && !bitmap.isRecycled()) {
+			return bitmap;
 		}
-		return null;
+		bitmap = getImage(this.path);
+		XCacheUtil.pushImageView(this.path, bitmap);
+		return bitmap;
+	}
+
+	@Override
+	protected void onPostExecute(Bitmap result) {
+		if (this.imageViewReference != null && result != null) {
+			final ImageView imageView = imageViewReference.get();
+			if (imageView != null) {
+				imageView.setImageBitmap(result);
+			}
+		}
+		super.onPostExecute(result);
 	}
 
 	private Bitmap getImage(String imagePath) {
