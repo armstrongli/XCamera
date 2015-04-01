@@ -81,21 +81,18 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 		}
 		Bitmap bitmap = XCacheUtil.getFromMemCache(path);
 		if (bitmap != null && !bitmap.isRecycled() && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
-			if (this.isCancelled()) {
-				return null;
-			}
-			XQueueUtil.executeTaskDirectly(new ImageLoader(0, this.path, this.imageView));
+
 		} else {
 			if (this.isCancelled()) {
 				return null;
 			}
 			bitmap = getImageItem(this.path);
 			XCacheUtil.pushToCache(this.path, bitmap);
-			if (this.isCancelled()) {
-				return null;
-			}
-			XQueueUtil.executeTaskDirectly(new ImageLoader(0, this.path, this.imageView));
 		}
+		if (this.isCancelled()) {
+			return null;
+		}
+		XQueueUtil.execAddImage(new ImageLoader(0, this.path, this.imageView));
 		ImageItemTaskPool.removeFromPool(path);
 		return null;
 	}
