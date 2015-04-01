@@ -74,24 +74,19 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... params) {
 		try {
-			if (!this.isCancelled()) {
-				ImageViewTaskArray.addToArray(this.path, this);
-			}
-			if (!this.isCancelled()) {
-				Bitmap bitmap = XCacheUtil.getImaveView(this.path);
-				if (bitmap != null && !bitmap.isRecycled() && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
-					if (!this.isCancelled()) {
-						XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
-					}
-				} else {
-					if (!this.isCancelled()) {
-						bitmap = getImage(this.path);
-						XCacheUtil.pushImageView(this.path, bitmap);
-					}
-					if (!this.isCancelled()) {
-						XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
-					}
+			ImageViewTaskArray.addToArray(this.path, this);
+			Bitmap bitmap = XCacheUtil.getImaveView(this.path);
+			if (bitmap != null && !bitmap.isRecycled() && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
+				if (!this.isCancelled()) {
+					XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 				}
+			} else {
+				bitmap = getImage(this.path);
+				XCacheUtil.pushImageView(this.path, bitmap);
+				if (this.isCancelled()) {
+					return null;
+				}
+				XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
 			}
 			if (!this.isCancelled()) {
 				ImageViewTaskArray.removeFromPool(this.path);
