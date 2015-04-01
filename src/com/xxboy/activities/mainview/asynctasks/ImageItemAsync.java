@@ -83,7 +83,7 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 			if (this.isCancelled()) {
 				return null;
 			}
-			bitmap = getImageItem(this.path);
+			bitmap = getImageItem();
 			XCacheUtil.pushToCache(this.path, bitmap);
 		}
 		if (this.isCancelled()) {
@@ -94,7 +94,7 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 		return null;
 	}
 
-	private Bitmap getImageItem(String imagePath) {
-		return BitmapFactory.decodeFile(this.path, XBitmapUtil.getImageItemOption(imagePath));
+	private Bitmap getImageItem() {
+		return BitmapFactory.decodeFile(this.path, XBitmapUtil.getImageItemOption(this.path));
 	}
 }
