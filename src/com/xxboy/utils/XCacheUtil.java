@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.ref.SoftReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,20 +17,14 @@ import com.xxboy.log.Logger;
 
 public class XCacheUtil {
 	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 6;// 1/6 of runtime max memory
-	private static LruCache<String, SoftReference<Bitmap>> mMemoryCache = new LruCache<String, SoftReference<Bitmap>>(M_MEMORY_CACHE_SIZE.intValue()) {
+	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE.intValue()) {
 		@Override
-		protected int sizeOf(String key, SoftReference<Bitmap> value) {
-			if (value == null) {
+		protected int sizeOf(String key, Bitmap value) {
+			if (value == null || value.isRecycled()) {
 				mMemoryCache.remove(key);
 				return 0;
 			} else {
-				Bitmap bitmap = value.get();
-				if (bitmap == null || bitmap.isRecycled()) {
-					mMemoryCache.remove(key);
-					return 0;
-				} else {
-					return bitmap.getByteCount();
-				}
+				return value.getByteCount();
 			}
 		}
 
@@ -75,7 +68,7 @@ public class XCacheUtil {
 	public static void pushToMemCache(String id, Bitmap bitmap) {
 		Logger.debug("Pushing to memory cache: " + id);
 		try {
-			mMemoryCache.put(hashKeyForDisk(id), new SoftReference<Bitmap>(bitmap));
+			mMemoryCache.put(hashKeyForDisk(id), bitmap);
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
 		}
@@ -105,10 +98,10 @@ public class XCacheUtil {
 		try {
 			Logger.debug("Getting From memcache(" + mMemoryCache.size() + "): " + id);
 			// check whether it's in memory cache
-			SoftReference<Bitmap> bitmap = mMemoryCache.get(hashKeyForDisk(id));
-			if (bitmap != null && bitmap.get() != null && !bitmap.get().isRecycled()) {
+			Bitmap bitmap = mMemoryCache.get(hashKeyForDisk(id));
+			if (bitmap != null && bitmap.isRecycled()) {
 				Logger.debug("hit in cache: memory cache");
-				return bitmap.get();
+				return bitmap;
 			}
 			return null;
 		} catch (Exception e) {
