@@ -19,32 +19,7 @@ public class XBitmapUtil {
 		opt.inJustDecodeBounds = true;
 
 		BitmapFactory.decodeFile(resourcePath, opt);
-
-		float width_divide_height = (float) opt.outWidth / (float) opt.outHeight;
-		double cal_width = 0, cal_height = 0;
-		if (width_divide_height > XCameraConst.ITEM_WIDTH_DIVIDE_HEIGHT) {
-			if (opt.outWidth > XCameraConst.PHOTO_ITEM_WIDTH) {
-				cal_width = XCameraConst.PHOTO_ITEM_WIDTH;
-				cal_height = cal_width / width_divide_height;
-			} else {
-				cal_height = opt.outHeight;
-				cal_width = opt.outWidth;
-			}
-			opt.inSampleSize = (int) (opt.outHeight / cal_height);
-		} else {
-			if (opt.outHeight > XCameraConst.PHOTO_ITEM_HEIGHT) {
-				cal_height = XCameraConst.PHOTO_ITEM_HEIGHT;
-				cal_width = cal_height * width_divide_height;
-			} else {
-				cal_height = opt.outHeight;
-				cal_width = opt.outWidth;
-			}
-			opt.inSampleSize = (int) (opt.outWidth / cal_width);
-		}
-		opt.outHeight = (int) (cal_height);
-		opt.outWidth = (int) (cal_width);
-
-		opt.inSampleSize = opt.inSampleSize;
+		opt.inSampleSize = calculateInSampleSize(opt, XCameraConst.PHOTO_ITEM_WIDTH, XCameraConst.PHOTO_ITEM_HEIGHT);
 
 		opt.inJustDecodeBounds = false;
 		return opt;
@@ -55,34 +30,31 @@ public class XBitmapUtil {
 		opt.inJustDecodeBounds = true;
 
 		BitmapFactory.decodeFile(resourcePath, opt);
-
-		float width_divide_height = (float) opt.outWidth / (float) opt.outHeight;
-		double cal_width = 0, cal_height = 0;
-		if (width_divide_height > XCameraConst.VIEW_WIDTH_DIVIDE_HEIGHT) {
-			if (opt.outWidth > XCameraConst.SCREEN_WIDTH) {
-				cal_width = XCameraConst.SCREEN_WIDTH;
-				cal_height = cal_width / width_divide_height;
-			} else {
-				cal_height = opt.outHeight;
-				cal_width = opt.outWidth;
-			}
-			opt.inSampleSize = (int) (opt.outHeight / cal_height);
-		} else {
-			if (opt.outHeight > XCameraConst.SCREEN_HEIGHT) {
-				cal_height = XCameraConst.SCREEN_HEIGHT;
-				cal_width = cal_height * width_divide_height;
-			} else {
-				cal_height = opt.outHeight;
-				cal_width = opt.outWidth;
-			}
-			opt.inSampleSize = (int) (opt.outWidth / cal_width);
-		}
-		opt.outHeight = (int) (cal_height);
-		opt.outWidth = (int) (cal_width);
-
-		opt.inSampleSize = opt.inSampleSize;
+		opt.inSampleSize = calculateInSampleSize(opt, XCameraConst.SCREEN_WIDTH, XCameraConst.SCREEN_HEIGHT);
 
 		opt.inJustDecodeBounds = false;
 		return opt;
 	}
+
+	public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+
+		return inSampleSize;
+	}
+
 }
