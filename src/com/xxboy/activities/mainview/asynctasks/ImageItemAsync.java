@@ -15,12 +15,11 @@ import com.xxboy.utils.XQueueUtil;
 
 public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 	private static final class ImageItemTaskPool {
-		private static Object poolLock = new Object();
 		@SuppressWarnings("rawtypes")
 		private static ConcurrentHashMap<String, AsyncTask> imageViewAsyncPool = new ConcurrentHashMap<String, AsyncTask>();
 
-		private static boolean checkExists(String checked) {
-			return imageViewAsyncPool.containsKey(checked);
+		private static boolean checkExists(ImageView checked) {
+			return imageViewAsyncPool.containsKey(checked.toString());
 		}
 
 		/**
@@ -30,15 +29,13 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 		 * @return if the task has been completed, return false. else return true.
 		 */
 		@SuppressWarnings("rawtypes")
-		private static boolean stopAndRemoveFromPool(String path) {
-			synchronized (poolLock) {
-				AsyncTask task = imageViewAsyncPool.remove(path);
-				if (task.isCancelled()) {
-					return true;
-				} else {
-					Logger.log("Canceling: " + path);
-					return task.cancel(true);
-				}
+		private static boolean stopAndRemoveFromPool(ImageView path) {
+			AsyncTask task = imageViewAsyncPool.remove(path.toString());
+			if (task.isCancelled()) {
+				return true;
+			} else {
+				Logger.log("Canceling: " + path);
+				return task.cancel(true);
 			}
 		}
 
@@ -47,19 +44,18 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 		 * 
 		 * @param path
 		 */
-		private static void removeFromPool(String path) {
-			imageViewAsyncPool.remove(path);
+		private static void removeFromPool(ImageView path) {
+			imageViewAsyncPool.remove(path.toString());
 		}
 
 		@SuppressWarnings("rawtypes")
-		private static boolean addToArray(String path, AsyncTask task) {
-			synchronized (poolLock) {
-				boolean exists = checkExists(path);
-				if (exists) {
-					stopAndRemoveFromPool(path);
-				}
-				imageViewAsyncPool.put(path, task);
+		private static boolean addToArray(ImageView path, AsyncTask task) {
+			Logger.log("Adding Image Item to Pool: " + path.toString());
+			boolean exists = checkExists(path);
+			if (exists) {
+				stopAndRemoveFromPool(path);
 			}
+			imageViewAsyncPool.put(path.toString(), task);
 
 			return true;
 		}
@@ -75,7 +71,8 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		ImageItemTaskPool.addToArray(this.path, this);
+		Logger.log("Loading imageview: " + this.imageView);
+		ImageItemTaskPool.addToArray(this.imageView, this);
 		if (this.isCancelled()) {
 			return null;
 		}
@@ -92,8 +89,8 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 		if (this.isCancelled()) {
 			return null;
 		}
-		XQueueUtil.execAddImage(new ImageLoader(0, this.path, this.imageView));
-		ImageItemTaskPool.removeFromPool(path);
+		XQueueUtil.executeTaskDirectly(new ImageLoader(0, this.path, this.imageView));
+		ImageItemTaskPool.removeFromPool(this.imageView);
 		return null;
 	}
 
