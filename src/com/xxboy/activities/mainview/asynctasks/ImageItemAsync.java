@@ -28,7 +28,7 @@ public class ImageItemAsync extends AsyncTask<String, Void, Bitmap> {
 		if (this.isCancelled()) {
 			return null;
 		}
-		Bitmap bitmap = XCacheUtil.getFromMemCache(path);
+		Bitmap bitmap = XCacheUtil.getFromCache(path);
 		if (bitmap == null) {
 			if (this.isCancelled()) {
 				return null;
