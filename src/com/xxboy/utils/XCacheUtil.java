@@ -17,7 +17,7 @@ import com.xxboy.common.DiskLruCache;
 import com.xxboy.log.Logger;
 
 public class XCacheUtil {
-	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 1/4 of runtime max memory
+	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 8;// 1/8 of runtime max memory
 	private static LruCache<String, SoftReference<Bitmap>> mMemoryCache = new LruCache<String, SoftReference<Bitmap>>(M_MEMORY_CACHE_SIZE.intValue()) {
 		@Override
 		protected int sizeOf(String key, SoftReference<Bitmap> value) {
@@ -28,6 +28,15 @@ public class XCacheUtil {
 			}
 		}
 
+		@Override
+		protected void entryRemoved(boolean evicted, String key, SoftReference<Bitmap> oldValue, SoftReference<Bitmap> newValue) {
+			if (oldValue != null && oldValue.get() != null && !oldValue.get().isRecycled()) {
+				Logger.debug("Moving cache from memory cache to soft referene cache: " + key + ", old value: " + oldValue);
+				XCacheUtil.pushToSoftCache(key, oldValue.get());
+			}
+			super.entryRemoved(evicted, key, oldValue, newValue);
+		}
+
 	};
 
 	public static final Bitmap getFromCache(String id) {
@@ -36,13 +45,21 @@ public class XCacheUtil {
 			Logger.debug("hit in cache: memory cache");
 			return bitmapFromMem;
 		} else {
-			Bitmap bitmapFromDisk = getFromDiskCache(id);
-			if (bitmapFromDisk != null && !bitmapFromDisk.isRecycled()) {
-				pushToMemCache(id, bitmapFromDisk);
-				Logger.debug("hit in cache: disk cache");
-				return bitmapFromDisk;
+			Bitmap bitmapFromSoft = getFromSoftCache(id);
+			if (bitmapFromSoft != null && !bitmapFromSoft.isRecycled()) {
+				pushToMemCache(id, bitmapFromSoft);
+				deleteFromSoftCache(id);
+				Logger.debug("hit in cache: soft reference cache");
+				return bitmapFromSoft;
 			} else {
-				return null;
+				Bitmap bitmapFromDisk = getFromDiskCache(id);
+				if (bitmapFromDisk != null && !bitmapFromDisk.isRecycled()) {
+					pushToMemCache(id, bitmapFromDisk);
+					Logger.debug("hit in cache: disk cache");
+					return bitmapFromDisk;
+				} else {
+					return null;
+				}
 			}
 		}
 	}
@@ -111,8 +128,83 @@ public class XCacheUtil {
 	}
 
 	private static final Long M_DISK_CACHE_SIZE = 20l * 1024l * 1024l;// 20M
+	private static LruCache<String, SoftReference<Bitmap>> xSoftCache = new LruCache<String, SoftReference<Bitmap>>(M_DISK_CACHE_SIZE.intValue()) {
 
+		@Override
+		protected int sizeOf(String key, SoftReference<Bitmap> value) {
+			if (value == null) {
+				return 0;
+			} else {
+				Bitmap b = value.get();
+				if (b == null || b.isRecycled()) {
+					return 0;
+				} else {
+					return b.getByteCount();
+				}
+			}
+		}
+
+		@Override
+		protected void entryRemoved(boolean evicted, String key, SoftReference<Bitmap> oldValue, SoftReference<Bitmap> newValue) {
+			if (oldValue != null) {
+				Bitmap oldBitmap = oldValue.get();
+				if (oldBitmap != null && !oldBitmap.isRecycled()) {
+					oldBitmap.recycle();
+				}
+			}
+			super.entryRemoved(evicted, key, oldValue, newValue);
+		}
+
+	};
 	private static DiskLruCache mDiskCache;
+
+	/**
+	 * getting bitmap from soft reference
+	 * 
+	 * @param id
+	 *            image path
+	 * @return
+	 */
+	private static final Bitmap getFromSoftCache(String id) {
+		try {
+			Logger.debug("Getting from softcache(" + xSoftCache.size() + "): " + id);
+			String xkey = hashKeyForDisk(id);
+			SoftReference<Bitmap> softCache = xSoftCache.get(xkey);
+			if (softCache == null) {
+				Logger.debug("Getting from softcache NONE " + id);
+				xSoftCache.remove(xkey);
+				return null;
+			}
+			Bitmap bitmap = softCache.get();
+			if (bitmap == null || bitmap.isRecycled()) {
+				Logger.debug("Bitmap has been recycled: " + id);
+				return null;
+			} else {
+				return bitmap;
+			}
+		} catch (Exception e) {
+			Logger.log("Error when getting bitmap from soft reference cache: " + id, e);
+		}
+		return null;
+	}
+
+	private static final void pushToSoftCache(String id, Bitmap bitmap) {
+		Logger.debug("Pushing to soft reference cache: " + id);
+		String xkey = hashKeyForDisk(id);
+		Logger.debug("Soft reference cache size is: " + xSoftCache.size());
+		xSoftCache.put(xkey, new SoftReference<Bitmap>(bitmap));
+		Logger.debug("Soft reference cache size up to: " + xSoftCache.size());
+	}
+
+	/**
+	 * remove cache from softreference cache
+	 * 
+	 * @param id
+	 */
+	private static final void deleteFromSoftCache(String id) {
+		String xkey = hashKeyForDisk(id);
+		xSoftCache.remove(xkey);
+	}
 
 	private static Bitmap getFromDiskCache(String id) {
 		Logger.debug("Getting from diskCache: " + id);
