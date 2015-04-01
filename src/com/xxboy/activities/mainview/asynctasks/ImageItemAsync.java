@@ -37,7 +37,7 @@ public class ImageItemAsync extends AsyncTask<Void, Void, Void> {
 					return true;
 				} else {
 					Logger.log("Canceling: " + path);
-					return task.cancel(true);
+					return task.cancel(false);
 				}
 			}
 		}
