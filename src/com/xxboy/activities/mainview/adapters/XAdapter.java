@@ -3,6 +3,7 @@ package com.xxboy.activities.mainview.adapters;
 import java.util.LinkedList;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.pool.RunnablePool;
+import com.xxboy.utils.XCacheUtil;
 
 public class XAdapter extends BaseAdapter {
 
@@ -146,10 +148,15 @@ public class XAdapter extends BaseAdapter {
 	private void loadImage(int position, String imagePath, ImageView imageView) {
 		if (XFunction.isImage(imagePath)) {
 			if (ImageItemAsync.cancelPotentialWork(imagePath, imageView)) {
-				final ImageItemAsync task = new ImageItemAsync(imagePath, imageView);
-				AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
-				imageView.setImageDrawable(asyncDrawable);
-				task.execute();
+				Bitmap bitmap = XCacheUtil.getFromMemCache(imagePath);
+				if (bitmap != null) {
+					imageView.setImageBitmap(bitmap);
+				} else {
+					final ImageItemAsync task = new ImageItemAsync(imagePath, imageView);
+					AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
+					imageView.setImageDrawable(asyncDrawable);
+					task.execute();
+				}
 			}
 		} else {
 			imageView.setImageResource(R.drawable.ic_media_embed_play);
