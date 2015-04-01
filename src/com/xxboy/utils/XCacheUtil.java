@@ -18,17 +18,21 @@ import com.xxboy.log.Logger;
 
 public class XCacheUtil {
 	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 1/4 of runtime max memory
-	private static LruCache<String, Bitmap> mMemoryCache = new LruCache<String, Bitmap>(M_MEMORY_CACHE_SIZE.intValue()) {
+	private static LruCache<String, SoftReference<Bitmap>> mMemoryCache = new LruCache<String, SoftReference<Bitmap>>(M_MEMORY_CACHE_SIZE.intValue()) {
 		@Override
-		protected int sizeOf(String key, Bitmap value) {
-			return value.getByteCount();
+		protected int sizeOf(String key, SoftReference<Bitmap> value) {
+			if (value == null || value.get() == null) {
+				return 0;
+			} else {
+				return value.get().getByteCount();
+			}
 		}
 
 		@Override
-		protected void entryRemoved(boolean evicted, String key, Bitmap oldValue, Bitmap newValue) {
-			if (oldValue != null && !oldValue.isRecycled()) {
+		protected void entryRemoved(boolean evicted, String key, SoftReference<Bitmap> oldValue, SoftReference<Bitmap> newValue) {
+			if (oldValue != null && oldValue.get() != null && !oldValue.get().isRecycled()) {
 				Logger.debug("Moving cache from memory cache to soft referene cache: " + key + ", old value: " + oldValue);
-				XCacheUtil.pushToSoftCache(key, oldValue);
+				XCacheUtil.pushToSoftCache(key, oldValue.get());
 			}
 			super.entryRemoved(evicted, key, oldValue, newValue);
 		}
@@ -81,7 +85,7 @@ public class XCacheUtil {
 	public static void pushToMemCache(String id, Bitmap bitmap) {
 		Logger.debug("Pushing to memory cache: " + id);
 		try {
-			mMemoryCache.put(hashKeyForDisk(id), bitmap);
+			mMemoryCache.put(hashKeyForDisk(id), new SoftReference<Bitmap>(bitmap));
 		} catch (Exception e) {
 			Logger.log(e.getMessage(), e);
 		}
@@ -111,10 +115,10 @@ public class XCacheUtil {
 		try {
 			Logger.debug("Getting From memcache(" + mMemoryCache.size() + "): " + id);
 			// check whether it's in memory cache
-			Bitmap bitmap = mMemoryCache.get(hashKeyForDisk(id));
-			if (bitmap != null && !bitmap.isRecycled()) {
+			SoftReference<Bitmap> bitmap = mMemoryCache.get(hashKeyForDisk(id));
+			if (bitmap != null && bitmap.get() != null && !bitmap.get().isRecycled()) {
 				Logger.debug("hit in cache: memory cache");
-				return bitmap;
+				return bitmap.get();
 			}
 			return null;
 		} catch (Exception e) {
