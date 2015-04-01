@@ -16,6 +16,7 @@ import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
 import com.xxboy.activities.mainview.asynctasks.ImageItemAsync;
+import com.xxboy.activities.mainview.asynctasks.ImageItemAsync.AsyncDrawable;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
@@ -144,10 +145,14 @@ public class XAdapter extends BaseAdapter {
 
 	private void loadImage(int position, String imagePath, ImageView imageView) {
 		if (XFunction.isImage(imagePath)) {
-			new ImageItemAsync(imagePath, imageView).execute();
+			if (ImageItemAsync.cancelPotentialWork(imagePath, imageView)) {
+				final ImageItemAsync task = new ImageItemAsync(imagePath, imageView);
+				AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
+				imageView.setImageDrawable(asyncDrawable);
+				task.execute();
+			}
 		} else {
 			imageView.setImageResource(R.drawable.ic_media_embed_play);
 		}
 	}
-
 }
