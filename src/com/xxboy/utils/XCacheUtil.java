@@ -60,6 +60,12 @@ public class XCacheUtil {
 		}
 	}
 
+	/**
+	 * push to mem cache & disk cache
+	 * 
+	 * @param id
+	 * @param bitmap
+	 */
 	public static final void pushToCache(String id, Bitmap bitmap) {
 		Bitmap bitmapFromMem = getFromMemCache(id);
 		if (bitmapFromMem == null) {

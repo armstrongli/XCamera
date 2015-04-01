@@ -1,6 +1,6 @@
 package com.xxboy.activities.imageview.asynctasks;
 
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,76 +15,92 @@ import com.xxboy.utils.XQueueUtil;
 
 public class ImageViewAsync extends AsyncTask<Void, Void, Void> {
 
-	private static final class ImageTaskArray {
-		private static Object arrayLock = new Object();
-		private static LinkedList<Integer> array = new LinkedList<Integer>();
-		private static final int ARRAY_SIZE = 3;
+	private static final class ImageViewTaskArray {
+		private static Object poolLock = new Object();
+		private static ConcurrentHashMap<String, ImageViewAsync> imageViewAsyncPool = new ConcurrentHashMap<String, ImageViewAsync>();
 
-		private static boolean checkExists(Integer checked) {
-			synchronized (arrayLock) {
-				return array.indexOf(checked) >= 0;
-			}
+		private static boolean checkExists(String checked) {
+			return imageViewAsyncPool.containsKey(checked);
 		}
 
-		private static boolean removeFromArray(Integer i) {
-			return array.remove(i);
-		}
-
-		private static boolean addToArray(Integer i) {
-			boolean exists = checkExists(i);
-			if (exists) {
-				return false;
-			} else {
-				synchronized (arrayLock) {
-					array.addFirst(i);
-					if (ARRAY_SIZE < array.size()) {
-						array.removeLast();
-					}
+		/**
+		 * remove from image view pool and stop the thread.
+		 * 
+		 * @param path
+		 * @return if the task has been completed, return false. else return true.
+		 */
+		private static boolean stopAndRemoveFromPool(String path) {
+			synchronized (poolLock) {
+				ImageViewAsync task = imageViewAsyncPool.remove(path);
+				if (task.isCancelled()) {
+					return true;
+				} else {
+					Logger.log("Canceling: " + path);
+					return task.cancel(true);
 				}
-				return true;
 			}
+		}
+
+		/**
+		 * just remove from pool.
+		 * 
+		 * @param path
+		 */
+		private static void removeFromPool(String path) {
+			imageViewAsyncPool.remove(path);
+		}
+
+		private static boolean addToArray(String path, ImageViewAsync task) {
+			synchronized (poolLock) {
+				boolean exists = checkExists(path);
+				if (exists) {
+					stopAndRemoveFromPool(path);
+				}
+				imageViewAsyncPool.put(path, task);
+			}
+
+			return true;
 		}
 	}
 
-	private int position;
 	private String path;
 	private ImageView imageView;
 
-	public ImageViewAsync(int position, String path, ImageView imageView) {
-		this.position = position;
+	public ImageViewAsync(String path, ImageView imageView) {
 		this.path = path;
 		this.imageView = imageView;
 	}
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		boolean successAdded = ImageTaskArray.addToArray(this.position);
-		if (successAdded) {
-			Bitmap bitmap = XCacheUtil.getImaveView(this.path);
-			if (bitmap != null && !bitmap.isRecycled() && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
-				XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
-			} else {
-				bitmap = getImage(this.path);
-				XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
-				XCacheUtil.pushImageView(this.path, bitmap);
+		try {
+			if (!this.isCancelled()) {
+				ImageViewTaskArray.addToArray(this.path, this);
 			}
-		} else {
-			Bitmap bitmap = null;
-			while (bitmap == null) {
-				Logger.log("load gallery : " + this.path + this.imageView);
-				bitmap = XCacheUtil.getImaveView(this.path);
-				if (bitmap != null && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
-					break;
-				}
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					Logger.log(e);
+			if (!this.isCancelled()) {
+				Bitmap bitmap = XCacheUtil.getImaveView(this.path);
+				if (bitmap != null && !bitmap.isRecycled() && (bitmap.getWidth() + bitmap.getHeight() > 0)) {
+					if (!this.isCancelled()) {
+						XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
+					}
+				} else {
+					if (!this.isCancelled()) {
+						bitmap = getImage(this.path);
+					}
+					if (!this.isCancelled()) {
+						XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
+					}
+					if (!this.isCancelled()) {
+						XCacheUtil.pushImageView(this.path, bitmap);
+					}
 				}
 			}
-			XQueueUtil.executeTaskDirectly(new ImageViewLoader(this.path, imageView));
+			if (!this.isCancelled()) {
+				ImageViewTaskArray.removeFromPool(this.path);
+			}
+		} catch (Exception e) {
+			Logger.log(e);
 		}
-		ImageTaskArray.removeFromArray(Integer.valueOf(this.position));
 		return null;
 	}
 

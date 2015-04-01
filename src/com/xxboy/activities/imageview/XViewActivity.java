@@ -93,7 +93,7 @@ public class XViewActivity extends Activity {
 			imageView.setLayoutParams(new Gallery.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 			imageView.setBackgroundColor(Color.BLACK);
 
-			new ImageViewAsync(position, pathes.get(position), imageView).execute();
+			new ImageViewAsync(pathes.get(position), imageView).execute();
 
 			return imageView;
 		}
