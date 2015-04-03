@@ -39,7 +39,6 @@ public class ImageViewAsync extends AsyncTask<Void, Void, Bitmap> {
 				imageView.setImageBitmap(result);
 			}
 		}
-		super.onPostExecute(result);
 	}
 
 	private Bitmap getImage(String imagePath) {

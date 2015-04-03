@@ -19,12 +19,9 @@ import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterCamera;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
-import com.xxboy.activities.mainview.runnables.ImageExecutor;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.pool.ExecutorPool;
-import com.xxboy.services.pool.RunnablePool;
 import com.xxboy.utils.XCacheUtil;
 
 public class XImageViewAdapter extends BaseAdapter {
@@ -82,7 +79,6 @@ public class XImageViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Logger.debug("Loading: " + position);
-		RunnablePool.syncFutureIndex(position);
 		View resultView = createViewFromResource(position, convertView, parent, this.mData.get(position).getResource());
 		return resultView;
 	}
@@ -171,7 +167,6 @@ public class XImageViewAdapter extends BaseAdapter {
 		} else {
 			imageView.setImageBitmap(null);
 			if (XFunction.isImage(imagePath)) {
-				ExecutorPool.executeExecutor(new ImageExecutor(position, imagePath, imageView));
 				// new ImageExecutor(position, imagePath, imageView).start();
 			} else {
 				imageView.setImageResource(R.drawable.ic_media_embed_play);

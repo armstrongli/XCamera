@@ -21,7 +21,6 @@ import com.xxboy.activities.mainview.asynctasks.ImageItemAsync.AsyncDrawable;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.services.pool.RunnablePool;
 import com.xxboy.utils.XCacheUtil;
 
 public class XAdapter extends BaseAdapter {
@@ -63,7 +62,6 @@ public class XAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Logger.debug("Loading: " + position);
-		RunnablePool.syncFutureIndex(position);
 		View resultView = createViewFromResource(position, convertView, parent, this.mData.get(position).getResource());
 		return resultView;
 	}

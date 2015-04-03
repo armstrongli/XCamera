@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -25,14 +24,12 @@ import android.widget.TextView;
 import com.xxboy.activities.imageview.XViewActivity;
 import com.xxboy.activities.mainview.adapters.XAdapter;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
-import com.xxboy.activities.mainview.listeners.XScrollListener;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
 import com.xxboy.services.asynctasks.XPreCacheLoaderAsyncTask;
 import com.xxboy.services.asynctasks.XReloadPhoto;
 import com.xxboy.utils.XCacheUtil;
-import com.xxboy.utils.XQueueUtil;
 
 public class XCamera extends Activity {
 	private static XAdapter xAdp = null;
@@ -77,7 +74,6 @@ public class XCamera extends Activity {
 		public static String GLOBAL_X_DEFAULT_CAMERA_PATH = null;
 		public static String GLOBAL_X_CAMERA_PATH = null;
 
-		public static int GLOBAL_X_GRIDVIEW_VISIABLE_COUNT = 20;
 	}
 
 	private static GridView xGridView;
@@ -94,7 +90,6 @@ public class XCamera extends Activity {
 
 		// get components in the main view.
 		xGridView = (GridView) findViewById(R.id.photo_grid);
-		xGridView.setOnScrollListener(new XScrollListener());
 		xGridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -118,8 +113,6 @@ public class XCamera extends Activity {
 
 		new XInitialAsyncTask().execute();
 		XCamera.xCamera = this;
-
-		XQueueUtil.setHandler(new Handler());
 	}
 
 	private void onClickImage(View v) {

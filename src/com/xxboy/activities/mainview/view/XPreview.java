@@ -1,4 +1,4 @@
-package com.xxboy.view;
+package com.xxboy.activities.mainview.view;
 
 import java.io.IOException;
 import java.util.List;

@@ -16,7 +16,6 @@ import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterPicture;
 import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
-import com.xxboy.services.pool.ExecutorPool;
 import com.xxboy.utils.XColorUtil;
 
 public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
@@ -81,9 +80,6 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... param) {
-		// reset executor for loading photos cause of reload may lead to changing indexes for image path
-		ExecutorPool.resetExecutorPool();
-
 		// moving files
 		int hasCount = XCamera.getxView().getCount();
 		Integer moveCount = Mover.moveAllPhotos();
