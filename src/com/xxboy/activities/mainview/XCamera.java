@@ -156,9 +156,6 @@ public class XCamera extends Activity {
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
 		XCameraConst.setWidthHeight(metric.widthPixels, metric.heightPixels);
 
-		Logger.log("SCREEN_WIDTH: " + XCameraConst.SCREEN_WIDTH);
-		Logger.log("SCREEN_HEIGHT: " + XCameraConst.SCREEN_HEIGHT);
-
 		try {
 			PackageManager pm = this.getPackageManager();
 			PackageInfo pkgInfo = pm.getPackageInfo(this.getPackageName(), 0);
@@ -170,7 +167,6 @@ public class XCamera extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		// XCameraAsyncTask.releaseCameras();
 		super.onDestroy();
 	}
 

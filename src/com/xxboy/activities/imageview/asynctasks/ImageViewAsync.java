@@ -33,7 +33,7 @@ public class ImageViewAsync extends XBitmapAsyncTask {
 			final ImageView imageView = imageViewReference.get();
 			if (imageView != null) {
 				final XBitmapAsyncTask bitmapWorkerTask = XBitmapDrawable.getBitmapWorkerTask(imageView);
-				if (this == bitmapWorkerTask && imageView != null) {
+				if (this == bitmapWorkerTask) {
 					imageView.setImageBitmap(result);
 				}
 			}

@@ -28,9 +28,7 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 			if (freshFile == null || freshFile.length == 0) {
 				return 0;
 			}
-			Logger.log("Begin moving photos");
 			int movedPhotosCount = movePhotos();
-			Logger.log("Moved " + movedPhotosCount + " photos");
 			return movedPhotosCount;
 		}
 
@@ -53,7 +51,6 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		private static int movePhotos() {
 			File[] pictures = checkExistingImages();
 			if (pictures != null && pictures.length > 0) {
-				Logger.log(">>>>>>Begin moving files: " + pictures.length);
 				XFunction.XDate date = new XFunction.XDate();
 				String currentTargetFolderName = ""//
 						+ XCameraConst.GLOBAL_X_CAMERA_PATH//
@@ -124,13 +121,11 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 			return result;
 		}
 		for (File yyyymmFolder : xyyyymmFolders) {
-			Logger.log("Going to " + yyyymmFolder.getAbsolutePath());
 			if (!yyyymmFolder.isDirectory() || yyyymmFolder.isHidden()) {
 				continue;
 			}
 			File[] yyyymmddFolders = yyyymmFolder.listFiles();
 			for (File yyyymmddFolder : yyyymmddFolders) {
-				Logger.log("Going to " + yyyymmddFolder.getAbsolutePath());
 				List<XAdapterBase> itemResult = get1DayPhotoResourceX(yyyymmddFolder);
 				if (itemResult != null && itemResult.size() > 0) {
 					result.addAll(itemResult);
@@ -157,10 +152,8 @@ public final class XReloadPhoto extends AsyncTask<Void, Void, Void> {
 		if (photos != null && photos.length > 0) {
 			for (File photoItem : photos) {
 				if (photoItem.isDirectory()) {
-					Logger.log("Come up with one Directory: " + photoItem.getAbsolutePath());
 					continue;
 				} else if (photoItem.isHidden()) {
-					Logger.log("Come up with one hidden file: " + photoItem.getAbsolutePath());
 					continue;
 				}
 				HashMap<String, Object> item = new HashMap<String, Object>();

@@ -31,7 +31,6 @@ public class XAdapter extends BaseAdapter {
 	public XAdapter(XCamera xCamera, LinkedList<XAdapterBase> mData) {
 		super();
 		this.mData = mData;
-		Logger.log("There're " + mData.size() + " pictures in total");
 		this.mInflater = (LayoutInflater) xCamera.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -61,7 +60,6 @@ public class XAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Logger.debug("Loading: " + position);
 		View resultView = createViewFromResource(position, convertView, parent, this.mData.get(position).getResource());
 		return resultView;
 	}
