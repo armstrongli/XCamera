@@ -17,8 +17,8 @@ import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
 import com.xxboy.activities.mainview.asynctasks.ImageItemAsync;
-import com.xxboy.activities.mainview.asynctasks.ImageItemAsync.AsyncDrawable;
 import com.xxboy.common.XFunction;
+import com.xxboy.drawables.XBitmapDrawable;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.utils.XCacheUtil;
@@ -145,13 +145,13 @@ public class XAdapter extends BaseAdapter {
 
 	private void loadImage(int position, String imagePath, ImageView imageView) {
 		if (XFunction.isImage(imagePath)) {
-			if (ImageItemAsync.cancelPotentialWork(imagePath, imageView)) {
+			if (XBitmapDrawable.cancelPotentialWork(imagePath, imageView)) {
 				Bitmap bitmap = XCacheUtil.getFromMemCache(imagePath);
 				if (bitmap != null) {
 					imageView.setImageBitmap(bitmap);
 				} else {
 					final ImageItemAsync task = new ImageItemAsync(imagePath, imageView);
-					AsyncDrawable asyncDrawable = new AsyncDrawable(null, task);
+					XBitmapDrawable asyncDrawable = new XBitmapDrawable(null, task);
 					imageView.setImageDrawable(asyncDrawable);
 					task.execute();
 				}

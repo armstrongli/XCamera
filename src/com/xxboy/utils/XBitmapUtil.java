@@ -1,10 +1,31 @@
 package com.xxboy.utils;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.xxboy.activities.mainview.XCamera.XCameraConst;
 
 public class XBitmapUtil {
+
+	/**
+	 * get image item for main view.
+	 * 
+	 * @param imagePath
+	 * @return
+	 */
+	public static Bitmap getImageItem(String imagePath) {
+		return BitmapFactory.decodeFile(imagePath, getImageItemOption(imagePath));
+	}
+
+	/**
+	 * get image view bitmap from file.
+	 * 
+	 * @param imagePath
+	 * @return
+	 */
+	public static Bitmap getImageView(String imagePath) {
+		return BitmapFactory.decodeFile(imagePath, getImageViewOption(imagePath));
+	}
 
 	public static BitmapFactory.Options getImageItemOption(String resourcePath) {
 		return getOptionsInCalculate4ImageItem(resourcePath);
