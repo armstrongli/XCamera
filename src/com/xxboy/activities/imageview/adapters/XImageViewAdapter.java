@@ -6,14 +6,16 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xxboy.activities.mainview.XCamera;
+import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
 import com.xxboy.activities.mainview.XCamera.XCameraConst;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
 import com.xxboy.common.XFunction;
@@ -26,11 +28,11 @@ public class XImageViewAdapter extends BaseAdapter {
 	private List<String> mData;
 	private LayoutInflater mInflater;
 
-	public XImageViewAdapter(XCamera xCamera, final List<XAdapterBase> privateData) {
+	public XImageViewAdapter(Context context, final List<String> privateData) {
 		super();
-		this.mData = initData(privateData);
+		this.mData = privateData;
 		Logger.log("There're " + privateData.size() + " pictures in total");
-		this.mInflater = (LayoutInflater) xCamera.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/**
@@ -75,8 +77,16 @@ public class XImageViewAdapter extends BaseAdapter {
 
 	private View createViewFromResource(int position, View convertView, ViewGroup parent, int resource) {
 		View v = (convertView == null) ? this.mInflater.inflate(resource, parent, false) : convertView;
-		ImageView tmpImageView = (ImageView) v.findViewById(R.id.xcamera_imageview);
+		final ImageView tmpImageView = (ImageView) v.findViewById(R.id.xcamera_imageview);
+		final TextView barTxt = (TextView) v.findViewById(R.id.id_bar_txt);
+		final LinearLayout barBg = (LinearLayout) v.findViewById(R.id.id_bar_bg);
+
+		barBg.setBackgroundColor(Color.GREEN);
 		String path = this.mData.get(position);
+		barTxt.setText(path);
+		tmpImageView.setImageBitmap(null);
+		// set image
+		new ImageViewAsync(path, tmpImageView).execute();
 
 		return v;
 	}

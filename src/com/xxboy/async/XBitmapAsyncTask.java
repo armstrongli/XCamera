@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-public abstract class XBitmapAsyncTask extends AsyncTask<String, Void, Bitmap> {
+public abstract class XBitmapAsyncTask extends AsyncTask<Void, Void, Bitmap> {
 
 	private String imagePath;
 	private WeakReference<ImageView> weakImageView;
@@ -18,7 +18,7 @@ public abstract class XBitmapAsyncTask extends AsyncTask<String, Void, Bitmap> {
 	}
 
 	@Override
-	protected final Bitmap doInBackground(String... params) {
+	protected final Bitmap doInBackground(Void... params) {
 		return doInBackground();
 	}
 
@@ -37,5 +37,14 @@ public abstract class XBitmapAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
 	public final WeakReference<ImageView> getWeakImageView() {
 		return this.weakImageView;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof XBitmapAsyncTask) {
+			return ((XBitmapAsyncTask) o).imagePath.equals(this.imagePath) && ((XBitmapAsyncTask) o).weakImageView == this.weakImageView;
+		} else {
+			return false;
+		}
 	}
 }

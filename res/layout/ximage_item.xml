@@ -10,4 +10,6 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name" />
 
+    <include layout="@layout/xcamera_bar" />
+
 </LinearLayout>

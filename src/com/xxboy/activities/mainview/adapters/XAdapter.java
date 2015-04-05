@@ -19,7 +19,6 @@ import com.xxboy.activities.mainview.adapters.xdata.XAdapterDate;
 import com.xxboy.activities.mainview.asynctasks.ImageItemAsync;
 import com.xxboy.common.XFunction;
 import com.xxboy.drawables.XBitmapDrawable;
-import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.utils.XCacheUtil;
 
