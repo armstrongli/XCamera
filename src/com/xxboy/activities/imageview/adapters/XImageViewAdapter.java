@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
+import com.xxboy.drawables.XBitmapDrawable;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 
@@ -52,16 +53,19 @@ public class XImageViewAdapter extends BaseAdapter {
 
 	private View createViewFromResource(int position, View convertView, ViewGroup parent, int resource) {
 		View v = (convertView == null) ? this.mInflater.inflate(resource, parent, false) : convertView;
-		final ImageView tmpImageView = (ImageView) v.findViewById(R.id.xcamera_imageview);
+		final ImageView imageView = (ImageView) v.findViewById(R.id.xcamera_imageview);
 		final TextView barTxt = (TextView) v.findViewById(R.id.id_bar_txt);
 		final LinearLayout barBg = (LinearLayout) v.findViewById(R.id.id_bar_bg);
 
 		barBg.setBackgroundColor(Color.GREEN);
 		String path = this.mData.get(position);
 		barTxt.setText(path);
-		tmpImageView.setImageBitmap(null);
+
 		// set image
-		new ImageViewAsync(path, tmpImageView).execute();
+		final ImageViewAsync task = new ImageViewAsync(path, imageView);
+		XBitmapDrawable asyncDrawable = new XBitmapDrawable(null, task);
+		imageView.setImageDrawable(asyncDrawable);
+		task.execute();
 
 		return v;
 	}
