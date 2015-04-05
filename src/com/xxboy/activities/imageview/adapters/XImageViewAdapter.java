@@ -1,11 +1,8 @@
 package com.xxboy.activities.imageview.adapters;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
-import com.xxboy.activities.mainview.XCamera.XCameraConst;
-import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
-import com.xxboy.common.XFunction;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
-import com.xxboy.utils.XCacheUtil;
 
 public class XImageViewAdapter extends BaseAdapter {
 
@@ -33,24 +26,6 @@ public class XImageViewAdapter extends BaseAdapter {
 		this.mData = privateData;
 		Logger.log("There're " + privateData.size() + " pictures in total");
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
-
-	/**
-	 * get base data from primary data, and remove the ones which aren't photos
-	 * 
-	 * @param mData
-	 * @return
-	 */
-	private List<String> initData(final List<XAdapterBase> mData) {
-		List<String> result = new LinkedList<String>();
-		if (mData != null && mData.size() > 0) {
-			Iterator<XAdapterBase> it = mData.iterator();
-			while (it.hasNext()) {
-				XAdapterBase item = it.next();
-				result.add(item.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString());
-			}
-		}
-		return result;
 	}
 
 	@Override
@@ -89,32 +64,6 @@ public class XImageViewAdapter extends BaseAdapter {
 		new ImageViewAsync(path, tmpImageView).execute();
 
 		return v;
-	}
-
-	public void setViewText(TextView v, String text) {
-		v.setText(text);
-	}
-
-	public void setViewImage(ImageView v, int value) {
-		v.setImageResource(value);
-	}
-
-	public void setViewImage(int position, ImageView v, String value) {
-		loadImage(position, value, v);
-	}
-
-	private void loadImage(int position, String imagePath, ImageView imageView) {
-		Bitmap bitmapFromMemCache = XCacheUtil.getFromMemCache(imagePath);
-		if (bitmapFromMemCache != null && !bitmapFromMemCache.isRecycled()) {
-			imageView.setImageBitmap(bitmapFromMemCache);
-		} else {
-			imageView.setImageBitmap(null);
-			if (XFunction.isImage(imagePath)) {
-				// new ImageExecutor(position, imagePath, imageView).start();
-			} else {
-				imageView.setImageResource(R.drawable.ic_media_embed_play);
-			}
-		}
 	}
 
 }
