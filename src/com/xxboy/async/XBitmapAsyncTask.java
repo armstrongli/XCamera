@@ -39,12 +39,4 @@ public abstract class XBitmapAsyncTask extends AsyncTask<Void, Void, Bitmap> {
 		return this.weakImageView;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof XBitmapAsyncTask) {
-			return ((XBitmapAsyncTask) o).imagePath.equals(this.imagePath) && ((XBitmapAsyncTask) o).weakImageView == this.weakImageView;
-		} else {
-			return false;
-		}
-	}
 }
