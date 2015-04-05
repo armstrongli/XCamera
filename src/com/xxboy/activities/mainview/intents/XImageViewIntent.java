@@ -1,7 +1,6 @@
 package com.xxboy.activities.mainview.intents;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +44,14 @@ public class XImageViewIntent extends Intent implements XIntentInterface {
 	@Override
 	public void start() {
 		this.context.startActivity(this);
+	}
+
+	public static final String getChoosedResource(Intent defaultIntent) {
+		return defaultIntent.getStringExtra(INTENT_VAR_PATH);
+	}
+
+	public static final ArrayList<String> getResources(Intent defaultIntent) {
+		return defaultIntent.getStringArrayListExtra(INTENT_VAR_PATHES);
 	}
 
 }

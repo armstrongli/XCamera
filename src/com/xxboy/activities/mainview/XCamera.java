@@ -21,9 +21,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xxboy.activities.imageview.XViewActivity;
 import com.xxboy.activities.mainview.adapters.XAdapter;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
+import com.xxboy.activities.mainview.intents.XImageViewIntent;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.services.asynctasks.XInitialAsyncTask;
@@ -120,10 +120,7 @@ public class XCamera extends Activity {
 		ImageView imageView4Camera = (ImageView) v.findViewById(R.id.id_camera_image);
 		if (txtPath != null) {
 			// means it's the image view item
-			Intent intent = new Intent(this, XViewActivity.class);
-			intent.putExtra(XViewActivity.INTENT_VAR_PATH, txtPath.getText().toString());
-			intent.putStringArrayListExtra(XViewActivity.INTENT_VAR_PATHES, XCamera.resources);
-			this.startActivity(intent);
+			new XImageViewIntent(this, XCamera.resources, txtPath.getText().toString()).start();
 		} else if (imageView4Camera != null) {
 			// means it's the camera view
 			Intent intent = new Intent();
