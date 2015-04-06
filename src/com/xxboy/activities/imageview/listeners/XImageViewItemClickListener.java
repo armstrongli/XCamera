@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.xxboy.activities.imageview.adapters.XImageViewAdapter;
 import com.xxboy.photo.R;
 
 public class XImageViewItemClickListener implements OnItemClickListener {
@@ -19,6 +20,8 @@ public class XImageViewItemClickListener implements OnItemClickListener {
 			bar.setVisibility(View.GONE);
 			break;
 		}
+		// -- set image view bar visibility to set the default visibility of new image view item
+		XImageViewAdapter.Image_View_Item_Bar_Visibility = bar.getVisibility();
 	}
 
 }

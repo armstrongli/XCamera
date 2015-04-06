@@ -186,4 +186,13 @@ public final class XFunction {
 		}
 		return false;
 	}
+
+	public static final String getFileName(String filePath) {
+		if (filePath == null || filePath.trim().length() == 0) {
+			return "";
+		} else {
+			String[] pathes = filePath.split("\\\\|\\/");
+			return pathes[pathes.length - 1];
+		}
+	}
 }

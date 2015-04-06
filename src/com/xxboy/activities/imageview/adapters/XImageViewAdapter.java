@@ -7,17 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
+import com.xxboy.common.XFunction;
 import com.xxboy.drawables.XBitmapDrawable;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
 import com.xxboy.utils.XColorUtil;
 
 public class XImageViewAdapter extends BaseAdapter {
+	public static int Image_View_Item_Bar_Visibility = View.GONE;
 
 	private List<String> mData;
 	private LayoutInflater mInflater;
@@ -53,13 +56,17 @@ public class XImageViewAdapter extends BaseAdapter {
 
 	private View createViewFromResource(int position, View convertView, ViewGroup parent, int resource) {
 		View v = (convertView == null) ? this.mInflater.inflate(resource, parent, false) : convertView;
+		final FrameLayout barFrame = (FrameLayout) v.findViewById(R.id.id_bar);
 		final ImageView imageView = (ImageView) v.findViewById(R.id.xcamera_imageview);
 		final TextView barTxt = (TextView) v.findViewById(R.id.id_bar_txt);
 		final LinearLayout barBg = (LinearLayout) v.findViewById(R.id.id_bar_bg);
 
+		// set visibility of image view item bar
+		barFrame.setVisibility(Image_View_Item_Bar_Visibility);
+
 		barBg.setBackgroundColor(XColorUtil.GRASS_GREEN);
 		String path = this.mData.get(position);
-		barTxt.setText(path);
+		barTxt.setText(XFunction.getFileName(path));
 
 		// set image
 		final ImageViewAsync task = new ImageViewAsync(path, imageView);
