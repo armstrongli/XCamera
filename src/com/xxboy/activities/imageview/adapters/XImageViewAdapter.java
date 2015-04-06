@@ -3,7 +3,6 @@ package com.xxboy.activities.imageview.adapters;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import com.xxboy.activities.imageview.asynctasks.ImageViewAsync;
 import com.xxboy.drawables.XBitmapDrawable;
 import com.xxboy.log.Logger;
 import com.xxboy.photo.R;
+import com.xxboy.utils.XColorUtil;
 
 public class XImageViewAdapter extends BaseAdapter {
 
@@ -57,7 +57,7 @@ public class XImageViewAdapter extends BaseAdapter {
 		final TextView barTxt = (TextView) v.findViewById(R.id.id_bar_txt);
 		final LinearLayout barBg = (LinearLayout) v.findViewById(R.id.id_bar_bg);
 
-		barBg.setBackgroundColor(Color.GREEN);
+		barBg.setBackgroundColor(XColorUtil.GRASS_GREEN);
 		String path = this.mData.get(position);
 		barTxt.setText(path);
 

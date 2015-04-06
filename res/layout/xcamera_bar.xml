@@ -3,13 +3,13 @@
     android:id="@+id/id_bar"
     android:layout_width="fill_parent"
     android:layout_height="50dp"
-    android:layout_gravity="top|left" >
+    android:layout_gravity="top|left"
+    android:visibility="gone" >
 
     <LinearLayout
         android:id="@+id/id_bar_bg"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:alpha="0.8"
         android:background="#ffffff"
         android:orientation="horizontal" >
     </LinearLayout>

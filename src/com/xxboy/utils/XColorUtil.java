@@ -3,6 +3,8 @@ package com.xxboy.utils;
 import android.graphics.Color;
 
 public class XColorUtil {
+	public static final int GRASS_GREEN = Color.argb(255, 153, 204, 0);
+
 	private static final int[] COLOR_SET = {//
 	//
 	// Color.argb(50, 206, 209, 0),//

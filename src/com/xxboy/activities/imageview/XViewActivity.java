@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.xxboy.activities.imageview.adapters.XImageViewAdapter;
+import com.xxboy.activities.imageview.listeners.XImageViewItemClickListener;
 import com.xxboy.activities.imageview.views.XGallery;
 import com.xxboy.activities.mainview.intents.XImageViewIntent;
 import com.xxboy.photo.R;
@@ -36,6 +37,7 @@ public class XViewActivity extends Activity {
 		}
 
 		this.xGallery.setAdapter(new XImageViewAdapter(this, this.pathes));
+		this.xGallery.setOnItemClickListener(new XImageViewItemClickListener());
 		this.xGallery.setSelection(defaultPicture);
 	}
 

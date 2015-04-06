@@ -12,9 +12,6 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_name" />
 
-    <include
-        android:id="@+id/id_image_view_bar"
-        layout="@layout/xcamera_bar"
-        android:visibility="gone" />
+    <include layout="@layout/xcamera_bar" />
 
 </FrameLayout>
