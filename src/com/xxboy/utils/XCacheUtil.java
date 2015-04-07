@@ -14,7 +14,7 @@ import com.xxboy.common.DiskLruCache;
 import com.xxboy.log.Logger;
 
 public class XCacheUtil {
-	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 6;// 1/6 of runtime max memory
+	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 1/6 of runtime max memory
 	private static LruCache<Integer, Bitmap> mMemoryCache = new LruCache<Integer, Bitmap>(M_MEMORY_CACHE_SIZE.intValue()) {
 		@Override
 		protected int sizeOf(Integer key, Bitmap value) {
@@ -28,9 +28,13 @@ public class XCacheUtil {
 
 		@Override
 		protected void entryRemoved(boolean evicted, Integer key, Bitmap oldValue, Bitmap newValue) {
-			Logger.log("removing from mem cache: " + key);
-			super.entryRemoved(evicted, key, oldValue, newValue);
-			pushToDiskCache(key, oldValue);
+			Logger.log(this.toString());
+			if (evicted) {
+				Bitmap bitmapInDisk = getFromDiskCache(key);
+				if (bitmapInDisk == null) {
+					pushToDiskCache(key, oldValue);
+				}
+			}
 		}
 
 	};
@@ -124,8 +128,13 @@ public class XCacheUtil {
 
 	private static Bitmap getFromDiskCache(String path) {
 		Logger.debug("Getting from diskCache: " + path);
+		return getFromDiskCache(HashKeyUtil.hashKey(path));
+	}
+
+	private static Bitmap getFromDiskCache(final Integer hashKey) {
+
 		try {
-			DiskLruCache.Snapshot snapshot = getDiskCache().get(HashKeyUtil.hashKey(path).toString());
+			DiskLruCache.Snapshot snapshot = getDiskCache().get(hashKey.toString());
 			if (snapshot != null) {
 				InputStream bitmapInputStream = snapshot.getInputStream(0);
 				try {
