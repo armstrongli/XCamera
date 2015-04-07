@@ -21,9 +21,11 @@ public class ImageViewAsync extends XBitmapAsyncTask {
 		Bitmap bitmap = XCacheUtil.getImaveView(super.getImagePath());
 		if (bitmap != null && !bitmap.isRecycled()) {
 			return bitmap;
+		} else {
+			bitmap = XBitmapUtil.getImageView(super.getImagePath());
+			XCacheUtil.pushImageView(super.getImagePath(), bitmap);
+			return bitmap;
 		}
-		XCacheUtil.pushImageView(super.getImagePath(), XBitmapUtil.getImageView(super.getImagePath()));
-		return bitmap;
 	}
 
 	@Override
