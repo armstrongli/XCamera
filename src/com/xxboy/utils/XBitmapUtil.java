@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.xxboy.activities.mainview.XCamera.XCameraConst;
+import com.xxboy.common.XFunction;
 
 public class XBitmapUtil {
 
@@ -14,7 +15,7 @@ public class XBitmapUtil {
 	 * @return
 	 */
 	public static Bitmap getImageItem(String imagePath) {
-		return BitmapFactory.decodeFile(imagePath, getImageItemOption(imagePath));
+		return XFunction.XCompress.comp(BitmapFactory.decodeFile(imagePath, getImageItemOption(imagePath)));
 	}
 
 	/**

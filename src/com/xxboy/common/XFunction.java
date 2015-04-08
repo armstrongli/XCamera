@@ -48,19 +48,14 @@ public final class XFunction {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			image.compress(JPEG, 100, baos);
 			// compress it until it's less than 50k
-			int preLength = Integer.MAX_VALUE, coLength = Integer.MAX_VALUE;
+			int coLength = Integer.MAX_VALUE;
 			int count = 0;
-			while (coLength > 50 * 1024 || count >= 10) {
-				preLength = baos.toByteArray().length;
+			while (coLength > 40 * 1024 && count <= 10) {
 				baos.reset();
 				image.compress(JPEG, 50, baos);
 				count++;
 				coLength = baos.toByteArray().length;
-				if (coLength / preLength > 0.8) {
-					// if the compress doesn't take effects, break the loop.
-					// take the percent to 80%
-					break;
-				}
+				Logger.log("Compress length > " + coLength * 8);
 			}
 			Logger.log("Compress count: " + count);
 

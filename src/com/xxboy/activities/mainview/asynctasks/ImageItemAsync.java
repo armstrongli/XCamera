@@ -18,7 +18,7 @@ public class ImageItemAsync extends XBitmapAsyncTask {
 	}
 
 	private Bitmap getImageItem() {
-		return BitmapFactory.decodeFile(super.getImagePath(), XBitmapUtil.getImageItemOption(super.getImagePath()));
+		return XBitmapUtil.getImageItem(super.getImagePath());
 	}
 
 	@Override
