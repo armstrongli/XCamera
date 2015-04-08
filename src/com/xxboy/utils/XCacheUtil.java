@@ -165,7 +165,7 @@ public class XCacheUtil {
 			DiskLruCache.Editor editor = getDiskCache().edit(hashKey.toString());
 			if (editor != null) {
 				OutputStream outputStream = editor.newOutputStream(0);
-				bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
 				editor.commit();
 				if (outputStream != null) {
 					outputStream.close();
