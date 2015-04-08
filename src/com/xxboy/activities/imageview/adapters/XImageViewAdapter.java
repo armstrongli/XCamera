@@ -20,7 +20,6 @@ import com.xxboy.photo.R;
 import com.xxboy.utils.XColorUtil;
 
 public class XImageViewAdapter extends BaseAdapter {
-	public static int Image_View_Item_Bar_Visibility = View.GONE;
 
 	private List<String> mData;
 	private LayoutInflater mInflater;
@@ -62,7 +61,7 @@ public class XImageViewAdapter extends BaseAdapter {
 		final LinearLayout barBg = (LinearLayout) v.findViewById(R.id.id_bar_bg);
 
 		// set visibility of image view item bar
-		barFrame.setVisibility(Image_View_Item_Bar_Visibility);
+		barFrame.setVisibility(View.GONE);
 
 		barBg.setBackgroundColor(XColorUtil.GRASS_GREEN);
 		String path = this.mData.get(position);

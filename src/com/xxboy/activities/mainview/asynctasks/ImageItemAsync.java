@@ -3,7 +3,6 @@ package com.xxboy.activities.mainview.asynctasks;
 import java.lang.ref.WeakReference;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 import com.xxboy.async.XBitmapAsyncTask;
