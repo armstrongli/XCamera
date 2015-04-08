@@ -112,7 +112,7 @@ public class XCacheUtil {
 			Logger.debug("Getting From memcache(" + mMemoryCache.size() + "): " + path);
 			// check whether it's in memory cache
 			Bitmap bitmap = mMemoryCache.get(HashKeyUtil.hashKey(path));
-			if (bitmap != null && bitmap.isRecycled()) {
+			if (bitmap != null && !bitmap.isRecycled()) {
 				Logger.debug("hit in cache: memory cache");
 				return bitmap;
 			}
