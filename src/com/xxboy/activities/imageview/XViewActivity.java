@@ -28,10 +28,10 @@ public class XViewActivity extends Activity {
 		this.xGallery = (XGallery) findViewById(R.id.id_gallery_image_view);
 
 		Intent xIntent = getIntent();
-		String path = XImageViewIntent.getChoosedResource(xIntent);
+		int pasition = XImageViewIntent.getPosition(xIntent);
 		this.pathes = treatPath(XImageViewIntent.getResources(xIntent));
 
-		int defaultPicture = this.pathes.indexOf(path);
+		int defaultPicture = pasition;
 		if (defaultPicture < 0) {
 			defaultPicture = 0;
 		}

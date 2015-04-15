@@ -5,7 +5,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="top|left"
-    android:background="#222222"
     android:orientation="vertical"
     tools:context="com.xxboy.activities.mainview.XCamera" >
 

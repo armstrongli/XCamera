@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.xxboy.activities.mainview.adapters.XAdapter;
 import com.xxboy.activities.mainview.adapters.xdata.XAdapterBase;
@@ -94,7 +93,7 @@ public class XCamera extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				onClickImage(view);
+				onClickImage(view, position);
 			}
 		});
 
@@ -115,12 +114,11 @@ public class XCamera extends Activity {
 		XCamera.xCamera = this;
 	}
 
-	private void onClickImage(View v) {
-		TextView txtPath = (TextView) v.findViewById(R.id.ItemResource);
+	private void onClickImage(View v, int position) {
 		ImageView imageView4Camera = (ImageView) v.findViewById(R.id.id_camera_image);
-		if (txtPath != null) {
+		if (imageView4Camera == null) {
 			// means it's the image view item
-			new XImageViewIntent(this, XCamera.resources, txtPath.getText().toString()).start();
+			new XImageViewIntent(this, XCamera.resources, position).start();
 		} else if (imageView4Camera != null) {
 			// means it's the camera view
 			Intent intent = new Intent();

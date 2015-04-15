@@ -96,9 +96,7 @@ public class XAdapter extends BaseAdapter {
 				ImageContainer = (LinearLayout) v.findViewById(R.id.ImageContainer);
 			}
 			final ImageView Image = (ImageView) v.findViewById(R.id.ItemImage);
-			final TextView txtPath = (TextView) v.findViewById(R.id.ItemResource);
 			final String path = xData.get(XCameraConst.VIEW_NAME_IMAGE_ITEM).toString();
-			txtPath.setText(path);
 			ImageContainer.getLayoutParams().height = XCameraConst.PHOTO_ITEM_HEIGHT - microMdf;
 			ImageContainer.setBackgroundColor(xData.getBackgroundColor());
 			setViewImage(position, Image, path);

@@ -9,32 +9,32 @@ import com.xxboy.activities.imageview.XViewActivity;
 
 public class XImageViewIntent extends Intent implements XIntentInterface {
 	// extra value keys
-	private static final String INTENT_VAR_PATH = "INTENT_VAR_PATH";
+	private static final String INTENT_VAR_PASITION = "INTENT_VAR_PASITION";
 	private static final String INTENT_VAR_PATHES = "INTENT_VAR_PATHES";
 	// image view class
 	private static final Class<?> clazz = XViewActivity.class;
 	// -- xIntent context
 	private final Context context;
 	private final ArrayList<String> resources;
-	private final String choosedResource;
+	private final int position;
 
-	public XImageViewIntent(Context packageContext, ArrayList<String> resources, String choosedResource) {
+	public XImageViewIntent(Context packageContext, ArrayList<String> resources, int position) {
 		super(packageContext, clazz);
 		this.context = packageContext;
 		this.resources = resources;
-		this.choosedResource = choosedResource;
+		this.position = position;
 
 		// -- put extra value for xcamera intent
 		putExtraValues();
 	}
 
 	private void putExtraValues() {
-		this.putExtra(INTENT_VAR_PATH, this.choosedResource);
+		this.putExtra(INTENT_VAR_PASITION, this.position);
 		this.putStringArrayListExtra(INTENT_VAR_PATHES, this.resources);
 	}
 
-	public String getChoosedResource() {
-		return this.choosedResource;
+	public int getPosition() {
+		return this.position;
 	}
 
 	public ArrayList<String> getResources() {
@@ -46,8 +46,8 @@ public class XImageViewIntent extends Intent implements XIntentInterface {
 		this.context.startActivity(this);
 	}
 
-	public static final String getChoosedResource(Intent defaultIntent) {
-		return defaultIntent.getStringExtra(INTENT_VAR_PATH);
+	public static final int getPosition(Intent defaultIntent) {
+		return defaultIntent.getIntExtra(INTENT_VAR_PASITION, 0);
 	}
 
 	public static final ArrayList<String> getResources(Intent defaultIntent) {
