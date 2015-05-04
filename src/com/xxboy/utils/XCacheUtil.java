@@ -14,7 +14,8 @@ import com.xxboy.common.DiskLruCache;
 import com.xxboy.log.Logger;
 
 public class XCacheUtil {
-	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 4;// 1/6 of runtime max memory
+	/** 1/5 of runtime max memory. 1/4 may result in OOM */
+	private static final Long M_MEMORY_CACHE_SIZE = Runtime.getRuntime().maxMemory() / 5;
 	private static LruCache<Integer, Bitmap> mMemoryCache = new LruCache<Integer, Bitmap>(M_MEMORY_CACHE_SIZE.intValue()) {
 		@Override
 		protected int sizeOf(Integer key, Bitmap value) {
@@ -195,35 +196,6 @@ public class XCacheUtil {
 		public static final Integer hashKey(String path) {
 			return path.hashCode();
 		}
-
-		// private static final String hashKeyForDisk(String key) {
-		// String cacheKey;
-		// MessageDigest mDigest = getMsgDgst();
-		// mDigest.update(key.getBytes());
-		// cacheKey = bytesToHexString(mDigest.digest());
-		// return cacheKey;
-		// }
-		//
-		// private static final MessageDigest getMsgDgst() {
-		// try {
-		// return MessageDigest.getInstance("MD5");
-		// } catch (NoSuchAlgorithmException e) {
-		// Logger.log(e);
-		// }
-		// return null;
-		// }
-		//
-		// private static final String bytesToHexString(byte[] bytes) {
-		// StringBuilder sb = new StringBuilder();
-		// for (int i = 0; i < bytes.length; i++) {
-		// String hex = Integer.toHexString(0xFF & bytes[i]);
-		// if (hex.length() == 1) {
-		// sb.append('0');
-		// }
-		// sb.append(hex);
-		// }
-		// return sb.toString();
-		// }
 	}
 
 	public static final void closeDiskCache() {
