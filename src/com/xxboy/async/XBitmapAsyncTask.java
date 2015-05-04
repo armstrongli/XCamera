@@ -2,6 +2,8 @@ package com.xxboy.async;
 
 import java.lang.ref.WeakReference;
 
+import com.xxboy.drawables.XBitmapDrawable;
+
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
@@ -29,7 +31,22 @@ public abstract class XBitmapAsyncTask extends AsyncTask<Void, Void, Bitmap> {
 		postExecute(result);
 	}
 
-	protected abstract void postExecute(Bitmap result);
+	protected void postExecute(Bitmap result) {
+		if (result == null || result.isRecycled()) {
+			return;
+		}
+		WeakReference<ImageView> imageViewReference = this.getWeakImageView();
+		if (imageViewReference != null && result != null) {
+			final ImageView imageView = imageViewReference.get();
+			if (imageView != null) {
+				final XBitmapAsyncTask bitmapWorkerTask = XBitmapDrawable.getBitmapWorkerTask(imageView);
+				if (this == bitmapWorkerTask) {
+					imageView.setImageBitmap(result);
+				}
+			}
+		}
+
+	}
 
 	public final String getImagePath() {
 		return this.imagePath;

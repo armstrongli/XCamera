@@ -1,12 +1,9 @@
 package com.xxboy.activities.imageview.asynctasks;
 
-import java.lang.ref.WeakReference;
-
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.xxboy.async.XBitmapAsyncTask;
-import com.xxboy.drawables.XBitmapDrawable;
 import com.xxboy.utils.XBitmapUtil;
 import com.xxboy.utils.XCacheUtil;
 
@@ -30,17 +27,7 @@ public class ImageViewAsync extends XBitmapAsyncTask {
 
 	@Override
 	protected void postExecute(Bitmap result) {
-		WeakReference<ImageView> imageViewReference = super.getWeakImageView();
-		if (imageViewReference != null && result != null) {
-			final ImageView imageView = imageViewReference.get();
-			if (imageView != null) {
-				final XBitmapAsyncTask bitmapWorkerTask = XBitmapDrawable.getBitmapWorkerTask(imageView);
-				if (this == bitmapWorkerTask) {
-					imageView.setImageBitmap(result);
-				}
-			}
-		}
-
+		super.postExecute(result);
 	}
 
 }
