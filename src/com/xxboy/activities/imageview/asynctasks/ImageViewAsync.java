@@ -1,5 +1,7 @@
 package com.xxboy.activities.imageview.asynctasks;
 
+import java.lang.ref.WeakReference;
+
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
@@ -28,6 +30,12 @@ public class ImageViewAsync extends XBitmapAsyncTask {
 	@Override
 	protected void postExecute(Bitmap result) {
 		super.postExecute(result);
+
+		// load full image after loading image from cache
+		WeakReference<ImageView> wImageView = super.getWeakImageView();
+		if (wImageView != null) {
+			new FullImageViewAsync(getImagePath(), wImageView.get()).execute();
+		}
 	}
 
 }
